@@ -146,3 +146,21 @@ Research: PASS (postgres.js prepare:false, RLS with no policies)
 Fresh rerun: PASS
 Outstanding blockers: NONE
 Git SHA: recorded after this commit
+
+## 2026-09-24T02:45:00Z — Phase 9 chain reader and API
+
+- Added account decoding, Token-2022 mint fee parsing, receipt verification, catalog loading, and the `/v1` routes. The catalog is the live PreStocks response with SPACEX removed. Premium uses integer micro-USD from the JSON text.
+- Local checks: `/health` and `/ready` 200, config allowlist is the seven eligible symbols, `/v1/offers` returned an empty live book at slot 503255480, opportunities returned seven rows and no SPACEX, and posting the devnet return signature `2of8HQPVcY2XpjJCHcs95uho9W5UuACwonPCDDdAJuWYco6JPKM9kF2q4t6NAST2nFRyeuphytcHYY2hxH5hXEP7` returned `verified` with net received `2018660`.
+- `getProgramAccounts` memcmp filters are base58. The first call used base64 and the RPC rejected it.
+- Evidence: `evidence/backend/local-routes-20260924T0244Z.json`.
+
+PHASE 9 COMPLETE
+
+Implementation: PASS
+Tests: PASS
+Security: PASS
+Evidence: PASS
+Research: PASS (live catalog, Jupiter price v3, devnet getTransaction)
+Fresh rerun: PASS
+Outstanding blockers: NONE
+Git SHA: recorded after this commit

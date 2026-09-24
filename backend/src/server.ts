@@ -7,6 +7,7 @@ import Fastify, { type FastifyInstance } from "fastify";
 import { Connection } from "@solana/web3.js";
 import { loadConfig, type AppConfig } from "./config.js";
 import { createSql, type Sql } from "./db/sql.js";
+import { registerRoutes } from "./routes/register.js";
 
 export const EXPECTED_MIGRATION = "002";
 
@@ -45,7 +46,7 @@ export async function buildServer(options?: {
   await app.register(cors, {
     origin: config.CORS_ALLOWED_ORIGINS.split(",").map((origin) => origin.trim()),
   });
-  await app.register(rateLimit, { max: 100, timeWindow: "1 minute" });
+  await app.register(rateLimit, { max: 120, timeWindow: "1 minute" });
 
   app.get("/health", async () => ({
     ok: true,
@@ -73,6 +74,7 @@ export async function buildServer(options?: {
   app.addHook("onClose", async () => {
     await sql.end({ timeout: 5 });
   });
+  await registerRoutes(app, config, sql);
   return app;
 }
 
