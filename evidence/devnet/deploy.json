@@ -1,0 +1,14 @@
+{
+  "cluster": "devnet",
+  "programId": "F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6",
+  "signature": "4qwgdv1cdjnXVkgJNpE3QH8SwtHopdocvwp4dvSa42bXjNhpH9jnPusabjNEcsU3yqnf6WvkHZJi8L2d8hKkwgtP",
+  "slot": 503243469,
+  "blockTime": 1790215850,
+  "err": null,
+  "executable": true,
+  "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+  "programAccountLength": 36,
+  "programData": "DSbRjFotfkpDqdKNPQ9dFshpTi5cg57bXL72VRxM7Vhh",
+  "programDataLength": 395728,
+  "fetchedAt": "2026-09-24T02:26:41.414Z"
+}
