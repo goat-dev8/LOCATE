@@ -1,0 +1,228 @@
+{
+  "status": 200,
+  "fetchedAt": "2026-09-24T03:42:32.579Z",
+  "body": {
+    "cluster": "devnet",
+    "label": "devnet test mint mirroring OPENAI's extensions; not a PreStocks token",
+    "receipts": [
+      {
+        "signature": "2PgXCZhh2HiGDguNVFka1JKhjoPxyGeBoWv4acS5uNB3vMiGHnLVHjqJFf2DfcHyAczEa6tWSgcrvQEikqVstyTi",
+        "kind": "offer_created",
+        "loan": null,
+        "slot": "503246975",
+        "commitment": "finalized",
+        "raw_event": {
+          "kind": "offer_created",
+          "fields": {
+            "mint": "9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P",
+            "nonce": "1",
+            "offer": "F529WQuaEXUddFMS89cEgcuoLc1KbUURSJnb8FGewbYf",
+            "lender": "TL3iubbaXvTg8gNwHnWN7AVrspUfy1Qq1K9yDAZFGvf",
+            "feeUsdc": "50000",
+            "termSecs": "3600",
+            "amountRaw": "2018660",
+            "expiresAt": "1790302831",
+            "graceSecs": "30",
+            "lenderAta": "Hd3Hc6uUXjuvyxqSU9sf4LEwqySUDVJ6X1bwWhdtQ2pu",
+            "collateralUsdc": "1000000"
+          },
+          "eventIndex": 0
+        }
+      },
+      {
+        "signature": "5dE2AyTW8quE1hjKjJZrHjBTocmRb9HnSommsF9toyjraF27TdvtzKnKgw4K3cFmq6gkajz9Get5KhnyvcxHyq4w",
+        "kind": "loan_taken",
+        "loan": "4dG1A5h8UKV8rvGePrfML2yNEPmrbNPv3h4ZapVVQLax",
+        "slot": "503246979",
+        "commitment": "finalized",
+        "raw_event": {
+          "kind": "loan_taken",
+          "fields": {
+            "loan": "4dG1A5h8UKV8rvGePrfML2yNEPmrbNPv3h4ZapVVQLax",
+            "mint": "9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P",
+            "offer": "F529WQuaEXUddFMS89cEgcuoLc1KbUURSJnb8FGewbYf",
+            "feeBps": 100,
+            "lender": "TL3iubbaXvTg8gNwHnWN7AVrspUfy1Qq1K9yDAZFGvf",
+            "feeUsdc": "50000",
+            "startTs": "1790216431",
+            "borrower": "FmZGfioFdPn7iJch3FXW3W4iDdhyXXBPhn6MJPGMU4iN",
+            "amountRaw": "2018660",
+            "maturityTs": "1790220031",
+            "claimAfterTs": "1790220061",
+            "collateralUsdc": "1000000",
+            "borrowerReceivedRaw": "1998473"
+          },
+          "eventIndex": 0
+        }
+      },
+      {
+        "signature": "2of8HQPVcY2XpjJCHcs95uho9W5UuACwonPCDDdAJuWYco6JPKM9kF2q4t6NAST2nFRyeuphytcHYY2hxH5hXEP7",
+        "kind": "loan_returned",
+        "loan": "4dG1A5h8UKV8rvGePrfML2yNEPmrbNPv3h4ZapVVQLax",
+        "slot": "503246982",
+        "commitment": "finalized",
+        "raw_event": {
+          "kind": "loan_returned",
+          "fields": {
+            "loan": "4dG1A5h8UKV8rvGePrfML2yNEPmrbNPv3h4ZapVVQLax",
+            "mint": "9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P",
+            "offer": "F529WQuaEXUddFMS89cEgcuoLc1KbUURSJnb8FGewbYf",
+            "feeBps": 100,
+            "lender": "TL3iubbaXvTg8gNwHnWN7AVrspUfy1Qq1K9yDAZFGvf",
+            "borrower": "FmZGfioFdPn7iJch3FXW3W4iDdhyXXBPhn6MJPGMU4iN",
+            "grossRaw": "2039051",
+            "amountRaw": "2018660",
+            "netReceivedRaw": "2018660",
+            "collateralReleased": "1000000"
+          },
+          "eventIndex": 0
+        }
+      },
+      {
+        "signature": "eepbfCzTp2YsHdDBdRvqjjGHEuqAFyAyDovnq9GL5RYtkni99p5pKoHYnqNMyJ5r88hQoDWw6MyknUsDFUXF1ep",
+        "kind": "offer_created",
+        "loan": null,
+        "slot": "503246985",
+        "commitment": "finalized",
+        "raw_event": {
+          "kind": "offer_created",
+          "fields": {
+            "mint": "9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P",
+            "nonce": "2",
+            "offer": "5FN7DN8tSZ63yN37qoHV4P8jURGe5ji2ZSCgWrVCZkCy",
+            "lender": "TL3iubbaXvTg8gNwHnWN7AVrspUfy1Qq1K9yDAZFGvf",
+            "feeUsdc": "50000",
+            "termSecs": "60",
+            "amountRaw": "2018660",
+            "expiresAt": "1790302831",
+            "graceSecs": "30",
+            "lenderAta": "Hd3Hc6uUXjuvyxqSU9sf4LEwqySUDVJ6X1bwWhdtQ2pu",
+            "collateralUsdc": "1000000"
+          },
+          "eventIndex": 0
+        }
+      },
+      {
+        "signature": "64scdqzbA3jooNoDZKWQLTsY24joDkWft6enWBKqR1G318G7QqALm7WjFbTbGFKrnZHqcXj3kLqQxtZuEsE3GNaA",
+        "kind": "loan_taken",
+        "loan": "GjhK4XipCty5pyjHPKP1oAjaWFByg5RjqwnKtJ3FjAzo",
+        "slot": "503246988",
+        "commitment": "finalized",
+        "raw_event": {
+          "kind": "loan_taken",
+          "fields": {
+            "loan": "GjhK4XipCty5pyjHPKP1oAjaWFByg5RjqwnKtJ3FjAzo",
+            "mint": "9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P",
+            "offer": "5FN7DN8tSZ63yN37qoHV4P8jURGe5ji2ZSCgWrVCZkCy",
+            "feeBps": 100,
+            "lender": "TL3iubbaXvTg8gNwHnWN7AVrspUfy1Qq1K9yDAZFGvf",
+            "feeUsdc": "50000",
+            "startTs": "1790216433",
+            "borrower": "FmZGfioFdPn7iJch3FXW3W4iDdhyXXBPhn6MJPGMU4iN",
+            "amountRaw": "2018660",
+            "maturityTs": "1790216493",
+            "claimAfterTs": "1790216523",
+            "collateralUsdc": "1000000",
+            "borrowerReceivedRaw": "1998473"
+          },
+          "eventIndex": 0
+        }
+      },
+      {
+        "signature": "653KdWNMynZzpronirJKQTHhFybZsi7PUGfhPaa4zp4QcfeHXmt9ecvvKP5dDDFQs9D9eR7zKbDSctQ4rhNZkxkq",
+        "kind": "loan_claimed",
+        "loan": "GjhK4XipCty5pyjHPKP1oAjaWFByg5RjqwnKtJ3FjAzo",
+        "slot": "503247570",
+        "commitment": "finalized",
+        "raw_event": {
+          "kind": "loan_claimed",
+          "fields": {
+            "loan": "GjhK4XipCty5pyjHPKP1oAjaWFByg5RjqwnKtJ3FjAzo",
+            "mint": "9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P",
+            "offer": "5FN7DN8tSZ63yN37qoHV4P8jURGe5ji2ZSCgWrVCZkCy",
+            "lender": "TL3iubbaXvTg8gNwHnWN7AVrspUfy1Qq1K9yDAZFGvf",
+            "borrower": "FmZGfioFdPn7iJch3FXW3W4iDdhyXXBPhn6MJPGMU4iN",
+            "amountRaw": "2018660",
+            "claimedBy": "TL3iubbaXvTg8gNwHnWN7AVrspUfy1Qq1K9yDAZFGvf",
+            "collateralUsdc": "1000000"
+          },
+          "eventIndex": 0
+        }
+      },
+      {
+        "signature": "2Sv4qQGyugUn96oe41SikzPtsSGPAN2RrKWhB41FYfqgpVMmGN56WFzM7kESSzci3aamX39cethDPZuQP2VZGgx4",
+        "kind": "offer_created",
+        "loan": null,
+        "slot": "503247575",
+        "commitment": "finalized",
+        "raw_event": {
+          "kind": "offer_created",
+          "fields": {
+            "mint": "9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P",
+            "nonce": "3",
+            "offer": "7Bog8w6hshFcEGFxZorWKqZZmPGBaDbj92dc6z8qRrqt",
+            "lender": "TL3iubbaXvTg8gNwHnWN7AVrspUfy1Qq1K9yDAZFGvf",
+            "feeUsdc": "50000",
+            "termSecs": "60",
+            "amountRaw": "2018660",
+            "expiresAt": "1790302831",
+            "graceSecs": "30",
+            "lenderAta": "Hd3Hc6uUXjuvyxqSU9sf4LEwqySUDVJ6X1bwWhdtQ2pu",
+            "collateralUsdc": "1000000"
+          },
+          "eventIndex": 0
+        }
+      },
+      {
+        "signature": "485J1zRnKA8MvYS24ugLuTwNsJcrUvJkRkECByGmSFut2H7KzngHzgTfxUnYoiZzGiA3LU4EXhP92h7fPME1xgfr",
+        "kind": "loan_taken",
+        "loan": "2jBEiHuCS5EgozQ6vJqvApxAfcQTkJRjiGN4MTLrXZsp",
+        "slot": "503248742",
+        "commitment": "finalized",
+        "raw_event": {
+          "kind": "loan_taken",
+          "fields": {
+            "loan": "2jBEiHuCS5EgozQ6vJqvApxAfcQTkJRjiGN4MTLrXZsp",
+            "mint": "9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P",
+            "offer": "7Bog8w6hshFcEGFxZorWKqZZmPGBaDbj92dc6z8qRrqt",
+            "feeBps": 100,
+            "lender": "TL3iubbaXvTg8gNwHnWN7AVrspUfy1Qq1K9yDAZFGvf",
+            "feeUsdc": "50000",
+            "startTs": "1790216725",
+            "borrower": "FmZGfioFdPn7iJch3FXW3W4iDdhyXXBPhn6MJPGMU4iN",
+            "amountRaw": "2018660",
+            "maturityTs": "1790216785",
+            "claimAfterTs": "1790216815",
+            "collateralUsdc": "1000000",
+            "borrowerReceivedRaw": "1998473"
+          },
+          "eventIndex": 0
+        }
+      },
+      {
+        "signature": "MfjxFE1fjqTyDVuJpwRkf35VbXBPHfzhUidVTNFr8k85VEpKEWGSyDxGi5UXg6hLDMfbugq8ZoZaS9hC4gWkanC",
+        "kind": "loan_returned",
+        "loan": "2jBEiHuCS5EgozQ6vJqvApxAfcQTkJRjiGN4MTLrXZsp",
+        "slot": "503248747",
+        "commitment": "finalized",
+        "raw_event": {
+          "kind": "loan_returned",
+          "fields": {
+            "loan": "2jBEiHuCS5EgozQ6vJqvApxAfcQTkJRjiGN4MTLrXZsp",
+            "mint": "9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P",
+            "offer": "7Bog8w6hshFcEGFxZorWKqZZmPGBaDbj92dc6z8qRrqt",
+            "feeBps": 100,
+            "lender": "TL3iubbaXvTg8gNwHnWN7AVrspUfy1Qq1K9yDAZFGvf",
+            "borrower": "FmZGfioFdPn7iJch3FXW3W4iDdhyXXBPhn6MJPGMU4iN",
+            "grossRaw": "2039051",
+            "amountRaw": "2018660",
+            "netReceivedRaw": "2018660",
+            "collateralReleased": "1000000"
+          },
+          "eventIndex": 0
+        }
+      }
+    ],
+    "fetchedAt": "2026-09-24T03:42:32.749Z"
+  }
+}

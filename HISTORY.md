@@ -327,3 +327,20 @@ Research: PASS
 Fresh rerun: PASS
 Outstanding blockers: release receipts are not backfilled; cold start has not been measured
 Git SHA: recorded after this commit
+
+## 2026-09-24T03:42:00Z — Evidence route backfill
+
+- Posted seven devnet signatures to the live API. Each returned `verified`. `GET /v1/evidence` returned 200 with 9 receipt rows, commitment `finalized`.
+- The saved response is `evidence/backend/evidence-route.json`. The mint label in that response is the devnet test mint, not a PreStocks token.
+- The SDK cycle signatures were added to the demo set so the next deploy can label them the same way.
+
+PHASE 14 IN PROGRESS
+
+Implementation: PASS
+Tests: PASS
+Security: PASS
+Evidence: PASS
+Research: PASS
+Fresh rerun: PASS
+Outstanding blockers: SDK-cycle signatures are not labeled on the live service yet; cold start has not been measured
+Git SHA: recorded after this commit
