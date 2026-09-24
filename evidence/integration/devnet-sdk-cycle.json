@@ -1,0 +1,58 @@
+{
+  "cluster": "devnet",
+  "label": "devnet test mint mirroring OPENAI's extensions; not a PreStocks token",
+  "programId": "F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6",
+  "returnCycle": {
+    "create": {
+      "signature": "3oW3dET9hBUwm1EMwvyWBN21hMBVX2LwUt8K5binJi4iE2JkzdRimFQxja886pLQG7wbrzmMAWtpV7fvV7AfWRxi",
+      "slot": 503264904,
+      "blockTime": 1790219405,
+      "err": null
+    },
+    "take": {
+      "signature": "3BpyAK9emZMTyBC4KnNZxYhdR2Z18HwkDgftwAENTLXrX9cHCPcr4vh9NL8rgTGjXnqBy1vU68CYH97L2i2X2Vaq",
+      "slot": 503264909,
+      "blockTime": 1790219406,
+      "err": null
+    },
+    "return": {
+      "signature": "5YJGkxd9wtZ8PA114v8m53QgbMsbdBuS7LH2BDBWTMk4reP5mgcJyPsidbD5MwcvtLhP986m8L1Xs6MyuZb85f2h",
+      "slot": 503264913,
+      "blockTime": 1790219407,
+      "err": null
+    },
+    "grossRaw": "2039051"
+  },
+  "claimCycle": {
+    "create": {
+      "signature": "3ipFume6pxkJGP2vAv3Wf87uwNoBeNa6KhrvvY7eWX9xqu7ywxvZWHrjfViSo2955H3nkFEq9TKkrZpweSG4LeaS",
+      "slot": 503264916,
+      "blockTime": 1790219407,
+      "err": null
+    },
+    "take": {
+      "signature": "Et6n6CopgJQ3EG4NCcKVFNsHcsrzqrHBm7yKQRX2bnzy1gkvvcB81XCEv36J5vC1Ay3nT71CH5VhPa2tAXaJDAH",
+      "slot": 503264919,
+      "blockTime": 1790219408,
+      "err": null
+    },
+    "earlyClaimSimulation": {
+      "err": {
+        "InstructionError": [
+          1,
+          {
+            "Custom": 6015
+          }
+        ]
+      },
+      "simulation": true
+    },
+    "claim": {
+      "signature": "2paQbq9PaVd5gM9nSbJaupauPMVSAzBJxkEQE9tsZpLkqS7P3nCXAfSHeYWrASrBKqwJThe6P6RUGz7KApmDGJHn",
+      "slot": 503265496,
+      "blockTime": 1790219504,
+      "err": null
+    }
+  },
+  "fetchedAt": "2026-09-24T03:11:45.787Z"
+}

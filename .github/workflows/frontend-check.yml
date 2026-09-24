@@ -1,0 +1,21 @@
+name: frontend-check
+on:
+  push:
+    paths: ["FRONTEND/**", "sdk/tools/check-frontend.mjs"]
+  pull_request:
+    paths: ["FRONTEND/**", "sdk/tools/check-frontend.mjs"]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check the delivered frontend
+        run: |
+          if [ ! -d FRONTEND ]; then
+            echo "FRONTEND is not in this commit"
+            exit 0
+          fi
+          node sdk/tools/check-frontend.mjs FRONTEND

@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: locate-api
+    runtime: node
+    plan: free
+    region: frankfurt
+    rootDir: backend
+    autoDeploy: false
+    buildCommand: npm ci && npm run build
+    startCommand: node dist/server.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: PORT
+        value: "10000"
+      - key: SOLANA_CLUSTER
+        value: devnet
+      - key: LOCATE_PROGRAM_ID
+        value: F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6
+      - key: JUPITER_API_BASE
+        value: https://api.jup.ag
+      - key: PRESTOCKS_API_BASE
+        value: https://prestocks.com
+      - key: CORS_ALLOWED_ORIGINS
+        value: http://localhost:5173
+      - key: DATABASE_URL
+        sync: false
+      - key: SOLANA_RPC_URL
+        sync: false
+      - key: GIT_SHA
+        sync: false

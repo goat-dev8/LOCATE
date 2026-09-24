@@ -238,3 +238,21 @@ Research: PASS
 Fresh rerun: PASS
 Outstanding blockers: SDK devnet cycle; mainnet size simulation after the holder lookup is available
 Git SHA: recorded after this commit
+
+## 2026-09-24T03:12:00Z — Phase 11 SDK devnet cycle
+
+- The SDK builders sent real devnet transactions. Return cycle: create `3oW3dET9hBUwm1EMwvyWBN21hMBVX2LwUt8K5binJi4iE2JkzdRimFQxja886pLQG7wbrzmMAWtpV7fvV7AfWRxi` slot 503264904, take `3BpyAK9emZMTyBC4KnNZxYhdR2Z18HwkDgftwAENTLXrX9cHCPcr4vh9NL8rgTGjXnqBy1vU68CYH97L2i2X2Vaq` slot 503264909, return `5YJGkxd9wtZ8PA114v8m53QgbMsbdBuS7LH2BDBWTMk4reP5mgcJyPsidbD5MwcvtLhP986m8L1Xs6MyuZb85f2h` slot 503264913. `getTransaction` err is null. Gross raw 2039051.
+- Claim cycle: create `3ipFume6pxkJGP2vAv3Wf87uwNoBeNa6KhrvvY7eWX9xqu7ywxvZWHrjfViSo2955H3nkFEq9TKkrZpweSG4LeaS`, take `Et6n6CopgJQ3EG4NCcKVFNsHcsrzqrHBm7yKQRX2bnzy1gkvvcB81XCEv36J5vC1Ay3nT71CH5VhPa2tAXaJDAH`, claim `2paQbq9PaVd5gM9nSbJaupauPMVSAzBJxkEQE9tsZpLkqS7P3nCXAfSHeYWrASrBKqwJThe6P6RUGz7KApmDGJHn` slot 503265496. Early claim was a simulation and returned custom 6015, `ClaimRefusedNotMatured`.
+- The mint in these transactions is the devnet test mint mirroring OPENAI's extensions; not a PreStocks token.
+- `getTokenLargestAccounts` is still rate limited, so the mainnet size simulation is not recorded.
+
+PHASE 11 IN PROGRESS
+
+Implementation: PASS
+Tests: PASS
+Security: PASS
+Evidence: FAIL
+Research: PASS
+Fresh rerun: PASS
+Outstanding blockers: mainnet holder lookup and transaction-size simulation
+Git SHA: recorded after this commit

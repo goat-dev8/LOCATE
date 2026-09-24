@@ -1,0 +1,26 @@
+name: program
+on:
+  push:
+    paths: ["programs/**", "tests/**", "Cargo.toml", "Cargo.lock"]
+  pull_request:
+    paths: ["programs/**", "tests/**", "Cargo.toml", "Cargo.lock"]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install Solana 4.1.2
+        run: |
+          sh -c "$(curl -sSfL https://release.anza.xyz/v4.1.2/install)"
+          echo "$HOME/.local/share/solana/install/active_release/bin" >> "$GITHUB_PATH"
+      - name: No oracle
+        run: |
+          if grep -R -n -E "oracle|pyth|switchboard" programs/locate/src tests; then
+            echo "oracle reference found"
+            exit 1
+          fi
+      - name: Build and test
+        run: |
+          cargo-build-sbf --manifest-path programs/locate/Cargo.toml --features devnet
+          cargo test -p locate -- --test-threads=1
