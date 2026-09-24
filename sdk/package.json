@@ -7,7 +7,8 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     }
   },
   "scripts": {
@@ -16,6 +17,7 @@
     "pack:tgz": "npm pack --pack-destination ."
   },
   "dependencies": {
+    "@noble/hashes": "^1.8.0",
     "@solana/web3.js": "1.99.0",
     "zod": "4.6.5"
   },

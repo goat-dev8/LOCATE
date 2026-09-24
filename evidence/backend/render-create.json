@@ -2,8 +2,8 @@
   "serviceId": "srv-daq9ilgjo6nc73dkv78g",
   "name": "locate-api",
   "url": "https://locate-api-znz1.onrender.com",
-  "deployId": "dep-daq9mkgu01pc73fcf5j0",
-  "gitSha": "04e27326dbb13dd401de4b6197c3202274b1c3d2",
-  "fetchedAt": "2026-09-24T03:38:57.965Z",
+  "deployId": "dep-daqactdg1s2s73fon390",
+  "gitSha": "8f100adf1676bf4f5f98e7d92fa0541809096c7c",
+  "fetchedAt": "2026-09-24T04:26:29.106Z",
   "directUrlOnService": false
 }

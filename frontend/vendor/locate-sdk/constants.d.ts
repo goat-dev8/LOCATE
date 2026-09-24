@@ -1,0 +1,13 @@
+import { PublicKey } from "@solana/web3.js";
+export declare const LOCATE_PROGRAM_ID: PublicKey;
+export declare const DEVNET_USDC: PublicKey;
+export declare const MAINNET_USDC: PublicKey;
+export declare const TOKEN_2022: PublicKey;
+export declare const TOKEN: PublicKey;
+export declare const ATA: PublicKey;
+export declare const MEMO: PublicKey;
+export declare const SYSTEM: PublicKey;
+export declare const COMPUTE_BUDGET: PublicKey;
+export declare const JUPITER_V6: PublicKey;
+export declare const DEVNET_MINT_LABEL = "devnet test mint mirroring OPENAI's extensions; not a PreStocks token";
+export declare const ERROR_NAMES: readonly ["InvalidMint", "InvalidUsdcMint", "InvalidTerms", "InvalidLenderAccount", "OfferExpired", "TermsMismatch", "SelfTakeNotAllowed", "TakeRefusedPaused", "TakeRefusedHook", "TakeRefusedFeePending", "TakeRefusedUnfunded", "ReturnRefusedPaused", "ReturnRefusedHook", "ReturnExceedsMaxGross", "ReturnRefusedShortDelivery", "ClaimRefusedNotMatured", "ClaimDeferredPaused", "MathOverflow", "Unauthorized"];

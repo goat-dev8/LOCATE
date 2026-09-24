@@ -1,0 +1,24 @@
+import { PublicKey, TransactionInstruction } from "@solana/web3.js";
+export type Cluster = "devnet" | "mainnet-beta";
+export type OfferTerms = {
+    lender: PublicKey;
+    mint: PublicKey;
+    usdcMint: PublicKey;
+    nonce: bigint;
+    amountRaw: bigint;
+    collateralUsdc: bigint;
+    feeUsdc: bigint;
+    termSecs: bigint;
+    graceSecs: bigint;
+    expiresAt: bigint;
+    decimals: number;
+};
+export declare function createOfferIx(terms: OfferTerms, programId?: PublicKey): TransactionInstruction;
+export declare function buildListTx(terms: OfferTerms, programId?: PublicKey): TransactionInstruction[];
+export declare function buildCancelTx(terms: Pick<OfferTerms, "lender" | "mint" | "nonce">, programId?: PublicKey): TransactionInstruction[];
+export declare function takeOfferIx(borrower: PublicKey, terms: OfferTerms, programId?: PublicKey): TransactionInstruction;
+export declare function buildTakeTx(borrower: PublicKey, terms: OfferTerms, programId?: PublicKey): TransactionInstruction[];
+export declare function returnLoanIx(borrower: PublicKey, terms: OfferTerms, maxGrossRaw: bigint, programId?: PublicKey): TransactionInstruction;
+export declare function buildReturnTx(borrower: PublicKey, terms: OfferTerms, maxGrossRaw: bigint, programId?: PublicKey): TransactionInstruction[];
+export declare function claimIx(caller: PublicKey, borrower: PublicKey, terms: OfferTerms, programId?: PublicKey): TransactionInstruction;
+export declare function buildClaimTx(caller: PublicKey, borrower: PublicKey, terms: OfferTerms, programId?: PublicKey): TransactionInstruction[];

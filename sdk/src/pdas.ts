@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { sha256 } from "@noble/hashes/sha256";
 import { PublicKey } from "@solana/web3.js";
 import { ATA, LOCATE_PROGRAM_ID } from "./constants.js";
 
@@ -15,7 +15,7 @@ export function i64(n: bigint): Buffer {
 }
 
 export function discriminator(name: string): Buffer {
-  return createHash("sha256").update("global:" + name).digest().subarray(0, 8);
+  return Buffer.from(sha256(new TextEncoder().encode("global:" + name)).subarray(0, 8));
 }
 
 export function ata(owner: PublicKey, mint: PublicKey, tokenProgram: PublicKey): PublicKey {

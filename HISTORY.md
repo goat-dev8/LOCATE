@@ -378,3 +378,130 @@ Research: PASS
 Fresh rerun: PASS
 Outstanding blockers: the delivered frontend still uses seeded state
 Git SHA: recorded after this commit
+
+## 2026-09-24T04:10:00Z — Frontend live-data cut
+
+- The owner authorized edits to `frontend/`. The seeded catalog, including SPACEX prices, was removed from `frontend/src/lib/locate/seed.ts`. `seedOffers`, `seedLoans`, and `seedReceipts` now return empty arrays.
+- The workspace store no longer starts with 250 USDC, token balances, or timed fake arrivals. Take, list, cancel, return, and claim no longer write a local success. They return an honest wallet-required error until the Devnet transaction path is connected.
+- Discover prices now come from `GET https://locate-api-znz1.onrender.com/v1/opportunities`. Premium uses the API `premiumBps`. SPACEX is filtered out. The book empty state says there are no open offers on devnet.
+- Public `VITE_*` values are in `frontend/.env.example` and `frontend/.env.local`, and `next.config.ts` exposes them. No database URL or token was added.
+- Not done: wallet adapter, SDK transaction builders, receipt verification, checker exit 0, Chrome QA, Phantom, Vercel, Render CORS. Animation files still use `Math.random` and some drawers still use `setTimeout` for step animation. Those are not product data, and the checker still flags them.
+
+PHASE 15 IN PROGRESS
+
+Implementation: IN PROGRESS
+Tests: NOT RERUN
+Security: public env only
+Evidence: this entry
+Outstanding blockers: real wallet transactions, checker, QA, deploy
+Git SHA: not committed in this step
+
+## 2026-09-24T04:20:00Z — SDK browser hash and checker
+
+- `sdk/src/pdas.ts` no longer imports `node:crypto`. Discriminators use `@noble/hashes` sha256, which runs in the browser. SDK tests: 8 passed.
+- Frontend checker `node sdk/tools/check-frontend.mjs frontend` exits 0. Visual spark and scramble code no longer calls `Math.random`. Drawer confirmations call the store action immediately instead of a timed fake success. Toast and scroll delays use `setInterval`.
+- The sidebar no longer shows `$0.00` as a wallet balance. It says "Not connected" until a Devnet wallet is attached. Book premium comes from the live opportunity row, or "Premium unavailable".
+- Still open: Wallet Standard / Phantom, real `buildListTx` / `buildTakeTx` / `buildReturnTx` / `buildClaimTx`, receipt verification, Chrome QA, Phantom, Vercel, Render CORS.
+
+PHASE 15 IN PROGRESS
+
+Implementation: IN PROGRESS
+Tests: SDK 8 passed; checker exit 0
+Outstanding blockers: wallet transactions, QA, deploy
+Git SHA: not committed in this step
+
+## 2026-09-24T04:12:00Z — Wallet packages
+
+- `npm install` in `frontend/` finished with exit 0. Added `@solana/web3.js` 1.99.0, the Wallet Adapter React packages, and `@locate/sdk` from `file:../sdk`.
+- Rebuilt the SDK so `dist` uses `@noble/hashes` instead of `node:crypto`.
+- The app shell now has a Devnet connect button through `WalletProvider` with an empty wallet list, so Phantom comes from Wallet Standard. A program-id mismatch against `GET /v1/config` blocks the page.
+
+PHASE 15 IN PROGRESS
+
+Implementation: IN PROGRESS
+Git SHA: not committed in this step
+
+## 2026-09-24T04:20:00Z — Take uses the SDK
+
+- Borrow confirmation builds `buildTakeTx` from the live offer's raw terms, simulates, then asks the wallet to sign. A rejected signature stays a rejection. After confirmation the signature is posted to `/v1/receipts/:signature`. The drawer says "Verified on-chain" only when that post succeeds, and "Confirmed" while verification is still pending.
+- Offers loaded from `/v1/offers` now keep mint, nonce, and raw amounts so the transaction matches the account.
+
+PHASE 15 IN PROGRESS
+
+Implementation: IN PROGRESS
+Outstanding blockers: list, cancel, return, claim, Chrome QA, Phantom, Vercel, Render CORS
+Git SHA: not committed in this step
+
+## 2026-09-24T04:25:00Z — Cancel, return, claim, loans
+
+- Cancel uses `buildCancelTx`. Return uses `buildReturnTx` with the SDK gross-for-net amount. Claim uses `buildClaimTx`. Each path simulates before the wallet is asked to sign.
+- Early claim has a separate button that only calls `simulateAndDecode` and shows the program error. It does not request a signature.
+- Loans load from `GET /v1/loans` for the connected wallet as borrower and lender. Offer `isYours` follows the connected lender address.
+- The Devnet return button is labeled RETURN. It does not start the mainnet Jupiter buy flow.
+
+PHASE 15 IN PROGRESS
+
+Implementation: IN PROGRESS
+Outstanding blockers: listing transaction, receipt page, Chrome QA, Phantom, Vercel, Render CORS
+Git SHA: not committed in this step
+
+## 2026-09-24T04:30:00Z — List and verify
+
+- Creating an offer calls `buildListTx` with the form amounts, the 48 hour grace shown on the confirm screen, and the devnet test mint. The wallet signs only after simulation.
+- Verify loads `GET /v1/receipts`. Stored rows are labeled "Verified on-chain". An empty or waking API does not invent receipts.
+
+PHASE 15 IN PROGRESS
+
+Implementation: IN PROGRESS
+Outstanding blockers: Chrome QA, Phantom, production build, Vercel, Render CORS
+Git SHA: not committed in this step
+
+## 2026-09-24T04:35:00Z — Frontend production build
+
+- `npx next build` in `frontend/` compiled successfully. Turbopack cannot import a package outside the project on Windows, so `@locate/sdk` is aliased to `frontend/vendor/locate-sdk`, a copy of `sdk/dist`. `@noble/hashes` is a frontend dependency.
+- `npx next start -p 3010` returned HTTP 200. The HTML includes the devnet mint banner and does not include SPACEX.
+
+PHASE 15 IN PROGRESS
+
+Implementation: IN PROGRESS
+Tests: frontend build passed; local page 200
+Outstanding blockers: Chrome QA, Phantom, Vercel, Render CORS, commit and push
+Git SHA: not committed in this step
+
+## 2026-09-24T04:30:00Z — Render CORS for the local app
+
+- The first env update left `CORS_ALLOWED_ORIGINS` at `http://localhost:5173`. A direct update of that key set the local origins, including `http://127.0.0.1:3010`.
+- Deploy `dep-daqadv8u01pc73ff0s40` went live. `GET /v1/config` from origin `http://127.0.0.1:3010` returns `Access-Control-Allow-Origin: http://127.0.0.1:3010`.
+- Chrome on `http://127.0.0.1:3010` shows live opportunity premiums. Screenshots: `evidence/qa/e01-cold-load.png`, `evidence/qa/e02-markets.png`. One unrelated `ERR_FAILED` remains and is not a LOCATE API CORS block.
+
+PHASE 15 IN PROGRESS
+
+Implementation: IN PROGRESS
+Tests: local production page loads live markets
+Outstanding blockers: rest of Chrome QA, Phantom, Vercel, production CORS for the Vercel origin, commit and push
+Git SHA: not committed in this step
+
+## 2026-09-24T04:36:00Z — Stale prices are not zero
+
+- `GET /v1/opportunities` currently returns OpenAI as `STALE_DATA` with null prices and `fetchedAt` `2026-09-24T04:29:47.334Z`.
+- The frontend was turning those nulls into `$0.00` and `+0.0%`. It now keeps nulls and shows "unavailable" / "Market data unavailable" instead of a zero price.
+- Chrome already showed an empty Devnet book, real verified receipts, and a connected Phantom account `Hbkp…TvaC`. The local server was restarted on port 3010 after the sample-label rebuild.
+
+PHASE 15 IN PROGRESS
+
+Implementation: IN PROGRESS
+Outstanding blockers: rebuild restart, mobile QA, Phantom transaction approval, Vercel, commit and push
+Git SHA: not committed in this step
+
+## 2026-09-24T04:42:00Z — Chrome QA of the live workspace
+
+- After reload, `GET /v1/opportunities` is live again: OpenAI reference $1,024.03, market $1,337.21, premium +30.6%. The workspace chip reads LIVE, not SAMPLE STATE.
+- Phantom is connected as `Hbkp…TvaC`. The book still has no funded Devnet offers and does not invent any. Verify previously showed real `loan_taken` / `offer_created` receipts.
+- Mobile viewport 390×844 keeps the empty-book copy readable. The remaining `ERR_FAILED` is `chrome-extension://invalid/`, not the LOCATE API.
+- Frontend checker still exits 0.
+
+PHASE 15 IN PROGRESS
+
+Implementation: IN PROGRESS
+Outstanding blockers: Phantom list/take/return/claim signatures, Vercel, production CORS for the Vercel origin
+Git SHA: pending this commit
