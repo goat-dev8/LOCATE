@@ -1,0 +1,248 @@
+git 807c37f
+warning: unexpected `cfg` condition value: `solana`
+  --> programs/locate/src/lib.rs:15:1
+   |
+15 | #[program]
+   | ^^^^^^^^^^
+   |
+   = note: expected values for `target_os` are: `aix`, `amdhsa`, `android`, `cuda`, `cygwin`, `dragonfly`, `emscripten`, `espidf`, `freebsd`, `fuchsia`, `haiku`, `helenos`, `hermit`, `horizon`, `hurd`, `illumos`, `ios`, `l4re`, `linux`, `lynxos178`, `macos`, `managarm`, `motor`, `netbsd`, `none`, `nto`, `nuttx`, `openbsd`, `psp`, `psx`, `qurt`, `redox`, `rtems`, `solaris`, and `solid_asp3` and 14 more
+   = note: using a cfg inside a macro will use the cfgs from the destination crate and not the ones from the defining crate
+   = help: try referring to `$crate::custom_heap_default` crate for guidance on how handle this unexpected cfg
+   = help: the macro `$crate::custom_heap_default` may come from an old version of the `solana_program_entrypoint` crate, try updating your dependency with `cargo update -p solana_program_entrypoint`
+   = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+   = note: `#[warn(unexpected_cfgs)]` on by default
+   = note: this warning originates in the macro `$crate::custom_heap_default` which comes from the expansion of the attribute macro `program` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning: unexpected `cfg` condition value: `solana`
+  --> programs/locate/src/lib.rs:15:1
+   |
+15 | #[program]
+   | ^^^^^^^^^^
+   |
+   = note: expected values for `target_os` are: `aix`, `amdhsa`, `android`, `cuda`, `cygwin`, `dragonfly`, `emscripten`, `espidf`, `freebsd`, `fuchsia`, `haiku`, `helenos`, `hermit`, `horizon`, `hurd`, `illumos`, `ios`, `l4re`, `linux`, `lynxos178`, `macos`, `managarm`, `motor`, `netbsd`, `none`, `nto`, `nuttx`, `openbsd`, `psp`, `psx`, `qurt`, `redox`, `rtems`, `solaris`, and `solid_asp3` and 14 more
+   = note: using a cfg inside a macro will use the cfgs from the destination crate and not the ones from the defining crate
+   = help: try referring to `$crate::custom_panic_default` crate for guidance on how handle this unexpected cfg
+   = help: the macro `$crate::custom_panic_default` may come from an old version of the `solana_program_entrypoint` crate, try updating your dependency with `cargo update -p solana_program_entrypoint`
+   = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+   = note: this warning originates in the macro `$crate::custom_panic_default` which comes from the expansion of the attribute macro `program` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning: unused import: `crate::state::Offer`
+ --> programs/locate/src/instructions/cancel_offer.rs:3:5
+  |
+3 | use crate::state::Offer;
+  |     ^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused imports: `Mint as TokenMint`, `Mint`, `TokenAccount`, `TokenInterface`, `Token`, and `associated_token::AssociatedToken`
+ --> programs/locate/src/instructions/claim_collateral.rs:3:5
+  |
+3 |     associated_token::AssociatedToken,
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+4 |     token::{self, CloseAccount, Mint as TokenMint, Token, Transfer},
+  |                                 ^^^^^^^^^^^^^^^^^  ^^^^^
+5 |     token_interface::{Mint, TokenAccount, TokenInterface},
+  |                       ^^^^  ^^^^^^^^^^^^  ^^^^^^^^^^^^^^
+
+warning: unused import: `crate::state::Loan`
+  --> programs/locate/src/instructions/claim_collateral.rs:10:5
+   |
+10 | use crate::state::Loan;
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `Mint`, `TokenAccount`, `TokenInterface`, and `associated_token::AssociatedToken`
+ --> programs/locate/src/instructions/create_offer.rs:3:5
+  |
+3 |     associated_token::AssociatedToken,
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+4 |     token_interface::{Mint, TokenAccount, TokenInterface},
+  |                       ^^^^  ^^^^^^^^^^^^  ^^^^^^^^^^^^^^
+
+warning: unused import: `crate::state::Offer`
+ --> programs/locate/src/instructions/create_offer.rs:9:5
+  |
+9 | use crate::state::Offer;
+  |     ^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `Mint`, `TokenAccount`, `TokenInterface`, `Token`, and `associated_token::AssociatedToken`
+ --> programs/locate/src/instructions/return_loan.rs:3:5
+  |
+3 |     associated_token::AssociatedToken,
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+4 |     token::{self, CloseAccount, Token, Transfer},
+  |                                 ^^^^^
+5 |     token_2022::{self, TransferChecked},
+6 |     token_interface::{Mint, TokenAccount, TokenInterface},
+  |                       ^^^^  ^^^^^^^^^^^^  ^^^^^^^^^^^^^^
+
+warning: unused import: `crate::constants::*`
+ --> programs/locate/src/instructions/return_loan.rs:9:5
+  |
+9 | use crate::constants::*;
+  |     ^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `crate::state::Loan`
+  --> programs/locate/src/instructions/return_loan.rs:12:5
+   |
+12 | use crate::state::Loan;
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `Mint`, `TokenAccount`, `TokenInterface`, `Token`, and `associated_token::AssociatedToken`
+ --> programs/locate/src/instructions/take_offer.rs:3:5
+  |
+3 |     associated_token::AssociatedToken,
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+4 |     token::{self, Token},
+  |                   ^^^^^
+5 |     token_2022::{self, TransferChecked},
+6 |     token_interface::{Mint, TokenAccount, TokenInterface},
+  |                       ^^^^  ^^^^^^^^^^^^  ^^^^^^^^^^^^^^
+
+warning: unused imports: `Loan` and `Offer`
+  --> programs/locate/src/instructions/take_offer.rs:12:20
+   |
+12 | use crate::state::{Loan, Offer};
+   |                    ^^^^  ^^^^^
+
+warning: unused import: `anchor_lang::prelude::*`
+   --> programs/locate/src/lib.rs:145:5
+    |
+145 | use anchor_lang::prelude::*;
+    |     ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `locate` (lib) generated 13 warnings (run `cargo fix --lib -p locate` to apply 11 suggestions)
+   Compiling locate v0.1.0 (/mnt/d/route/sol/LOCATE/programs/locate)
+warning: `locate` (lib test) generated 13 warnings (13 duplicates)
+warning: unused import: `BaseStateWithExtensions`
+  --> programs/locate/tests/common/mod.rs:35:43
+   |
+35 | use spl_token_2022_interface::extension::{BaseStateWithExtensions, ExtensionType, StateWithExtensions};
+   |                                           ^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `Account as TokenAccount`
+  --> programs/locate/tests/common/mod.rs:41:34
+   |
+41 | use spl_token_interface::state::{Account as TokenAccount, Mint};
+   |                                  ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: variable does not need to be mutable
+   --> programs/locate/tests/common/mod.rs:130:13
+    |
+130 |         let mut mint = Mint {
+    |             ----^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `nonce` is never read
+  --> programs/locate/tests/common/mod.rs:64:9
+   |
+56 | pub struct World {
+   |            ----- field in this struct
+...
+64 |     pub nonce: u64,
+   |         ^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: multiple methods are never used
+   --> programs/locate/tests/common/mod.rs:125:12
+    |
+ 75 | impl World {
+    | ---------- methods in this implementation
+...
+125 |     pub fn warp(&mut self, secs: i64) {
+    |            ^^^^
+...
+487 |     pub fn return_loan(&mut self, nonce: u64) -> IxResult {
+    |            ^^^^^^^^^^^
+...
+503 |     pub fn claim_ix(&self, nonce: u64, caller: &Address) -> Instruction {
+    |            ^^^^^^^^
+...
+528 |     pub fn claim(&mut self, nonce: u64) -> IxResult {
+    |            ^^^^^
+...
+536 |     pub fn cancel_ix(&self, nonce: u64) -> Instruction {
+    |            ^^^^^^^^^
+...
+551 |     pub fn pause_mint(&mut self) {
+    |            ^^^^^^^^^^
+...
+556 |     pub fn resume_mint(&mut self) {
+    |            ^^^^^^^^^^^
+...
+561 |     pub fn set_hook(&mut self, program: Option<Address>) {
+    |            ^^^^^^^^
+...
+573 |     pub fn schedule_fee(&mut self, bps: u16) {
+    |            ^^^^^^^^^^^^
+...
+586 |     pub fn revoke_lender(&mut self) {
+    |            ^^^^^^^^^^^^^
+
+warning: function `expect_code` is never used
+   --> programs/locate/tests/common/mod.rs:631:8
+    |
+631 | pub fn expect_code(result: &IxResult, code: u32) {
+    |        ^^^^^^^^^^^
+
+warning: method `resume_mint` is never used
+   --> programs/locate/tests/common/mod.rs:556:12
+    |
+ 75 | impl World {
+    | ---------- method in this implementation
+...
+556 |     pub fn resume_mint(&mut self) {
+    |            ^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `locate` (test "fee_prop") generated 6 warnings (2 duplicates) (run `cargo fix --test "fee_prop" -p locate` to apply 1 suggestion)
+warning: `locate` (test "functional") generated 4 warnings (1 duplicate) (run `cargo fix --test "functional" -p locate` to apply 2 suggestions)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.18s
+     Running unittests src/lib.rs (/home/devmo/locate-target/debug/deps/locate-7a560a9757c927c8)
+
+running 5 tests
+test token2022::tests::hundred_bps_edges ... ok
+test token2022::tests::fee_pending_boundaries ... ok
+test token2022::tests::max_fee_cap_still_delivers ... ok
+test token2022::tests::ten_thousand_bps_fails_closed_when_uncapped ... ok
+test token2022::tests::zero_bps_is_identity ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/fee_prop.rs (/home/devmo/locate-target/debug/deps/fee_prop-96b759518430ea1c)
+
+running 2 tests
+test fz01_minimal_gross ... ok
+test fz01_svm_spot ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.43s
+
+     Running tests/functional.rs (/home/devmo/locate-target/debug/deps/functional-f3c8f15234508f33)
+
+running 17 tests
+test m01_compute_under_budget ... ok
+test t04_max_gross_and_short ... ok
+test t03_early_claim ... ok
+test t01_create_take_return ... ok
+test t05_pause_blocks_take ... ok
+test t02_claim_after_grace ... ok
+test t06_pause_defers_claim ... ok
+test t07_hook_blocks_take_return_and_defers_claim ... ok
+test t08_fee_pending_blocks_take ... ok
+test t09_revoke_blocks_take ... ok
+test t13_self_take ... ok
+test t11_no_double_settlement ... ok
+test t10_second_offer_replaces_delegate ... ok
+test t15_invalid_terms ... ok
+test t14_fee_increase_mid_loan ... ok
+test t16_cancel_conserves_tokens ... ok
+test t12_double_take_and_take_after_cancel ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.66s
+

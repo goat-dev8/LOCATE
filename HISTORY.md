@@ -45,4 +45,24 @@ Evidence: PASS (binary size above)
 Research: PASS
 Fresh rerun: PASS
 Outstanding blockers: NONE
-Git SHA: pending this commit
+Git SHA: 807c37f932e9c7a8c87a35c04adeaf7be7b6aae9
+
+## 2026-09-24T02:20:00Z — Phase 4 LiteSVM suite
+
+- Dumped mainnet Token-2022 ELF to `tests/fixtures/mainnet/token2022.so` (1382016 bytes, sha256 `0999dbf708971e723b08d1caafc988826a59c6001ed6dc02260da07defbe1469`). Slot and epoch are filled in phase 6.
+- LiteSVM loads that ELF plus the program `.so`. The synthetic mint has the OPENAI-like extensions. Test USDC is a classic mint at the pinned mainnet address.
+- `cargo test -p locate --tests --features mainnet`: 5 lib tests, FZ-01 (10,000 cases) plus one SVM spot check, and T-01 through T-16 plus M-01. All passed. Log: `evidence/tests/cargo-test-20260924Tphase4.txt`.
+- A borrower must hold extra tokens to repay, because the 1% fee means the received amount is below the gross required to deliver net N. The harness mints that top-up. It is not protocol behavior.
+- Self-take against the canonical ATA fails with Anchor 2040 (duplicate mutable account) before the handler's 6006 check. The handler check remains.
+- Each successful create, take, return, and claim runs `assert_invariants` (vault equals collateral while a loan is open).
+
+PHASE 4 COMPLETE
+
+Implementation: PASS
+Tests: PASS
+Security: N/A until phase 5
+Evidence: PASS
+Research: PASS (LiteSVM 0.16 `set_sysvar`, `expire_blockhash`, dumped Token-2022 ELF)
+Fresh rerun: PASS
+Outstanding blockers: NONE
+Git SHA: recorded after this commit
