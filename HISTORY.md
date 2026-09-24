@@ -344,3 +344,20 @@ Research: PASS
 Fresh rerun: PASS
 Outstanding blockers: SDK-cycle signatures are not labeled on the live service yet; cold start has not been measured
 Git SHA: recorded after this commit
+
+## 2026-09-24T03:44:00Z — SDK cycle receipts verified
+
+- Deploy `dep-daq9olou01pc73fcmqc0` went live with the SDK-cycle signatures in the demo set.
+- Six SDK-cycle signatures returned `verified`. `GET /v1/evidence` now lists 15 finalized receipt rows.
+- The refreshed response is `evidence/backend/evidence-route.json`.
+
+PHASE 14 IN PROGRESS
+
+Implementation: PASS
+Tests: PASS
+Security: PASS
+Evidence: PASS
+Research: PASS
+Fresh rerun: PASS
+Outstanding blockers: cold start has not been measured after 16 minutes idle
+Git SHA: recorded after this commit
