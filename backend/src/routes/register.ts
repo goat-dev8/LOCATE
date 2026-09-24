@@ -13,7 +13,7 @@ import { catchUp } from "../ingest/catchup.js";
 import { jupiterPrice } from "../market/jupiter.js";
 import { loadCatalog } from "../market/prestocks.js";
 import { buildOpportunities } from "../market/opportunities.js";
-import { protocolEconomics, premiumBps } from "../market/economics.js";
+import { protocolEconomics, presentMarket } from "../market/economics.js";
 import { DEMO_SIGNATURES } from "../demo.js";
 
 const pubkey = z.string().regex(/^[1-9A-HJ-NP-Za-km-z]{32,44}$/);
@@ -47,21 +47,17 @@ export async function registerRoutes(app: FastifyInstance, config: AppConfig, sq
 
   app.get("/v1/markets", async () => {
     const catalog = await loadCatalog(config.PRESTOCKS_API_BASE);
-    const stale = catalog.ageMs > 120_000;
     const markets = [];
     for (const row of catalog.rows) {
       const dex = await jupiterPrice(config.JUPITER_API_BASE, row.mint);
-      const premium = stale ? null : premiumBps(row.tokenMicro, row.markMicro);
-      markets.push({
-        symbol: row.symbol,
-        mint: row.mint,
-        tokenPrice: stale || row.tokenMicro === null ? null : row.tokenMicro.toString(),
-        markPrice: stale || row.markMicro === null ? null : row.markMicro.toString(),
-        premiumBps: premium === null ? null : premium.toString(),
+      const presented = presentMarket({
+        ageMs: catalog.ageMs,
+        tokenMicro: row.tokenMicro,
+        markMicro: row.markMicro,
         dexUsd: dex.usd,
-        stale: stale || dex.stale || row.markMicro === null || row.markMicro === 0n,
-        fetchedAt: catalog.fetchedAt,
+        dexAgeMs: dex.stale ? 121_000 : 0,
       });
+      markets.push({ symbol: row.symbol, mint: row.mint, ...presented, fetchedAt: catalog.fetchedAt });
     }
     return { markets, fetchedAt: new Date().toISOString(), slot: await connection.getSlot("confirmed") };
   });

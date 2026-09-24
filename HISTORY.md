@@ -183,3 +183,22 @@ Research: PASS
 Fresh rerun: PASS
 Outstanding blockers: B-08 through B-12 are not written yet
 Git SHA: recorded after this commit
+
+## 2026-09-24T02:56:00Z — Phase 10 backend tests
+
+- Added B-08 receipt upsert idempotency and B-09 single-flight catch-up against the locate database. The test row was deleted after the assertion.
+- B-10 rejects a malformed lender pubkey with 400 and returns 429 after the receipt POST limit.
+- B-11 `presentMarket` returns null prices and `stale: true` when the snapshot is older than 120 seconds. The markets route uses that function.
+- B-12 funded flag covers a matching delegate, a frozen account, a short delegated balance, and a missing delegate.
+- `npx tsc --noEmit` passed. `npx vitest run` passed 19 tests.
+
+PHASE 10 COMPLETE
+
+Implementation: PASS
+Tests: PASS
+Security: N/A
+Evidence: PASS
+Research: PASS
+Fresh rerun: PASS
+Outstanding blockers: NONE
+Git SHA: recorded after this commit

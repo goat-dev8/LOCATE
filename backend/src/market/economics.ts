@@ -3,6 +3,19 @@ import { epochFee, grossForNet } from "../chain/mint.js";
 export const ILLUSTRATIVE =
   "Illustrative. Scales today's buy quote. Ignores liquidity, slippage changes, and a fee change. Not a forecast and not advice.";
 
+export function presentMarket(input: { ageMs: number; tokenMicro: bigint | null; markMicro: bigint | null; dexUsd: string | null; dexAgeMs: number }) {
+  const stale = input.ageMs > 120_000 || input.dexAgeMs > 120_000 || input.markMicro === null || input.markMicro === 0n;
+  const hide = input.ageMs > 120_000 || input.markMicro === null || input.markMicro === 0n;
+  const premium = hide ? null : premiumBps(input.tokenMicro, input.markMicro);
+  return {
+    tokenPrice: hide || input.tokenMicro === null ? null : input.tokenMicro.toString(),
+    markPrice: hide ? null : input.markMicro!.toString(),
+    premiumBps: premium === null ? null : premium.toString(),
+    dexUsd: input.dexAgeMs > 120_000 ? null : input.dexUsd,
+    stale,
+  };
+}
+
 export function premiumBps(tokenMicro: bigint | null, markMicro: bigint | null): bigint | null {
   if (tokenMicro === null || markMicro === null || markMicro === 0n) return null;
   return ((tokenMicro - markMicro) * 10000n) / markMicro;

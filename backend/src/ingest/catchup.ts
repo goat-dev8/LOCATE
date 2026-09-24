@@ -7,6 +7,11 @@ import { DEMO_SIGNATURES } from "../demo.js";
 let running = false;
 let lastRun = 0;
 
+export function resetCatchUpForTests() {
+  running = false;
+  lastRun = 0;
+}
+
 export async function catchUp(sql: Sql, connection: Connection, programId: PublicKey, cluster: string, usdcMint: PublicKey) {
   if (Date.now() - lastRun < 60_000) return;
   if (running) return;
