@@ -1,0 +1,18 @@
+{
+  "cluster": "devnet",
+  "programId": "F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6",
+  "authority": "Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC",
+  "programData": "DSbRjFotfkpDqdKNPQ9dFshpTi5cg57bXL72VRxM7Vhh",
+  "lastDeployedSlot": 503243469,
+  "originalDeploySignature": "4qwgdv1cdjnXVkgJNpE3QH8SwtHopdocvwp4dvSa42bXjNhpH9jnPusabjNEcsU3yqnf6WvkHZJi8L2d8hKkwgtP",
+  "dataLength": 395683,
+  "localBytes": 359712,
+  "localSha256": "698862354901ab1a262c378fcac6c424ee349bf8fa229e496e4ff933db56abc2",
+  "dumpBytes": 395683,
+  "dumpSha256": "12f9355d6a5c9cc4478500a2dbdcd80f2112833a90d2c64b89d751d6589f878a",
+  "elfPrefixMatchesLocal": true,
+  "paddingIsZero": true,
+  "upgradeSent": false,
+  "note": "solana program dump returns the allocated buffer, zero-padded to max-len. The ELF prefix matches the local devnet binary, so no identical-byte upgrade was sent.",
+  "fetchedAt": "2026-09-24T03:27:12Z"
+}

@@ -274,3 +274,21 @@ Research: PASS
 Fresh rerun: PASS
 Outstanding blockers: NONE
 Git SHA: recorded after this commit
+
+## 2026-09-24T03:26:00Z — Phase 12 devnet hash check
+
+- Rebuilt with `cargo-build-sbf --features devnet`. The local binary is 359712 bytes, sha256 `698862354901ab1a262c378fcac6c424ee349bf8fa229e496e4ff933db56abc2`.
+- `solana program dump` wrote 395683 bytes. The first 359712 bytes match the local ELF. The remaining bytes are zero padding from the allocated max length. Authority is `Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC`. Last deployed slot is 503243469.
+- No upgrade transaction was sent. The on-chain ELF is already this binary, and a same-byte upgrade would not make the padded dump hash equal the ELF hash.
+- Evidence: `evidence/devnet/release-hash.json`. The devnet lookup table from Phase 11 remains `8P6TGYmg3LKfxR21PHrApjuj127SV9rRDBRP2bqwpQAU`.
+
+PHASE 12 COMPLETE
+
+Implementation: PASS
+Tests: PASS
+Security: PASS
+Evidence: PASS
+Research: PASS
+Fresh rerun: PASS
+Outstanding blockers: NONE
+Git SHA: recorded after this commit
