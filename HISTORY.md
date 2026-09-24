@@ -65,4 +65,25 @@ Evidence: PASS
 Research: PASS (LiteSVM 0.16 `set_sysvar`, `expire_blockhash`, dumped Token-2022 ELF)
 Fresh rerun: PASS
 Outstanding blockers: NONE
+Git SHA: 4d6ec56
+
+## 2026-09-24T02:45:00Z — Phase 5 security tests
+
+- S-01 through S-14 pass in `programs/locate/tests/security.rs`.
+- Substituted mint, lender token account, loan, and vault are rejected. A fake USDC mint is rejected. Return without a loan delegation reverts and leaves the loan open.
+- CPI Guard and MemoTransfer pass after the token account is reallocated, because those extensions are not on the account until then.
+- Closing the lender's token account or USDC account mid-loan does not block return or claim. `init_if_needed` recreates them.
+- A scheduled fee change lands at least two epochs ahead. A second take of the same offer address fails while the first loan is open, then succeeds after return.
+- The permanent delegate can burn the borrower's tokens. The lender still claims the USDC collateral after the grace period.
+- Canonical ATA self-take is rejected by Anchor's duplicate-account constraint (2040), which runs before error 6006.
+
+PHASE 5 COMPLETE
+
+Implementation: PASS
+Tests: PASS
+Security: PASS
+Evidence: PASS (this entry; the security run was green, 14 tests)
+Research: PASS (Token-2022 reallocate, CPI Guard, memo transfer, permanent delegate burn)
+Fresh rerun: PASS
+Outstanding blockers: NONE
 Git SHA: recorded after this commit
