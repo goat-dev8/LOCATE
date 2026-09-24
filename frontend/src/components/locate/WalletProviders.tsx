@@ -1,7 +1,7 @@
 "use client";
 
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { LOCATE_PROGRAM_ID_TEXT, SOLANA_RPC_URL, locateApi } from "@/lib/locate/env";
 
 export function WalletProviders({ children }: { children: React.ReactNode }) {
@@ -33,6 +33,11 @@ export function WalletProviders({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
+  const connectionConfig = useMemo(
+    () => ({ commitment: "confirmed" as const, confirmTransactionInitialTimeout: 90_000 }),
+    [],
+  );
+
   if (block && block.startsWith("Configuration error")) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-black px-6 text-white">
@@ -42,7 +47,7 @@ export function WalletProviders({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <ConnectionProvider endpoint={SOLANA_RPC_URL}>
+    <ConnectionProvider endpoint={SOLANA_RPC_URL} config={connectionConfig}>
       <WalletProvider wallets={[]} autoConnect>
         {children}
       </WalletProvider>

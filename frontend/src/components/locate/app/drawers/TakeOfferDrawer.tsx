@@ -6,10 +6,10 @@
 
 import { useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { PublicKey } from "@solana/web3.js";
-import { DEVNET_USDC, ILLUSTRATIVE, LOCATE_PROGRAM_ID, buildTakeTx, quoteEconomics } from "@locate/sdk";
-import { submitInstructions } from "@/lib/locate/tx";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { ILLUSTRATIVE, quoteEconomics } from "@locate/sdk";
+import { takeInstructions } from "@/lib/locate/tx";
+import { phaseCopy, usePreparedTx } from "@/lib/locate/usePreparedTx";
 import { useLocate } from "@/lib/locate/store";
 import { ASSETS, fmtUsd, fmtToken, netFromGross } from "@/lib/locate/seed";
 import { locateApi } from "@/lib/locate/env";
@@ -52,14 +52,10 @@ function TakeOfferInner({
   onClose: () => void;
 }) {
   const navigate = useLocate((s) => s.navigate);
-  const { connection } = useConnection();
-  const { publicKey, sendTransaction } = useWallet();
+  const { publicKey } = useWallet();
+  const tx = usePreparedTx();
   const live = useLiveMarket();
   const row = live.bySymbol(offer.assetId);
-  const [stage, setStage] = useState<"review" | "busy" | "done">("review");
-  const [error, setError] = useState<string | null>(null);
-  const [newLoanId, setNewLoanId] = useState<string | null>(null);
-  const [verified, setVerified] = useState(false);
   const [economics, setEconomics] = useState<Record<string, unknown> | null>(null);
   const [breakEven, setBreakEven] = useState("Break-even unavailable");
   const [thesisKind, setThesisKind] = useState<"premium_compression" | "skip">("skip");
@@ -97,15 +93,14 @@ function TakeOfferInner({
   const total = offer.collateralUsdc + offer.feeUsdc;
 
   const confirm = async () => {
-    if (!publicKey || !offer.mint || !offer.nonce || !offer.amountRaw || !offer.collateralRaw || !offer.feeRaw || !offer.termSecs || !offer.graceSecs || !offer.expiresAtSec) {
-      setError("Connect a Devnet wallet. This offer has no on-chain terms.");
+    if (!publicKey) {
       return;
     }
-    if (thesisKind !== "skip" && publicKey && offer.mint) {
+    if (thesisKind !== "skip") {
       try {
         await locateApi.postThesis({
           wallet: publicKey.toBase58(),
-          mint: offer.mint,
+          mint: offer.mint ?? "",
           offer: offer.id,
           kind: "premium_compression",
           note: "Optional non-binding thesis. Does not change take bytes.",
@@ -115,29 +110,7 @@ function TakeOfferInner({
         /* thesis is optional; take still proceeds */
       }
     }
-    setStage("busy");
-    setError(null);
-    const result = await submitInstructions(connection, publicKey, sendTransaction, buildTakeTx(publicKey, {
-      lender: new PublicKey(offer.lender),
-      mint: new PublicKey(offer.mint),
-      usdcMint: DEVNET_USDC,
-      nonce: BigInt(offer.nonce),
-      amountRaw: BigInt(offer.amountRaw),
-      collateralUsdc: BigInt(offer.collateralRaw),
-      feeUsdc: BigInt(offer.feeRaw),
-      termSecs: BigInt(offer.termSecs),
-      graceSecs: BigInt(offer.graceSecs),
-      expiresAt: BigInt(offer.expiresAtSec),
-      decimals: 9,
-    }, LOCATE_PROGRAM_ID));
-    if (result.ok) {
-      setNewLoanId(result.signature);
-      setVerified(result.verified);
-      setStage("done");
-    } else {
-      setError(result.simulated ? `Simulation — not a transaction. ${result.error}` : result.error);
-      setStage("review");
-    }
+    await tx.simulate(takeInstructions(publicKey, offer));
   };
 
   return (
@@ -153,7 +126,7 @@ function TakeOfferInner({
         </SheetHeader>
 
         <div className="px-6 py-5">
-          {stage === "review" && (
+          {(tx.phase === "review" || tx.phase === "ready") && (
             <>
               <div className="mb-5 flex items-center gap-3.5 rounded-xl border border-line bg-cream p-4">
                 <AssetLogo asset={asset} size={44} className="rounded-xl" />
@@ -205,9 +178,15 @@ function TakeOfferInner({
                 </button>
               </div>
 
-              {error && (
+              {tx.phase === "ready" && !tx.error && (
+                <p className="mt-4 rounded-xl border border-line bg-cream px-4 py-3 font-mono text-[10.5px] uppercase leading-relaxed tracking-[0.1em] text-ink-2">
+                  Simulation passed. No transaction was sent. Approve in Phantom to borrow.
+                </p>
+              )}
+
+              {tx.error && (
                 <p className="mt-4 rounded-xl border border-refuse/30 bg-refuse-soft px-4 py-3 font-mono text-[10.5px] uppercase leading-relaxed tracking-[0.1em] text-refuse">
-                  {error}
+                  {tx.error}
                 </p>
               )}
 
@@ -217,30 +196,44 @@ function TakeOfferInner({
                 plus grace — or the collateral is claimed.
               </p>
 
-              <button
-                onClick={confirm}
-                className="lc-btn lc-btn-lime mt-5 w-full disabled:pointer-events-none disabled:opacity-40"
-              >
-                CONFIRM — LOCK &amp; BORROW
-              </button>
+              {tx.phase === "review" ? (
+                <button
+                  onClick={confirm}
+                  className="lc-btn lc-btn-lime mt-5 w-full disabled:pointer-events-none disabled:opacity-40"
+                >
+                  SIMULATE BORROW
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => void tx.approve()}
+                  className="lc-btn lc-btn-lime mt-5 w-full"
+                >
+                  APPROVE IN PHANTOM
+                </button>
+              )}
             </>
           )}
 
-          {stage === "busy" && (
+          {(tx.phase === "simulating" || tx.phase === "signing" || tx.phase === "confirming") && (
             <div className="py-6">
-              <StagedProgress steps={STAGES} activeIndex={1} />
+              <p className="mb-5 font-mono text-[10.5px] uppercase tracking-[0.14em] text-ink-3">
+                {phaseCopy(tx.phase)}
+                {tx.phase === "confirming" && tx.signature ? ` ${tx.signature}` : ""}
+              </p>
+              <StagedProgress steps={STAGES} activeIndex={tx.phase === "simulating" ? 0 : tx.phase === "signing" ? 1 : 2} />
             </div>
           )}
 
-          {stage === "done" && (
+          {tx.phase === "done" && (
             <DoneState
-              title={verified ? "Verified on-chain" : "Confirmed"}
-              body={verified ? `Signature ${newLoanId}` : `Confirmed on Devnet. Receipt verification is still pending. Signature ${newLoanId}`}
+              title={tx.verified ? "Verified on-chain" : "Confirmed"}
+              body={tx.verified ? `Signature ${tx.signature}` : `Confirmed on Devnet. Receipt verification is still pending. Signature ${tx.signature}`}
             >
               <button
                 onClick={() => {
                   onClose();
-                  navigate("loan", newLoanId ?? undefined);
+                  navigate("loans");
                 }}
                 className="lc-btn lc-btn-ink lc-btn-sm"
               >

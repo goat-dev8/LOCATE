@@ -1,0 +1,9 @@
+{
+  "id": "E-07",
+  "mode": "CLI simulate",
+  "utc": "2026-09-24T05:58:00Z",
+  "result": "pass",
+  "detail": "Early claim of the live Phantom-borrowed loan simulated only. Program returned ClaimRefusedNotMatured (6015). No signature was sent.",
+  "loan": "H4iTN9wwMyXHKpS2ku5YeJ8anfkce7NijdR8VoAK7QyC",
+  "error": { "InstructionError": [1, { "Custom": 6015 }] }
+}

@@ -1,0 +1,7 @@
+{
+  "id": "E-12",
+  "mode": "Phantom manual",
+  "utc": "2026-09-24T06:06:00Z",
+  "result": "pass",
+  "detail": "Workspace always shows DEVNET chip and the banner DEVNET TEST MINT MIRRORING OPENAI'S EXTENSIONS; NOT A PRESTOCKS TOKEN. WalletProviders blocks if GET /v1/config programId mismatches."
+}

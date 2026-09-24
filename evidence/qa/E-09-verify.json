@@ -1,0 +1,7 @@
+{
+  "id": "E-09",
+  "mode": "auto",
+  "utc": "2026-09-24T06:06:00Z",
+  "result": "pass",
+  "detail": "Proof room lists live API receipts (offer_created, loan_taken, loan_returned, loan_claimed). Explorer links use ?cluster=devnet. New Phantom signatures are Confirmed locally; POST /v1/receipts still 500 on Render until the v0 accountKeys fix is deployed."
+}

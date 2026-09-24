@@ -9,12 +9,12 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useEffect, useState } from "react";
 import { PublicKey } from "@solana/web3.js";
 import { TOKEN_2022, ata } from "@locate/sdk";
-import { returnOnChain } from "@/lib/locate/tx";
+import { returnInstructions } from "@/lib/locate/tx";
+import { phaseCopy, usePreparedTx } from "@/lib/locate/usePreparedTx";
 import { useLocate, locateAsset } from "@/lib/locate/store";
 import { fmtToken, fmtUsd, grossForNet } from "@/lib/locate/seed";
 import { DEVNET_MINT } from "@/lib/locate/env";
 import { ClickSpark } from "@/components/bits";
-import { useDrawerFlow } from "../hooks";
 import { DataRow, DoneState, Note, Payline, StagedProgress } from "../parts";
 import { ActionDrawer } from "./frame";
 
@@ -44,7 +44,8 @@ function Body({ loanId, onClose }: { loanId: string; onClose: () => void }) {
   const loan = useLocate((s) => s.loans.find((l) => l.id === loanId));
   const navigate = useLocate((s) => s.navigate);
   const { connection } = useConnection();
-  const { publicKey, sendTransaction } = useWallet();
+  const { publicKey } = useWallet();
+  const tx = usePreparedTx();
   const [held, setHeld] = useState(0);
 
   useEffect(() => {
@@ -68,7 +69,6 @@ function Body({ loanId, onClose }: { loanId: string; onClose: () => void }) {
     shortfall > 0
       ? ["BUY SHORTFALL", "DELIVER NET", "VERIFY RETURN"]
       : ["SEND GROSS", "VERIFY DELIVERY", "RELEASE COLLATERAL"];
-  const flow = useDrawerFlow(steps.length, 520);
 
   if (!loan || !asset) {
     return (
@@ -82,7 +82,7 @@ function Body({ loanId, onClose }: { loanId: string; onClose: () => void }) {
 
   return (
     <>
-      {flow.stage === "review" && (
+      {(tx.phase === "review" || tx.phase === "ready") && (
         <div className="flex flex-col gap-1">
           <DataRow
             label="NET REQUIRED"
@@ -124,7 +124,10 @@ function Body({ loanId, onClose }: { loanId: string; onClose: () => void }) {
           </div>
 
           <div className="mt-4 flex flex-col gap-3">
-            {flow.error && <Note tone="refuse">{flow.error.toUpperCase()}</Note>}
+            {tx.error && <Note tone="refuse">{tx.error.toUpperCase()}</Note>}
+            {tx.phase === "ready" && (
+              <Note tone="ink">SIMULATION PASSED. NO TRANSACTION WAS SENT. APPROVE IN PHANTOM TO RETURN.</Note>
+            )}
             {shortfall > 0 ? (
               <Note tone="ember">
                 WALLET HOLDS {fmtToken(held)} OF {fmtToken(gross)}{" "}
@@ -144,11 +147,15 @@ function Body({ loanId, onClose }: { loanId: string; onClose: () => void }) {
                 type="button"
                 onClick={() => {
                   if (!publicKey || !loan) return;
-                  void flow.run(() => returnOnChain(connection, publicKey, sendTransaction, loan));
+                  if (tx.phase === "ready") {
+                    void tx.approve();
+                    return;
+                  }
+                  void returnInstructions(publicKey, loan).then((built) => tx.simulate(built));
                 }}
                 className="lc-btn lc-btn-lime w-full"
               >
-                CONFIRM · RETURN
+                {tx.phase === "ready" ? "APPROVE IN PHANTOM" : "SIMULATE RETURN"}
               </button>
             </ClickSpark>
             <button
@@ -162,19 +169,19 @@ function Body({ loanId, onClose }: { loanId: string; onClose: () => void }) {
         </div>
       )}
 
-      {flow.stage === "busy" && (
+      {(tx.phase === "simulating" || tx.phase === "signing" || tx.phase === "confirming") && (
         <div className="pt-4">
-          <p className="lc-label mb-5">SETTLING ON THE RAIL…</p>
-          <StagedProgress steps={steps} activeIndex={flow.step} />
+          <p className="lc-label mb-5">{phaseCopy(tx.phase).toUpperCase()}{tx.phase === "confirming" && tx.signature ? ` ${tx.signature}` : ""}</p>
+          <StagedProgress steps={steps} activeIndex={tx.phase === "simulating" ? 0 : 1} />
         </div>
       )}
 
-      {flow.stage === "done" && (
+      {tx.phase === "done" && (
         <DoneState
-          title={flow.result?.error ? "Confirmed" : "RETURN CONFIRMED"}
-          body={`Full net delivery of ${fmtToken(loan.netRequired)} ${asset.symbol} confirmed. ${fmtUsd(
+          title={tx.verified ? "Verified on-chain" : "Confirmed"}
+          body={`Net delivery of ${fmtToken(loan.netRequired)} ${asset.symbol} confirmed. ${fmtUsd(
             loan.collateralUsdc,
-          )} USDC is back in your wallet.`}
+          )} USDC collateral release depends on verification. Signature ${tx.signature ?? ""}.`}
         >
           <ClickSpark sparkColor="#46600A">
             <button

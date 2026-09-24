@@ -7,11 +7,11 @@
 
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useState } from "react";
-import { claimOnChain, simulateEarlyClaim } from "@/lib/locate/tx";
+import { claimInstructions, simulateEarlyClaim } from "@/lib/locate/tx";
+import { phaseCopy, usePreparedTx } from "@/lib/locate/usePreparedTx";
 import { useLocate, locateAsset } from "@/lib/locate/store";
 import { fmtToken, fmtUsd } from "@/lib/locate/seed";
 import { ClickSpark } from "@/components/bits";
-import { useDrawerFlow } from "../hooks";
 import { DataRow, DoneState, Note, Payline, StagedProgress } from "../parts";
 import { ActionDrawer } from "./frame";
 
@@ -43,9 +43,9 @@ function Body({ loanId, onClose }: { loanId: string; onClose: () => void }) {
   const loan = useLocate((s) => s.loans.find((l) => l.id === loanId));
   const navigate = useLocate((s) => s.navigate);
   const { connection } = useConnection();
-  const { publicKey, sendTransaction } = useWallet();
+  const { publicKey } = useWallet();
   const [simNote, setSimNote] = useState<string | null>(null);
-  const flow = useDrawerFlow(STEPS.length, 560);
+  const tx = usePreparedTx();
 
   if (!loan) {
     return (
@@ -62,7 +62,7 @@ function Body({ loanId, onClose }: { loanId: string; onClose: () => void }) {
 
   return (
     <>
-      {flow.stage === "review" && (
+      {(tx.phase === "review" || tx.phase === "ready") && (
         <div className="flex flex-col gap-1">
           <DataRow
             label="DELIVERED"
@@ -86,7 +86,7 @@ function Body({ loanId, onClose }: { loanId: string; onClose: () => void }) {
           </div>
 
           <div className="mt-4 flex flex-col gap-3">
-            {flow.error && <Note tone="refuse">{flow.error.toUpperCase()}</Note>}
+            {tx.error && <Note tone="refuse">{tx.error.toUpperCase()}</Note>}
             {simNote && <Note tone="ink">{simNote}</Note>}
             <Note tone="ember">CLAIM IS FINAL — THE TOKENS ARE FORFEIT.</Note>
           </div>
@@ -113,15 +113,19 @@ function Body({ loanId, onClose }: { loanId: string; onClose: () => void }) {
                 type="button"
                 disabled={!claimable}
                 onClick={() => {
-                  if (!publicKey) return;
-                  void flow.run(() => claimOnChain(connection, publicKey, sendTransaction, loan));
+                  if (!publicKey || !claimable) return;
+                  if (tx.phase === "ready") {
+                    void tx.approve();
+                    return;
+                  }
+                  void claimInstructions(publicKey, loan).then((built) => tx.simulate(built));
                 }}
                 className={
                   "lc-btn bg-ember text-[#FFF4EC] transition-all duration-300 hover:bg-ember-deep w-full" +
                   (!claimable ? " pointer-events-none opacity-40" : "")
                 }
               >
-                CONFIRM · CLAIM {fmtUsd(loan.collateralUsdc)}
+                {tx.phase === "ready" ? "APPROVE IN PHANTOM" : `SIMULATE CLAIM ${fmtUsd(loan.collateralUsdc)}`}
               </button>
             </ClickSpark>
             <button
@@ -135,14 +139,14 @@ function Body({ loanId, onClose }: { loanId: string; onClose: () => void }) {
         </div>
       )}
 
-      {flow.stage === "busy" && (
+      {(tx.phase === "simulating" || tx.phase === "signing" || tx.phase === "confirming") && (
         <div className="pt-4">
-          <p className="lc-label mb-5">EXECUTING CLAIM…</p>
-          <StagedProgress steps={STEPS} activeIndex={flow.step} />
+          <p className="lc-label mb-5">{phaseCopy(tx.phase).toUpperCase()}{tx.phase === "confirming" && tx.signature ? ` ${tx.signature}` : ""}</p>
+          <StagedProgress steps={STEPS} activeIndex={tx.phase === "simulating" ? 0 : 1} />
         </div>
       )}
 
-      {flow.stage === "done" && (
+      {tx.phase === "done" && (
         <DoneState
           title="COLLATERAL CLAIMED"
           body={`${fmtUsd(loan.collateralUsdc)} USDC released to your wallet. The ${fmtToken(

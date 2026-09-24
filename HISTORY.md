@@ -549,4 +549,72 @@ Tests: checker 0, SDK 9, backend 19, frontend build PASS, local Chrome live API 
 Outstanding blockers: mint dOPENAI into the connected Phantom wallet so list/take/return/claim can be signed; Vercel READY + production Chrome; persist QA screenshots under evidence/qa
 Git SHA: 340be66 on origin/main
 
+## 2026-09-24T05:30:00Z — Phantom sign prompt fix
+
+- Minted 1 dOPENAI (raw 1e9, UI 1.4861347 with the Token-2022 multiplier) to Phantom ATA `HT9aeJbf65UtQariJxQ8xwcdsdKenoVgDSk14wr8Lx7J`. Create Offer now shows a live balance.
+- Root cause of "no Phantom popup": `sendTransaction` ran after `simulateAndDecode` (RPC round trip). Chrome drops the user-gesture, so Phantom never opens a sign dialog.
+- Split every transactional flow into SIMULATE (no wallet) then APPROVE IN PHANTOM. Approve calls `window.phantom.solana.signTransaction` first, then `sendRawTransaction` with skipPreflight. The wallet call is the first await on that click.
+- dOPENAI mint tx: `21SAu94ButvUKm2RTiBAHbXSKaVRteBn5eBbnB6dZYZnTwLjg5qG9kh2KK4ABPArCu3HpWFWyu3StPjC7fWfff8d`. ATA create: `3gJ8CpSnPVuysufHfGxB3g8e2xfHn3W7PSHhUGefUBuF2oXnTwZ8rKi9xeZqu5VLs2XSzs9Pkmf7kxacvvZQFmin`.
+- Backend `/v1/config` programId matches `F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6`. Production Verify shows real receipts. Book empty copy is honest. Opportunities currently return STALE_DATA with null prices — displayed as unavailable, not invented.
+
+PHASE 15 IN PROGRESS
+
+Implementation: IN PROGRESS
+Outstanding blockers: human Phantom APPROVE IN PHANTOM click for list; then cancel/take/return/claim; production rebuild + Vercel
+Git SHA: pending this commit
+
+## 2026-09-24T05:40:00Z — Browser-safe PDA encoding; listing simulation passes
+
+- Listing still produced no Phantom popup because `buildListTx` crashed first: `out.writeBigUInt64LE is not a function` in `sdk/src/pdas.ts` when the browser Buffer polyfill has no bigint helpers.
+- `u64`/`i64` now use `DataView.setBigUint64` / `setBigInt64`. Vendor copy at `frontend/vendor/locate-sdk` updated from `sdk/dist`.
+- SDK tests 10 passed, including U-04a little-endian encoding. Chrome simulation now reaches "Simulation passed. No transaction was sent."
+- Chrome at `http://localhost:3010` is waiting on Phantom after APPROVE IN PHANTOM.
+
+PHASE 15 IN PROGRESS
+
+Implementation: IN PROGRESS
+Tests: SDK 10 passed
+Outstanding blockers: human Phantom Approve click for the waiting list tx; then cancel/take/return/claim; production rebuild + Vercel
+Git SHA: pending this commit
+
+## 2026-09-24T05:50:00Z — Phantom signed; UI hung on confirm
+
+- Phantom did show a popup and the listing was signed. `sendRawTransaction` returned `RYEHw7harJuDa8VSc9A8Je57oagMSt7c8HhH4vKLEKoDEbseEC1sxuk15cfZctykwQUW7d98UruQ6HymqArJkoy`. `confirmTransaction` then hung/threw on the public Devnet websocket, so the drawer stayed on WAITING FOR PHANTOM APPROVAL after the user already approved. The signature is not on-chain (`getTransaction` found: false) because `skipPreflight: true` accepted an expired/dropped tx.
+- Approve now uses Phantom `signAndSendTransaction` when present, sends with preflight, and confirms by HTTP `getSignatureStatus` polling. The UI moves to "Signed. Confirming on Devnet." as soon as a signature exists. Failed sends return to SIMULATE LISTING with the error instead of hanging.
+- Reloaded `http://localhost:3010`. Phantom is connected as `Hbkp…TvaC` with live dOPENAI `1.4861347`. User must SIMULATE LISTING again, then APPROVE IN PHANTOM.
+
+PHASE 15 IN PROGRESS
+
+Implementation: IN PROGRESS
+Outstanding blockers: live Phantom list after this confirm fix; then cancel/take/return/claim; production rebuild + Vercel
+Git SHA: pending this commit
+
+## 2026-09-24T05:55:00Z — Phantom list confirmed; Phantom cancel confirmed
+
+- List signature `5YznNLmEwc9sFBfscRwVEKf7PhsiKCDGJ6fS837bFPPtko15U9czGrtcVXsMLHm9k5GEpc5BzoZ5WGMcGavhXrK1` landed at slot 503322435. Offer `8vGyHaW4gQciy2ZqYBktBRyW7vHfDmWAji57UUVCYZhJ` showed in My Offers as ACTIVE. The Book had been hiding `isYours` rows; it now shows funded listings including yours, with TAKE replaced by YOUR LISTING.
+- After Phantom approval the UI showed CONFIRMED instead of hanging. Receipt POST still 500 because `decodeTransactionEvents` read `message.accountKeys` on a v0 Message (undefined). `keyAt` now falls back to `staticAccountKeys`.
+- Cancel signature `5aQ41pERnQ8y8ChvsYPwp4MGacWnivnFfFujPmzXQRo9HcqPXkLgkXMVZAa9cPeJuGqHy8sGHZAwYBtvHFPzqv6Y`. UI: OFFER CANCELLED. My Offers empty.
+- CLI listed a takeable 60s offer `3xiL1r4CjPemRLbsijJXFqmdYKad1958Ca8vNgr26mPu` from lender `TL3iubbaXvTg8gNwHnWN7AVrspUfy1Qq1K9yDAZFGvf` (1 USDC collateral) so Phantom can borrow. Evidence: `evidence/qa/E-03-list.json`, `evidence/qa/E-04-cancel.json`.
+
+PHASE 15 IN PROGRESS
+
+Implementation: IN PROGRESS
+Outstanding blockers: Phantom take/return/claim, receipt POST 500 on Render until backend fix is deployed, checker this SHA, Vercel
+Git SHA: pending this commit
+
+## 2026-09-24T06:05:00Z — Phantom take and return; claim cycle; checker 0
+
+- Phantom take of CLI offer `3xiL1r4…26mPu`: signature `32mbFLLCNTZeGAq5onvhRboPTcsU6jR5xtfpGBKBhrULNfSmDDidCXeBeogiVQNiWH21tK1m2yHSh8pt12UJDyYG`. Loan `H4iTN9wwMyXHKpS2ku5YeJ8anfkce7NijdR8VoAK7QyC`. Loan screen showed a live countdown and RETURN. Jupiter quotes are not used on Devnet. Break-even unavailable.
+- Early claim simulation of that loan: `ClaimRefusedNotMatured` (6015). No signature sent.
+- After take, `GET /v1/offers/:pubkey` is 404 (offer account gone), so return used loan fields plus optional `OfferTerms.offer`. Phantom return confirmed: `44jfK5MAp8m3Mw8C4kQb55LUZtYWuTKs5SboZ5UvToq87Jna68hYSSurt6bAsgmgjr6iQpSsoVTM5RA8ZsmY1vp4`.
+- 60s claim cycle: list `vF6HQ18t…`, take `4jWtBmKL…`, early `ClaimRefusedNotMatured`, claim `2acHEoc2hat7LJuPD6xMQnv9gUNTPVpszzLRf7A2KNcb4g5jvcqwmyKvvtmaoStwTX5X1NEGQiXxY2SA4QoNzg2X`.
+- `node sdk/tools/check-frontend.mjs frontend` exits 0. SDK tests 10 passed. Backend 19 passed / 1 flaky catch-up lock (B-08).
+- Evidence: E-03 list, E-04 cancel, E-05 take, E-06 return, E-07 early claim, E-08 claim.
+
+PHASE 15 IN PROGRESS
+
+Implementation: IN PROGRESS
+Outstanding blockers: receipt POST 500 until Render deploy of v0 accountKeys fix; Vercel of this SHA; production Chrome; E-11 lighthouse
+Git SHA: pending this commit
+
 

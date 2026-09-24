@@ -1,0 +1,7 @@
+{
+  "id": "E-01",
+  "mode": "auto",
+  "utc": "2026-09-24T06:06:00Z",
+  "result": "pass",
+  "detail": "Cold load of localhost:3010 then OPEN APP. Opportunities and markets render STALE DATA / unavailable instead of invented numbers. Book loads independently. After a live offer, Overview showed 1 LIVE OFFERS."
+}

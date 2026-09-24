@@ -176,7 +176,7 @@ export function AppShell() {
   }, [view]);
 
   const counts: Record<string, number> = {
-    book: offers.filter((o) => o.status === "ACTIVE" && !o.isYours).length,
+    book: offers.filter((o) => o.status === "ACTIVE").length,
     offers: offers.filter((o) => o.isYours && o.status === "ACTIVE").length,
     loans: loans.filter((l) => l.status === "ACTIVE").length,
     verify: 0,

@@ -1,6 +1,9 @@
 import { TransactionInstruction } from "@solana/web3.js";
 import { ATA, COMPUTE_BUDGET, LOCATE_PROGRAM_ID, MEMO, SYSTEM, TOKEN, TOKEN_2022, } from "./constants.js";
 import { ata, discriminator, eventAuthority, i64, loanPda, offerPda, u64 } from "./pdas.js";
+function resolvedOffer(terms, programId) {
+    return terms.offer ?? offerPda(terms.lender, terms.mint, terms.nonce, programId);
+}
 function cu(units = 400_000) {
     const data = Buffer.alloc(5);
     data.writeUInt8(2, 0);
@@ -87,7 +90,7 @@ export function buildCancelTx(terms, programId = LOCATE_PROGRAM_ID) {
     return [ix, revoke(terms.lender, source, TOKEN_2022)];
 }
 export function takeOfferIx(borrower, terms, programId = LOCATE_PROGRAM_ID) {
-    const offer = offerPda(terms.lender, terms.mint, terms.nonce, programId);
+    const offer = resolvedOffer(terms, programId);
     const loan = loanPda(offer, programId);
     const data = Buffer.concat([
         discriminator("take_offer"),
@@ -124,7 +127,7 @@ export function buildTakeTx(borrower, terms, programId = LOCATE_PROGRAM_ID) {
     return [cu(), takeOfferIx(borrower, terms, programId)];
 }
 export function returnLoanIx(borrower, terms, maxGrossRaw, programId = LOCATE_PROGRAM_ID) {
-    const offer = offerPda(terms.lender, terms.mint, terms.nonce, programId);
+    const offer = resolvedOffer(terms, programId);
     const loan = loanPda(offer, programId);
     return new TransactionInstruction({
         programId,
@@ -149,7 +152,7 @@ export function returnLoanIx(borrower, terms, maxGrossRaw, programId = LOCATE_PR
     });
 }
 export function buildReturnTx(borrower, terms, maxGrossRaw, programId = LOCATE_PROGRAM_ID) {
-    const offer = offerPda(terms.lender, terms.mint, terms.nonce, programId);
+    const offer = resolvedOffer(terms, programId);
     const loan = loanPda(offer, programId);
     const source = ata(borrower, terms.mint, TOKEN_2022);
     return [
@@ -160,7 +163,7 @@ export function buildReturnTx(borrower, terms, maxGrossRaw, programId = LOCATE_P
     ];
 }
 export function claimIx(caller, borrower, terms, programId = LOCATE_PROGRAM_ID) {
-    const offer = offerPda(terms.lender, terms.mint, terms.nonce, programId);
+    const offer = resolvedOffer(terms, programId);
     const loan = loanPda(offer, programId);
     return new TransactionInstruction({
         programId,

@@ -1,0 +1,7 @@
+{
+  "id": "E-02",
+  "mode": "auto",
+  "utc": "2026-09-24T06:06:00Z",
+  "result": "pass",
+  "detail": "When PreStocks data is missing the UI says unavailable/STALE, never leftover prices. When the catalog is live the banner shows OPENAI $1,356 · +32.5% LIVE."
+}

@@ -31,7 +31,6 @@ export function BookView() {
       offers.filter(
         (o) =>
           o.status === "ACTIVE" &&
-          !o.isYours &&
           (assetFilter === "ALL" || o.assetId === assetFilter) &&
           (termFilter === "ALL" || `${o.termDays}D` === termFilter),
       ),
@@ -72,8 +71,8 @@ export function BookView() {
 
       {live.length === 0 ? (
         <EmptyState
-          title="No open offers on devnet right now."
-          body="No borrowable supply. The book shows funded offers from the chain. It does not invent listings."
+          title="No open offers on Devnet right now."
+          body="The book shows funded offers from the chain, including your own listings. It does not invent supply."
         />
       ) : (
         <div className="grid gap-4 xl:grid-cols-2">
@@ -150,12 +149,16 @@ function OfferCard({
 
         <div className="mt-auto flex items-center justify-between gap-3 pt-5">
           <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-3">
-            LOCK AT TAKE {fmtUsd(offer.collateralUsdc + offer.feeUsdc)}
+            {offer.isYours ? "YOUR LISTING · TOKENS STILL IN YOUR WALLET" : `LOCK AT TAKE ${fmtUsd(offer.collateralUsdc + offer.feeUsdc)}`}
           </p>
-          <button onClick={onTake} className="lc-btn lc-btn-ink lc-btn-sm group">
-            TAKE OFFER
-            <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden />
-          </button>
+          {offer.isYours ? (
+            <span className="lc-chip-lime">YOUR LISTING</span>
+          ) : (
+            <button onClick={onTake} className="lc-btn lc-btn-ink lc-btn-sm group">
+              TAKE OFFER
+              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden />
+            </button>
+          )}
         </div>
       </article>
     </FadeContent>

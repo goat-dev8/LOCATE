@@ -72,7 +72,11 @@ function asKey(key: unknown): string {
 }
 
 function keyAt(tx: Tx, index: number): string {
-  const keys = tx.transaction.message.accountKeys.map(asKey);
+  const message = tx.transaction.message as {
+    accountKeys?: unknown[];
+    staticAccountKeys?: unknown[];
+  };
+  const keys = (message.accountKeys ?? message.staticAccountKeys ?? []).map(asKey);
   const loaded = [...(tx.meta?.loadedAddresses?.writable ?? []), ...(tx.meta?.loadedAddresses?.readonly ?? [])].map(asKey);
   return keys.concat(loaded)[index] ?? "";
 }

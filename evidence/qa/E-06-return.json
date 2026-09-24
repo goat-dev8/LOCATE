@@ -1,0 +1,9 @@
+{
+  "id": "E-06",
+  "mode": "Phantom manual",
+  "utc": "2026-09-24T06:02:00Z",
+  "result": "pass",
+  "detail": "Phantom signed return of net 0.005 OPENAI. UI: CONFIRMED. Collateral release depends on verification.",
+  "signature": "44jfK5MAp8m3Mw8C4kQb55LUZtYWuTKs5SboZ5UvToq87Jna68hYSSurt6bAsgmgjr6iQpSsoVTM5RA8ZsmY1vp4",
+  "loan": "H4iTN9wwMyXHKpS2ku5YeJ8anfkce7NijdR8VoAK7QyC"
+}

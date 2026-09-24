@@ -1,0 +1,7 @@
+{
+  "id": "E-10",
+  "mode": "auto",
+  "utc": "2026-09-24T06:06:00Z",
+  "result": "pass",
+  "detail": "Network from localhost:3010 is locate-api-znz1.onrender.com and api.devnet.solana.com. No supabase.co or postgres hosts. chrome-extension://invalid/ is Phantom. Checker bundle scan not run on dist this SHA; source checker exits 0."
+}

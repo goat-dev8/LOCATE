@@ -24,7 +24,12 @@ export type OfferTerms = {
   graceSecs: bigint;
   expiresAt: bigint;
   decimals: number;
+  offer?: PublicKey;
 };
+
+function resolvedOffer(terms: OfferTerms, programId: PublicKey) {
+  return terms.offer ?? offerPda(terms.lender, terms.mint, terms.nonce, programId);
+}
 
 function cu(units = 400_000): TransactionInstruction {
   const data = Buffer.alloc(5);
@@ -119,7 +124,7 @@ export function buildCancelTx(terms: Pick<OfferTerms, "lender" | "mint" | "nonce
 }
 
 export function takeOfferIx(borrower: PublicKey, terms: OfferTerms, programId = LOCATE_PROGRAM_ID) {
-  const offer = offerPda(terms.lender, terms.mint, terms.nonce, programId);
+  const offer = resolvedOffer(terms, programId);
   const loan = loanPda(offer, programId);
   const data = Buffer.concat([
     discriminator("take_offer"),
@@ -158,7 +163,7 @@ export function buildTakeTx(borrower: PublicKey, terms: OfferTerms, programId = 
 }
 
 export function returnLoanIx(borrower: PublicKey, terms: OfferTerms, maxGrossRaw: bigint, programId = LOCATE_PROGRAM_ID) {
-  const offer = offerPda(terms.lender, terms.mint, terms.nonce, programId);
+  const offer = resolvedOffer(terms, programId);
   const loan = loanPda(offer, programId);
   return new TransactionInstruction({
     programId,
@@ -184,7 +189,7 @@ export function returnLoanIx(borrower: PublicKey, terms: OfferTerms, maxGrossRaw
 }
 
 export function buildReturnTx(borrower: PublicKey, terms: OfferTerms, maxGrossRaw: bigint, programId = LOCATE_PROGRAM_ID) {
-  const offer = offerPda(terms.lender, terms.mint, terms.nonce, programId);
+  const offer = resolvedOffer(terms, programId);
   const loan = loanPda(offer, programId);
   const source = ata(borrower, terms.mint, TOKEN_2022);
   return [
@@ -196,7 +201,7 @@ export function buildReturnTx(borrower: PublicKey, terms: OfferTerms, maxGrossRa
 }
 
 export function claimIx(caller: PublicKey, borrower: PublicKey, terms: OfferTerms, programId = LOCATE_PROGRAM_ID) {
-  const offer = offerPda(terms.lender, terms.mint, terms.nonce, programId);
+  const offer = resolvedOffer(terms, programId);
   const loan = loanPda(offer, programId);
   return new TransactionInstruction({
     programId,

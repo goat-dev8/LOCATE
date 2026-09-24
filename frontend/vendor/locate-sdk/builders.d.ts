@@ -12,6 +12,7 @@ export type OfferTerms = {
     graceSecs: bigint;
     expiresAt: bigint;
     decimals: number;
+    offer?: PublicKey;
 };
 export declare function createOfferIx(terms: OfferTerms, programId?: PublicKey): TransactionInstruction;
 export declare function buildListTx(terms: OfferTerms, programId?: PublicKey): TransactionInstruction[];

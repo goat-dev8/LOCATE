@@ -3,12 +3,12 @@ import { PublicKey } from "@solana/web3.js";
 import { ATA, LOCATE_PROGRAM_ID } from "./constants.js";
 export function u64(n) {
     const out = Buffer.alloc(8);
-    out.writeBigUInt64LE(n);
+    new DataView(out.buffer, out.byteOffset, 8).setBigUint64(0, n, true);
     return out;
 }
 export function i64(n) {
     const out = Buffer.alloc(8);
-    out.writeBigInt64LE(n);
+    new DataView(out.buffer, out.byteOffset, 8).setBigInt64(0, n, true);
     return out;
 }
 export function discriminator(name) {

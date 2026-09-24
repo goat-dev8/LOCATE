@@ -23,6 +23,14 @@ describe("recorded devnet fixtures", () => {
     if (claimed.status === "verified") expect(claimed.events[0]?.kind).toBe("loan_claimed");
   });
 
+  it("decodes a v0 message that only has staticAccountKeys", () => {
+    const taken = load("./fixtures/devnet/loan-taken-5dE2AyTW.json");
+    taken.transaction.message.staticAccountKeys = taken.transaction.message.accountKeys;
+    delete taken.transaction.message.accountKeys;
+    const result = verifyLoaded(taken, programId, usdc, "finalized");
+    expect(result.status).toBe("verified");
+  });
+
   it("B-05 B-06 B-07 reject failed, mismatched, and foreign events", () => {
     const failed = load("./fixtures/devnet/loan-returned-2of8HQPV.json");
     failed.meta.err = { InstructionError: [0, "Custom"] };

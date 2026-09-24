@@ -1,0 +1,12 @@
+{
+  "id": "E-03",
+  "mode": "Phantom manual",
+  "utc": "2026-09-24T05:49:12Z",
+  "result": "pass",
+  "detail": "Phantom signed list on localhost:3010. Offer appeared in My Offers and, after Book stopped hiding isYours rows, on the Book as YOUR LISTING.",
+  "signature": "5YznNLmEwc9sFBfscRwVEKf7PhsiKCDGJ6fS837bFPPtko15U9czGrtcVXsMLHm9k5GEpc5BzoZ5WGMcGavhXrK1",
+  "offer": "8vGyHaW4gQciy2ZqYBktBRyW7vHfDmWAji57UUVCYZhJ",
+  "lender": "Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC",
+  "slot": 503322435,
+  "receiptPost": "API POST /v1/receipts/:signature returned 500 (v0 message.accountKeys undefined). Confirmation is separate from verification."
+}

@@ -1,0 +1,11 @@
+{
+  "id": "E-05",
+  "mode": "Phantom manual",
+  "utc": "2026-09-24T05:57:00Z",
+  "result": "pass",
+  "detail": "Phantom signed take of CLI-listed 60s offer. Jupiter quotes are not used on Devnet. Break-even unavailable. Skip thesis was available.",
+  "signature": "32mbFLLCNTZeGAq5onvhRboPTcsU6jR5xtfpGBKBhrULNfSmDDidCXeBeogiVQNiWH21tK1m2yHSh8pt12UJDyYG",
+  "offer": "3xiL1r4CjPemRLbsijJXFqmdYKad1958Ca8vNgr26mPu",
+  "lender": "TL3iubbaXvTg8gNwHnWN7AVrspUfy1Qq1K9yDAZFGvf",
+  "borrower": "Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC"
+}

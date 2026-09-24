@@ -1,7 +1,7 @@
 import { Keypair, PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { describe, expect, it } from "vitest";
 import { DEVNET_USDC, JUPITER_V6, LOCATE_PROGRAM_ID, TOKEN_2022 } from "../src/constants.js";
-import { ata, offerPda, loanPda } from "../src/pdas.js";
+import { ata, i64, offerPda, loanPda, u64 } from "../src/pdas.js";
 import { epochFee, grossForNet, rawToUi, uiToRaw } from "../src/fees.js";
 import { quoteEconomics } from "../src/economics.js";
 import { createLocateApi } from "../src/api.js";
@@ -38,6 +38,12 @@ describe("sdk", () => {
   it("U-03 rawToUi matches the recorded scaled balance", () => {
     expect(rawToUi(10_000_000_000n, 9, "1.4861347")).toBe("14.861347");
     expect(uiToRaw("1.5", 6)).toBe(1_500_000n);
+  });
+
+  it("U-04a u64/i64 encode little-endian without Node Buffer bigint helpers", () => {
+    expect(Array.from(u64(1n))).toEqual([1, 0, 0, 0, 0, 0, 0, 0]);
+    expect(Array.from(u64(0x0102030405060708n))).toEqual([8, 7, 6, 5, 4, 3, 2, 1]);
+    expect(Array.from(i64(-1n))).toEqual([255, 255, 255, 255, 255, 255, 255, 255]);
   });
 
   it("U-04 PDAs are stable", () => {

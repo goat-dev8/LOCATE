@@ -1,7 +1,7 @@
 "use client";
 
 import { Connection, PublicKey, TransactionMessage, VersionedTransaction, type TransactionInstruction } from "@solana/web3.js";
-import { DEVNET_USDC, LOCATE_PROGRAM_ID, buildCancelTx, buildClaimTx, buildListTx, buildReturnTx, grossForNet, simulateAndDecode, type OfferTerms } from "@locate/sdk";
+import { DEVNET_USDC, LOCATE_PROGRAM_ID, buildCancelTx, buildClaimTx, buildListTx, buildReturnTx, buildTakeTx, grossForNet, simulateAndDecode, type OfferTerms } from "@locate/sdk";
 import type { Loan, Offer } from "./types";
 import { DEVNET_MINT, locateApi } from "./env";
 
@@ -9,68 +9,155 @@ export type TxResult =
   | { ok: true; signature: string; verified: boolean }
   | { ok: false; error: string; simulated: boolean };
 
-async function sendOnce(
-  connection: Connection,
-  payer: PublicKey,
-  send: (tx: VersionedTransaction, connection: Connection) => Promise<string>,
-  instructions: TransactionInstruction[],
-): Promise<{ signature: string; blockhash: string; lastValidBlockHeight: number }> {
-  const latest = await connection.getLatestBlockhash("confirmed");
-  const message = new TransactionMessage({
-    payerKey: payer,
-    recentBlockhash: latest.blockhash,
-    instructions,
-  }).compileToV0Message();
-  const signature = await send(new VersionedTransaction(message), connection);
-  return { signature, blockhash: latest.blockhash, lastValidBlockHeight: latest.lastValidBlockHeight };
+export type PreparedTx = {
+  tx: VersionedTransaction;
+  blockhash: string;
+  lastValidBlockHeight: number;
+};
+
+export type SignTx = (tx: VersionedTransaction) => Promise<VersionedTransaction>;
+
+type PhantomInjected = {
+  signTransaction?: SignTx;
+  signAndSendTransaction?: (
+    tx: VersionedTransaction,
+    opts?: { skipPreflight?: boolean; preflightCommitment?: string; maxRetries?: number },
+  ) => Promise<{ signature: string }>;
+};
+
+function phantomInjected(): PhantomInjected | undefined {
+  if (typeof window === "undefined") return undefined;
+  return (window as Window & { phantom?: { solana?: PhantomInjected } }).phantom?.solana;
 }
 
-export async function submitInstructions(
+function injectedSign(): SignTx | undefined {
+  const phantom = phantomInjected();
+  return phantom?.signTransaction ? (tx) => phantom.signTransaction!(tx) : undefined;
+}
+
+export function resolveSign(signTransaction?: SignTx): SignTx | undefined {
+  return injectedSign() ?? signTransaction;
+}
+
+export function canApprove(signTransaction?: SignTx): boolean {
+  const phantom = phantomInjected();
+  return Boolean(phantom?.signAndSendTransaction || resolveSign(signTransaction));
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => {
+    const started = Date.now();
+    const timer = setInterval(() => {
+      if (Date.now() - started >= ms) {
+        clearInterval(timer);
+        resolve();
+      }
+    }, 250);
+  });
+}
+
+async function confirmByPolling(
+  connection: Connection,
+  signature: string,
+  lastValidBlockHeight: number,
+): Promise<{ confirmed: boolean; error: string | null }> {
+  for (let i = 0; i < 45; i++) {
+    const status = await connection.getSignatureStatus(signature, { searchTransactionHistory: true });
+    const value = status.value;
+    if (value?.err) return { confirmed: false, error: "The transaction was sent but failed on-chain." };
+    if (value?.confirmationStatus === "confirmed" || value?.confirmationStatus === "finalized") {
+      return { confirmed: true, error: null };
+    }
+    let height = 0;
+    try {
+      height = await connection.getBlockHeight("confirmed");
+    } catch {
+      height = 0;
+    }
+    if (height > lastValidBlockHeight && !value) {
+      return { confirmed: false, error: `The signed transaction did not land. Signature ${signature}` };
+    }
+    await sleep(2000);
+  }
+  return { confirmed: false, error: `Devnet has not confirmed yet. Signature ${signature}` };
+}
+
+function compile(payer: PublicKey, instructions: TransactionInstruction[], blockhash: string): VersionedTransaction {
+  return new VersionedTransaction(
+    new TransactionMessage({
+      payerKey: payer,
+      recentBlockhash: blockhash,
+      instructions,
+    }).compileToV0Message(),
+  );
+}
+
+export async function prepareInstructions(
   connection: Connection,
   payer: PublicKey,
-  send: (tx: VersionedTransaction, connection: Connection) => Promise<string>,
   instructions: TransactionInstruction[],
-): Promise<TxResult> {
+): Promise<{ ok: true; prepared: PreparedTx } | TxResult> {
   const preview = await simulateAndDecode(connection, payer, instructions);
   if (preview.err) {
     return { ok: false, simulated: true, error: preview.name ?? "Simulation failed. No transaction was sent." };
   }
-  let sent: { signature: string; blockhash: string; lastValidBlockHeight: number };
+  const latest = await connection.getLatestBlockhash("confirmed");
+  return {
+    ok: true,
+    prepared: {
+      tx: compile(payer, instructions, latest.blockhash),
+      blockhash: latest.blockhash,
+      lastValidBlockHeight: latest.lastValidBlockHeight,
+    },
+  };
+}
+
+export async function approvePrepared(
+  connection: Connection,
+  signTransaction: SignTx,
+  prepared: PreparedTx,
+  onSent?: (signature: string) => void,
+): Promise<TxResult> {
+  const phantom = phantomInjected();
+  let signature: string;
   try {
-    sent = await sendOnce(connection, payer, send, instructions);
+    if (phantom?.signAndSendTransaction) {
+      const sent = await phantom.signAndSendTransaction(prepared.tx, {
+        skipPreflight: false,
+        preflightCommitment: "confirmed",
+        maxRetries: 5,
+      });
+      signature = sent.signature;
+    } else {
+      const signed = await signTransaction(prepared.tx);
+      signature = await connection.sendRawTransaction(signed.serialize(), {
+        skipPreflight: false,
+        preflightCommitment: "confirmed",
+        maxRetries: 5,
+      });
+    }
   } catch (error) {
     const messageText = error instanceof Error ? error.message : "";
     if (/reject/i.test(messageText)) return { ok: false, simulated: false, error: "Signing was rejected." };
     if (/blockhash|expired/i.test(messageText)) {
-      const again = await simulateAndDecode(connection, payer, instructions);
-      if (again.err) return { ok: false, simulated: true, error: again.name ?? "Simulation failed. No transaction was sent." };
-      try {
-        sent = await sendOnce(connection, payer, send, instructions);
-      } catch (retryError) {
-        const retryText = retryError instanceof Error ? retryError.message : "";
-        if (/reject/i.test(retryText)) return { ok: false, simulated: false, error: "Signing was rejected." };
-        return { ok: false, simulated: false, error: retryText || "The wallet did not send the transaction." };
-      }
-    } else {
-      return { ok: false, simulated: false, error: messageText || "The wallet did not send the transaction." };
+      return { ok: false, simulated: false, error: "The blockhash expired. Simulate again, then approve in Phantom." };
     }
+    return { ok: false, simulated: false, error: messageText || "Phantom did not return a signature." };
   }
-  const confirmed = await connection.confirmTransaction(
-    { signature: sent.signature, blockhash: sent.blockhash, lastValidBlockHeight: sent.lastValidBlockHeight },
-    "confirmed",
-  );
-  if (confirmed.value.err) return { ok: false, simulated: false, error: "The transaction was sent but not confirmed." };
+  onSent?.(signature);
+  const landed = await confirmByPolling(connection, signature, prepared.lastValidBlockHeight);
+  if (!landed.confirmed) {
+    return { ok: false, simulated: false, error: landed.error ?? `Signed. Signature ${signature}` };
+  }
   let verified = false;
   try {
-    const posted = await locateApi.postReceipt(sent.signature);
+    const posted = await locateApi.postReceipt(signature);
     verified = posted.status === "verified";
   } catch {
     verified = false;
   }
-  return { ok: true, signature: sent.signature, verified };
+  return { ok: true, signature, verified };
 }
-
-type Sender = (tx: VersionedTransaction, connection: Connection) => Promise<string>;
 
 function termsFromRow(row: {
   lender: string;
@@ -98,22 +185,14 @@ function termsFromRow(row: {
   };
 }
 
-function asFlow(result: TxResult): { ok: boolean; error?: string; id?: string } {
-  if (result.ok) return { ok: true, id: result.signature, error: result.verified ? undefined : "Confirmed. Receipt verification is still pending." };
-  return { ok: false, error: result.simulated ? `Simulation — not a transaction. ${result.error}` : result.error };
-}
-
-export async function listOnChain(
-  connection: Connection,
+export function listInstructions(
   payer: PublicKey,
-  send: Sender,
   input: { amount: number; collateralUsdc: number; feeUsdc: number; termDays: number; expiryHours: number },
-) {
+): TransactionInstruction[] {
   const now = BigInt(Math.floor(Date.now() / 1000));
-  const mint = new PublicKey(DEVNET_MINT);
   const terms: OfferTerms = {
     lender: payer,
-    mint,
+    mint: new PublicKey(DEVNET_MINT),
     usdcMint: DEVNET_USDC,
     nonce: BigInt(Date.now()),
     amountRaw: BigInt(Math.round(input.amount * 1e9)),
@@ -124,13 +203,31 @@ export async function listOnChain(
     expiresAt: now + BigInt(input.expiryHours * 3600),
     decimals: 9,
   };
-  return asFlow(await submitInstructions(connection, payer, send, buildListTx(terms, LOCATE_PROGRAM_ID)));
+  return buildListTx(terms, LOCATE_PROGRAM_ID);
 }
 
-export async function cancelOnChain(connection: Connection, payer: PublicKey, send: Sender, offer: Offer) {
-  if (!offer.mint || !offer.nonce) return { ok: false, error: "This offer has no on-chain terms." };
-  const built = buildCancelTx({ lender: new PublicKey(offer.lender), mint: new PublicKey(offer.mint), nonce: BigInt(offer.nonce) }, LOCATE_PROGRAM_ID);
-  return asFlow(await submitInstructions(connection, payer, send, built));
+export function takeInstructions(payer: PublicKey, offer: Offer): TransactionInstruction[] | string {
+  if (!offer.mint || !offer.nonce || !offer.amountRaw || !offer.collateralRaw || !offer.feeRaw || !offer.termSecs || !offer.graceSecs || !offer.expiresAtSec) {
+    return "This offer has no on-chain terms.";
+  }
+  return buildTakeTx(payer, {
+    lender: new PublicKey(offer.lender),
+    mint: new PublicKey(offer.mint),
+    usdcMint: DEVNET_USDC,
+    nonce: BigInt(offer.nonce),
+    amountRaw: BigInt(offer.amountRaw),
+    collateralUsdc: BigInt(offer.collateralRaw),
+    feeUsdc: BigInt(offer.feeRaw),
+    termSecs: BigInt(offer.termSecs),
+    graceSecs: BigInt(offer.graceSecs),
+    expiresAt: BigInt(offer.expiresAtSec),
+    decimals: 9,
+  }, LOCATE_PROGRAM_ID);
+}
+
+export function cancelInstructions(offer: Offer): TransactionInstruction[] | null {
+  if (!offer.mint || !offer.nonce) return null;
+  return buildCancelTx({ lender: new PublicKey(offer.lender), mint: new PublicKey(offer.mint), nonce: BigInt(offer.nonce) }, LOCATE_PROGRAM_ID);
 }
 
 async function offerTerms(pubkey: string): Promise<OfferTerms | null> {
@@ -154,26 +251,42 @@ async function offerTerms(pubkey: string): Promise<OfferTerms | null> {
   }
 }
 
-export async function returnOnChain(connection: Connection, payer: PublicKey, send: Sender, loan: Loan) {
-  if (!loan.offerPubkey || !loan.amountRaw) return { ok: false, error: "This loan has no on-chain terms." };
-  const terms = await offerTerms(loan.offerPubkey);
-  if (!terms) return { ok: false, error: "Offer terms are unavailable." };
-  const maxGross = grossForNet(loan.feeBps ?? 100, (1n << 64n) - 1n, BigInt(loan.amountRaw));
-  return asFlow(await submitInstructions(connection, payer, send, buildReturnTx(payer, terms, maxGross, LOCATE_PROGRAM_ID)));
+function termsFromLoan(loan: Loan): OfferTerms | null {
+  if (!loan.offerPubkey || !loan.lenderPubkey || !loan.mint || !loan.amountRaw) return null;
+  return {
+    lender: new PublicKey(loan.lenderPubkey),
+    mint: new PublicKey(loan.mint),
+    usdcMint: DEVNET_USDC,
+    nonce: 0n,
+    offer: new PublicKey(loan.offerPubkey),
+    amountRaw: BigInt(loan.amountRaw),
+    collateralUsdc: BigInt(loan.collateralRaw ?? "0"),
+    feeUsdc: BigInt(loan.feeRaw ?? "0"),
+    termSecs: 0n,
+    graceSecs: 0n,
+    expiresAt: 0n,
+    decimals: 9,
+  };
 }
 
-export async function claimOnChain(connection: Connection, payer: PublicKey, send: Sender, loan: Loan) {
-  if (!loan.offerPubkey || !loan.borrowerPubkey) return { ok: false, error: "This loan has no on-chain terms." };
-  const terms = await offerTerms(loan.offerPubkey);
-  if (!terms) return { ok: false, error: "Offer terms are unavailable." };
-  return asFlow(await submitInstructions(connection, payer, send, buildClaimTx(payer, new PublicKey(loan.borrowerPubkey), terms, LOCATE_PROGRAM_ID)));
+export async function returnInstructions(payer: PublicKey, loan: Loan): Promise<TransactionInstruction[] | string> {
+  if (!loan.offerPubkey || !loan.amountRaw) return "This loan has no on-chain terms.";
+  const terms = (await offerTerms(loan.offerPubkey)) ?? termsFromLoan(loan);
+  if (!terms) return "Offer terms are unavailable.";
+  const maxGross = grossForNet(loan.feeBps ?? 100, (1n << 64n) - 1n, BigInt(loan.amountRaw));
+  return buildReturnTx(payer, terms, maxGross, LOCATE_PROGRAM_ID);
+}
+
+export async function claimInstructions(payer: PublicKey, loan: Loan): Promise<TransactionInstruction[] | string> {
+  if (!loan.offerPubkey || !loan.borrowerPubkey) return "This loan has no on-chain terms.";
+  const terms = (await offerTerms(loan.offerPubkey)) ?? termsFromLoan(loan);
+  if (!terms) return "Offer terms are unavailable.";
+  return buildClaimTx(payer, new PublicKey(loan.borrowerPubkey), terms, LOCATE_PROGRAM_ID);
 }
 
 export async function simulateEarlyClaim(connection: Connection, payer: PublicKey, loan: Loan) {
-  if (!loan.offerPubkey || !loan.borrowerPubkey) return "This loan has no on-chain terms.";
-  const terms = await offerTerms(loan.offerPubkey);
-  if (!terms) return "Offer terms are unavailable.";
-  const preview = await simulateAndDecode(connection, payer, buildClaimTx(payer, new PublicKey(loan.borrowerPubkey), terms, LOCATE_PROGRAM_ID));
+  const built = await claimInstructions(payer, loan);
+  if (typeof built === "string") return built;
+  const preview = await simulateAndDecode(connection, payer, built);
   return preview.name ?? "Simulation — not a transaction.";
 }
-

@@ -5,12 +5,11 @@
  * the tokens never left the wallet.
  */
 
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { cancelOnChain } from "@/lib/locate/tx";
+import { cancelInstructions } from "@/lib/locate/tx";
+import { phaseCopy, usePreparedTx } from "@/lib/locate/usePreparedTx";
 import { useLocate, locateAsset } from "@/lib/locate/store";
 import { fmtToken, fmtUsd } from "@/lib/locate/seed";
 import { ClickSpark } from "@/components/bits";
-import { useDrawerFlow } from "../hooks";
 import { DataRow, DoneState, Note, Payline, StagedProgress } from "../parts";
 import { ActionDrawer } from "./frame";
 
@@ -41,9 +40,7 @@ export function CancelOfferDrawer({
 function Body({ offerId, onClose }: { offerId: string; onClose: () => void }) {
   const offer = useLocate((s) => s.offers.find((o) => o.id === offerId));
   const navigate = useLocate((s) => s.navigate);
-  const { connection } = useConnection();
-  const { publicKey, sendTransaction } = useWallet();
-  const flow = useDrawerFlow(STEPS.length, 560);
+  const tx = usePreparedTx();
 
   if (!offer) {
     return (
@@ -60,7 +57,7 @@ function Body({ offerId, onClose }: { offerId: string; onClose: () => void }) {
 
   return (
     <>
-      {flow.stage === "review" && (
+      {(tx.phase === "review" || tx.phase === "ready") && (
         <div className="flex flex-col gap-1">
           <DataRow label="OFFER" value={offer.id} />
           <DataRow label="ASSET" value={`${asset.symbol} · ${asset.standard}`} />
@@ -77,7 +74,10 @@ function Body({ offerId, onClose }: { offerId: string; onClose: () => void }) {
           </div>
 
           <div className="mt-4 flex flex-col gap-3">
-            {flow.error && <Note tone="refuse">{flow.error.toUpperCase()}</Note>}
+            {tx.error && <Note tone="refuse">{tx.error.toUpperCase()}</Note>}
+            {tx.phase === "ready" && (
+              <Note tone="ink">SIMULATION PASSED. NO TRANSACTION WAS SENT. APPROVE IN PHANTOM TO CANCEL.</Note>
+            )}
             <Note tone="lime">
               YOUR TOKENS NEVER LEFT YOUR WALLET — CANCEL IS FREE AND INSTANT.
             </Note>
@@ -89,18 +89,20 @@ function Body({ offerId, onClose }: { offerId: string; onClose: () => void }) {
                 type="button"
                 disabled={!cancellable}
                 onClick={() => {
-                  if (!publicKey) {
-                    flow.run(async () => ({ ok: false, error: "Connect a Devnet wallet." }));
+                  if (tx.phase === "ready") {
+                    void tx.approve();
                     return;
                   }
-                  void flow.run(() => cancelOnChain(connection, publicKey, sendTransaction, offer));
+                  const built = cancelInstructions(offer);
+                  if (!built) return;
+                  void tx.simulate(built);
                 }}
                 className={
                   "lc-btn lc-btn-ink w-full" +
                   (!cancellable ? " pointer-events-none opacity-40" : "")
                 }
               >
-                CONFIRM · CANCEL LISTING
+                {tx.phase === "ready" ? "APPROVE IN PHANTOM" : "SIMULATE CANCEL"}
               </button>
             </ClickSpark>
             <button
@@ -114,14 +116,14 @@ function Body({ offerId, onClose }: { offerId: string; onClose: () => void }) {
         </div>
       )}
 
-      {flow.stage === "busy" && (
+      {(tx.phase === "simulating" || tx.phase === "signing" || tx.phase === "confirming") && (
         <div className="pt-4">
-          <p className="lc-label mb-5">WITHDRAWING…</p>
-          <StagedProgress steps={STEPS} activeIndex={flow.step} />
+          <p className="lc-label mb-5">{phaseCopy(tx.phase).toUpperCase()}{tx.phase === "confirming" && tx.signature ? ` ${tx.signature}` : ""}</p>
+          <StagedProgress steps={STEPS} activeIndex={tx.phase === "simulating" ? 0 : 1} />
         </div>
       )}
 
-      {flow.stage === "done" && (
+      {tx.phase === "done" && (
         <DoneState
           title="OFFER CANCELLED"
           body={`${fmtToken(offer.amount)} ${asset.symbol} stays in your wallet — the listing is off the book.`}

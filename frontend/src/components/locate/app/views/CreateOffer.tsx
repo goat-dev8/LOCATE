@@ -9,7 +9,8 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "
 import { PublicKey } from "@solana/web3.js";
 import { TOKEN_2022, ata } from "@locate/sdk";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { listOnChain } from "@/lib/locate/tx";
+import { listInstructions } from "@/lib/locate/tx";
+import { phaseCopy, usePreparedTx } from "@/lib/locate/usePreparedTx";
 import { useLocate } from "@/lib/locate/store";
 import { ASSETS, fmtUsd, fmtToken } from "@/lib/locate/seed";
 import type { CreateOfferInput } from "@/lib/locate/types";
@@ -325,31 +326,8 @@ function ConfirmOfferInner({
   onClose: () => void;
   onListed: () => void;
 }) {
-  const [stage, setStage] = useState<"review" | "busy" | "done">("review");
-  const [error, setError] = useState<string | null>(null);
-  const [signature, setSignature] = useState<string | null>(null);
-  const { connection } = useConnection();
-  const { publicKey, sendTransaction } = useWallet();
-  const [step] = useState(1);
-
+  const tx = usePreparedTx();
   const asset = ASSETS.find((a) => a.id === input.assetId)!;
-
-  const confirm = async () => {
-    if (!publicKey) {
-      setError("Connect a Devnet wallet. Listing requires a real Token-2022 approval.");
-      return;
-    }
-    setStage("busy");
-    setError(null);
-    const res = await listOnChain(connection, publicKey, sendTransaction, input);
-    if (res.ok) {
-      setSignature(res.id ?? null);
-      setStage("done");
-    } else {
-      setError(res.error ?? "Listing failed.");
-      setStage("review");
-    }
-  };
 
   return (
     <>
@@ -364,7 +342,7 @@ function ConfirmOfferInner({
         </SheetHeader>
 
         <div className="px-6 py-5">
-          {stage === "review" && (
+          {(tx.phase === "review" || tx.phase === "ready") && (
             <>
               <DataRow label="ASSET" value={asset.symbol} tone="strong" />
               <DataRow label="AMOUNT" value={fmtToken(input.amount)} />
@@ -385,28 +363,55 @@ function ConfirmOfferInner({
                 taken, this listing moves nothing.
               </p>
 
-              {error && (
-                <p className="mt-4 font-mono text-[10.5px] uppercase tracking-[0.1em] text-refuse">
-                  {error}
+              {tx.phase === "ready" && (
+                <p className="mt-4 font-mono text-[10.5px] uppercase tracking-[0.1em] text-ink-2">
+                  Simulation passed. No transaction was sent. Approve in Phantom to list.
                 </p>
               )}
 
-              <button onClick={confirm} className="lc-btn lc-btn-lime mt-5 w-full">
-                SIGN &amp; LIST
-              </button>
+              {tx.error && (
+                <p className="mt-4 font-mono text-[10.5px] uppercase tracking-[0.1em] text-refuse">
+                  {tx.error}
+                </p>
+              )}
+
+              {tx.phase === "review" ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!tx.publicKey) return;
+                    try {
+                      void tx.simulate(listInstructions(tx.publicKey, input));
+                    } catch (thrown) {
+                      void tx.simulate(thrown instanceof Error ? thrown.message : "Could not build the listing.");
+                    }
+                  }}
+                  className="lc-btn lc-btn-lime mt-5 w-full"
+                >
+                  SIMULATE LISTING
+                </button>
+              ) : (
+                <button type="button" onClick={() => void tx.approve()} className="lc-btn lc-btn-lime mt-5 w-full">
+                  APPROVE IN PHANTOM
+                </button>
+              )}
             </>
           )}
 
-          {stage === "busy" && (
+          {(tx.phase === "simulating" || tx.phase === "signing" || tx.phase === "confirming") && (
             <div className="py-6">
-              <StagedProgress steps={LIST_STAGES} activeIndex={step} />
+              <p className="mb-5 font-mono text-[10.5px] uppercase tracking-[0.14em] text-ink-3">
+                {phaseCopy(tx.phase)}
+                {tx.phase === "confirming" && tx.signature ? ` ${tx.signature}` : ""}
+              </p>
+              <StagedProgress steps={LIST_STAGES} activeIndex={tx.phase === "simulating" ? 0 : tx.phase === "signing" ? 1 : 2} />
             </div>
           )}
 
-          {stage === "done" && (
+          {tx.phase === "done" && (
             <DoneState
-              title="Confirmed"
-              body={signature ? `Devnet signature ${signature}. The listing is on-chain. Receipt verification is separate from confirmation.` : "The listing transaction was confirmed."}
+              title={tx.verified ? "Verified on-chain" : "Confirmed"}
+              body={tx.signature ? `Devnet signature ${tx.signature}. Receipt verification is separate from confirmation.` : "The listing transaction was confirmed."}
             >
               <button onClick={onListed} className="lc-btn lc-btn-ink lc-btn-sm">
                 VIEW MY OFFERS

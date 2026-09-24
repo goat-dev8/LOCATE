@@ -1,0 +1,9 @@
+{
+  "id": "E-04",
+  "mode": "Phantom manual",
+  "utc": "2026-09-24T05:52:00Z",
+  "result": "pass",
+  "detail": "Phantom signed cancel. UI showed OFFER CANCELLED. My Offers empty. Book count 0. Tokens remain in the lender wallet.",
+  "signature": "5aQ41pERnQ8y8ChvsYPwp4MGacWnivnFfFujPmzXQRo9HcqPXkLgkXMVZAa9cPeJuGqHy8sGHZAwYBtvHFPzqv6Y",
+  "offer": "8vGyHaW4gQciy2ZqYBktBRyW7vHfDmWAji57UUVCYZhJ"
+}
