@@ -5,13 +5,15 @@ import type { AppConfig } from "../config.js";
 import type { Sql } from "../db/sql.js";
 import { loadLoan, loadLoans, loadOffer, loadOffers } from "../chain/accounts.js";
 import { fundOffers } from "../chain/funding.js";
-import { epochFee, grossForNet, readMint } from "../chain/mint.js";
+import { readMint } from "../chain/mint.js";
 import { eventAuthority } from "../chain/codec.js";
 import { verifySignature } from "../chain/verify.js";
 import { upsertReceipt } from "../db/receipts.js";
 import { catchUp } from "../ingest/catchup.js";
 import { jupiterPrice } from "../market/jupiter.js";
-import { loadCatalog, premiumBps } from "../market/prestocks.js";
+import { loadCatalog } from "../market/prestocks.js";
+import { buildOpportunities } from "../market/opportunities.js";
+import { protocolEconomics, premiumBps } from "../market/economics.js";
 import { DEMO_SIGNATURES } from "../demo.js";
 
 const pubkey = z.string().regex(/^[1-9A-HJ-NP-Za-km-z]{32,44}$/);
@@ -92,17 +94,22 @@ export async function registerRoutes(app: FastifyInstance, config: AppConfig, sq
     const offer = await loadOffer(connection, new PublicKey(params.data.pubkey));
     if (!offer) return bad(reply, "OFFER_NOT_FOUND", "offer not found", 404);
     const mint = await readMint(connection, new PublicKey(offer.mint));
-    const n = BigInt(offer.amountRaw);
-    const fee = epochFee(mint.feeBps, BigInt(mint.maxFee), n);
-    const received = n - fee;
-    const gross = grossForNet(mint.feeBps, BigInt(mint.maxFee), n);
+    const facts = protocolEconomics({
+      amountRaw: BigInt(offer.amountRaw),
+      feeBps: mint.feeBps,
+      maxFee: BigInt(mint.maxFee),
+      collateralUsdc: BigInt(offer.collateralUsdc),
+      feeUsdc: BigInt(offer.feeUsdc),
+      feePending: mint.feePending,
+    });
+    if ("unavailable" in facts) return { ...facts, advisory: true, settlementIndependent: true, fetchedAt: new Date().toISOString() };
     return {
-      receivedRaw: received.toString(),
-      returnGrossRaw: gross.toString(),
-      extraRaw: (gross - received).toString(),
-      feeRaw: fee.toString(),
-      collateralUsdc: offer.collateralUsdc,
-      maxLossUsdc: (BigInt(offer.collateralUsdc) + BigInt(offer.feeUsdc)).toString(),
+      receivedRaw: facts.receivedRaw.toString(),
+      returnGrossRaw: facts.returnGrossRaw.toString(),
+      extraRaw: facts.extraRaw.toString(),
+      feeRaw: facts.feeRaw.toString(),
+      collateralUsdc: facts.collateralUsdc.toString(),
+      maxLossUsdc: facts.maxLossUsdc.toString(),
       feeBps: mint.feeBps,
       advisory: true,
       settlementIndependent: true,
@@ -114,32 +121,35 @@ export async function registerRoutes(app: FastifyInstance, config: AppConfig, sq
     const catalog = await loadCatalog(config.PRESTOCKS_API_BASE);
     const offers = await loadOffers(connection, programId);
     const funding = await fundOffers(connection, offers);
-    const stale = catalog.ageMs > 120_000;
-    const rows = catalog.rows.map((row) => {
-      const funded = offers.filter((offer) => offer.mint === row.mint && funding.get(offer.pubkey)?.funded);
-      const supply = funded.reduce((sum, offer) => sum + BigInt(offer.amountRaw), 0n);
-      const best = [...funded].sort((a, b) => {
-        const fee = Number(BigInt(a.feeUsdc) * 1_000_000n / BigInt(a.amountRaw) - BigInt(b.feeUsdc) * 1_000_000n / BigInt(b.amountRaw));
-        return fee || Number(BigInt(a.termSecs) - BigInt(b.termSecs));
-      })[0] ?? null;
-      const premium = premiumBps(row.tokenMicro, row.markMicro);
-      const missing = row.tokenMicro === null || row.markMicro === null || row.markMicro === 0n;
-      const state = stale ? "STALE_DATA" : missing ? "UNAVAILABLE" : premium! > 0n && supply > 0n ? "BORROWABLE" : premium! > 0n ? "NO_SUPPLY" : "LOW_NEGATIVE_PREMIUM";
-      return {
+    const rows = buildOpportunities(
+      catalog.rows,
+      offers.map((offer) => ({
+        pubkey: offer.pubkey,
+        mint: offer.mint,
+        amountRaw: BigInt(offer.amountRaw),
+        collateralUsdc: BigInt(offer.collateralUsdc),
+        feeUsdc: BigInt(offer.feeUsdc),
+        termSecs: BigInt(offer.termSecs),
+        funded: funding.get(offer.pubkey)?.funded ?? false,
+      })),
+      catalog.ageMs,
+    );
+    return {
+      opportunities: rows.map((row) => ({
         symbol: row.symbol,
         mint: row.mint,
-        state,
-        tokenPrice: stale || missing ? null : row.tokenMicro!.toString(),
-        markPrice: stale || missing ? null : row.markMicro!.toString(),
-        premiumBps: stale || missing || premium === null ? null : premium.toString(),
-        fundedRaw: supply.toString(),
-        bestOffer: best ? { pubkey: best.pubkey, collateralUsdc: best.collateralUsdc, feeUsdc: best.feeUsdc, termSecs: best.termSecs, amountRaw: best.amountRaw } : null,
+        state: row.state,
+        tokenPrice: row.state === "STALE_DATA" || row.state === "UNAVAILABLE" ? null : catalog.rows.find((item) => item.mint === row.mint)?.tokenMicro?.toString() ?? null,
+        markPrice: row.state === "STALE_DATA" || row.state === "UNAVAILABLE" ? null : catalog.rows.find((item) => item.mint === row.mint)?.markMicro?.toString() ?? null,
+        premiumBps: row.premiumBps === null ? null : row.premiumBps.toString(),
+        fundedRaw: row.fundedRaw.toString(),
+        bestOffer: row.bestOffer ? { pubkey: row.bestOffer.pubkey, collateralUsdc: row.bestOffer.collateralUsdc.toString(), feeUsdc: row.bestOffer.feeUsdc.toString(), termSecs: row.bestOffer.termSecs.toString(), amountRaw: row.bestOffer.amountRaw.toString() } : null,
         contextOnly: true,
-      };
-    });
-    const order = ["BORROWABLE", "NO_SUPPLY", "LOW_NEGATIVE_PREMIUM", "UNAVAILABLE", "STALE_DATA"];
-    rows.sort((a, b) => order.indexOf(a.state) - order.indexOf(b.state) || a.symbol.localeCompare(b.symbol));
-    return { opportunities: rows, fetchedAt: catalog.fetchedAt, slot: await connection.getSlot("confirmed"), commitment: "confirmed" };
+      })),
+      fetchedAt: catalog.fetchedAt,
+      slot: await connection.getSlot("confirmed"),
+      commitment: "confirmed",
+    };
   });
 
   app.get("/v1/loans", async (request, reply) => {

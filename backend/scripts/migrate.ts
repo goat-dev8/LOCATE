@@ -6,15 +6,19 @@ import postgres from "postgres";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 
 function loadEnvFile() {
-  const text = readFileSync(resolve(root, ".env"), "utf8");
-  for (const line of text.split(/\n/)) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith("#") || !trimmed.includes("=")) continue;
-    const index = trimmed.indexOf("=");
-    const key = trimmed.slice(0, index);
-    if (!process.env[key]) {
-      process.env[key] = trimmed.slice(index + 1).trim().replace(/^["']|["']$/g, "");
+  try {
+    const text = readFileSync(resolve(root, ".env"), "utf8");
+    for (const line of text.split(/\n/)) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#") || !trimmed.includes("=")) continue;
+      const index = trimmed.indexOf("=");
+      const key = trimmed.slice(0, index);
+      if (!process.env[key]) {
+        process.env[key] = trimmed.slice(index + 1).trim().replace(/^["']|["']$/g, "");
+      }
     }
+  } catch {
+    if (!process.env.DIRECT_URL) throw new Error("DIRECT_URL is required for migrations");
   }
 }
 
@@ -45,7 +49,7 @@ async function main() {
   const pooled = process.env.DATABASE_URL;
   if (!pooled) throw new Error("DATABASE_URL is required");
 
-  const admin = postgres(direct, { prepare: false, ssl: "require", max: 1 });
+  const admin = postgres(direct, { prepare: false, ssl: /localhost|127\.0\.0\.1/.test(direct) ? false : "require", max: 1 });
   const before = (await publicTables(admin)).map((row) => row.table_name);
   const dir = resolve(dirname(fileURLToPath(import.meta.url)), "../migrations");
   const files = readdirSync(dir).filter((name) => name.endsWith(".sql")).sort();
@@ -69,7 +73,7 @@ async function main() {
   `;
   await admin.end({ timeout: 5 });
 
-  const pool = postgres(pooled, { prepare: false, ssl: "require", max: 1 });
+  const pool = postgres(pooled, { prepare: false, ssl: /localhost|127\.0\.0\.1/.test(pooled) ? false : "require", max: 1 });
   const pooledVersions = await pool<{ version: string }[]>`
     select version from locate.schema_migrations order by version
   `;

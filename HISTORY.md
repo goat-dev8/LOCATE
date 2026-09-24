@@ -164,3 +164,22 @@ Research: PASS (live catalog, Jupiter price v3, devnet getTransaction)
 Fresh rerun: PASS
 Outstanding blockers: NONE
 Git SHA: recorded after this commit
+
+## 2026-09-24T02:52:00Z — Phase 10 tests started
+
+- Added bigint economics and the opportunity builder, then pointed the API at them.
+- Vitest now covers O-01 through O-17, A-01 through A-07, B-01, B-03, and B-04 through B-07 against the recorded devnet return, take, and claim transactions.
+- `backend.yml` runs the migration twice against Postgres 17 and then vitest. Localhost database URLs do not require TLS. Supabase URLs still do.
+- The two local API processes that exited with code 1 were stopped after the route checks. They were not a failed boot.
+- Still open in this phase: B-08 through B-12, including the advisory-lock catch-up test.
+
+PHASE 10 IN PROGRESS
+
+Implementation: PASS
+Tests: PASS for the cases above
+Security: N/A
+Evidence: PASS
+Research: PASS
+Fresh rerun: PASS
+Outstanding blockers: B-08 through B-12 are not written yet
+Git SHA: recorded after this commit

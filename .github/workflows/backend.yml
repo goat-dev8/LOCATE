@@ -1,0 +1,45 @@
+name: backend
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: locate
+          POSTGRES_DB: locate
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgres://postgres:locate@localhost:5432/locate
+      DIRECT_URL: postgres://postgres:locate@localhost:5432/locate
+      SOLANA_CLUSTER: devnet
+      SOLANA_RPC_URL: http://127.0.0.1:1
+      LOCATE_PROGRAM_ID: F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6
+      JUPITER_API_BASE: https://api.jup.ag
+      PRESTOCKS_API_BASE: https://prestocks.com
+      CORS_ALLOWED_ORIGINS: http://localhost:5173
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
+      - run: npx tsx scripts/migrate.ts
+      - run: npx tsx scripts/migrate.ts
+      - run: npm test

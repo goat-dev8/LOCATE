@@ -12,6 +12,31 @@ function delta(tx: { meta: unknown }, mint: string, owner: string): bigint | nul
   return post - pre;
 }
 
+export function verifyLoaded(tx: { meta: { err: unknown } | null; slot?: number; blockTime?: number | null }, programId: PublicKey, usdcMint: PublicKey, commitment: "confirmed" | "finalized"): VerifyResult {
+  if (!tx.meta) return { status: "rejected", reason: "NOT_FOUND" };
+  if (tx.meta.err) return { status: "rejected", reason: "TRANSACTION_FAILED" };
+  const events = decodeTransactionEvents(tx as never, programId);
+  if (events.length === 0) return { status: "rejected", reason: "NO_LOCATE_EVENT" };
+  for (const event of events) {
+    const fields = event.fields;
+    if (event.kind === "loan_returned") {
+      const got = delta(tx, String(fields.mint), String(fields.lender));
+      if (got === null || got !== BigInt(String(fields.netReceivedRaw))) return { status: "rejected", reason: "BALANCE_MISMATCH" };
+    }
+    if (event.kind === "loan_taken") {
+      const got = delta(tx, String(fields.mint), String(fields.borrower));
+      const vault = balanceOf(tx.meta as never, usdcMint.toBase58(), String(fields.loan), "post");
+      if (got === null || got !== BigInt(String(fields.borrowerReceivedRaw))) return { status: "rejected", reason: "BALANCE_MISMATCH" };
+      if (vault === null || vault !== BigInt(String(fields.collateralUsdc))) return { status: "rejected", reason: "BALANCE_MISMATCH" };
+    }
+    if (event.kind === "loan_claimed") {
+      const got = delta(tx, usdcMint.toBase58(), String(fields.lender));
+      if (got === null || got !== BigInt(String(fields.collateralUsdc))) return { status: "rejected", reason: "BALANCE_MISMATCH" };
+    }
+  }
+  return { status: commitment === "finalized" ? "verified" : "pending", commitment, events, slot: tx.slot ?? 0, blockTime: tx.blockTime ?? null };
+}
+
 export async function verifySignature(
   connection: Connection,
   programId: PublicKey,
@@ -21,33 +46,5 @@ export async function verifySignature(
   const finalized = await connection.getTransaction(signature, { commitment: "finalized", maxSupportedTransactionVersion: 0 });
   const confirmed = finalized ?? await connection.getTransaction(signature, { commitment: "confirmed", maxSupportedTransactionVersion: 0 });
   if (!confirmed) return { status: "rejected", reason: "NOT_FOUND" };
-  if (confirmed.meta?.err) return { status: "rejected", reason: "TRANSACTION_FAILED" };
-  const events = decodeTransactionEvents(confirmed as never, programId);
-  if (events.length === 0) return { status: "rejected", reason: "NO_LOCATE_EVENT" };
-  for (const event of events) {
-    const fields = event.fields;
-    if (event.kind === "loan_returned") {
-  const got = delta(confirmed, String(fields.mint), String(fields.lender));
-      if (got === null || got !== BigInt(String(fields.netReceivedRaw))) return { status: "rejected", reason: "BALANCE_MISMATCH" };
-    }
-    if (event.kind === "loan_taken") {
-      const got = delta(confirmed, String(fields.mint), String(fields.borrower));
-      const vaultOwner = fields.loan ? String(fields.loan) : "";
-      const vault = balanceOf(confirmed.meta as never, usdcMint.toBase58(), vaultOwner, "post");
-      if (got === null || got !== BigInt(String(fields.borrowerReceivedRaw))) return { status: "rejected", reason: "BALANCE_MISMATCH" };
-      if (vault === null || vault !== BigInt(String(fields.collateralUsdc))) return { status: "rejected", reason: "BALANCE_MISMATCH" };
-    }
-    if (event.kind === "loan_claimed") {
-      const got = delta(confirmed, usdcMint.toBase58(), String(fields.lender));
-      if (got === null || got !== BigInt(String(fields.collateralUsdc))) return { status: "rejected", reason: "BALANCE_MISMATCH" };
-    }
-  }
-  const commitment = finalized ? "finalized" : "confirmed";
-  return {
-    status: commitment === "finalized" ? "verified" : "pending",
-    commitment,
-    events,
-    slot: confirmed.slot,
-    blockTime: confirmed.blockTime ?? null,
-  };
+  return verifyLoaded(confirmed as never, programId, usdcMint, finalized ? "finalized" : "confirmed");
 }
