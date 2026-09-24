@@ -42,7 +42,12 @@ export async function buildServer(options?: {
 }): Promise<FastifyInstance> {
   const config = options?.config ?? loadConfig();
   const sql = options?.sql ?? createSql(config.DATABASE_URL);
-  const app = Fastify({ logger: { level: "info", redact: ["req.headers.authorization"] } });
+  const app = Fastify({
+    logger: {
+      level: "info",
+      redact: ["req.headers.authorization", "req.headers.x-api-key", "DATABASE_URL", "DIRECT_URL"],
+    },
+  });
   await app.register(cors, {
     origin: config.CORS_ALLOWED_ORIGINS.split(",").map((origin) => origin.trim()),
   });

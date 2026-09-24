@@ -1,0 +1,112 @@
+{
+  "fetchedAt": "2026-09-24T03:29:09.029Z",
+  "slot": 449906754,
+  "epoch": 1041,
+  "cluster": "mainnet-beta",
+  "catalog": [
+    {
+      "name": "Anduril PreStocks",
+      "symbol": "ANDURIL",
+      "description": "Anduril builds AI-driven defense systems, including autonomous drones and perimeter sensors. Their platforms integrate real-time data and computer vision to enhance situational awareness for military and border security applications.\n\nANDURIL is a PreStocks issued token backed 1:1 by SPV exposure that tracks the price of the underlying private company.",
+      "image": "https://www.prestocks.com/logos/anduril.png",
+      "external_url": "https://www.prestocks.com/anduril",
+      "contract_address": "PresTj4Yc2bAR197Er7wz4UUKSfqt6FryBEdAriBoQB",
+      "markPrice": 152.41997191,
+      "markValuation": 134845805461,
+      "tokenPrice": 150.2806918982053,
+      "impliedValuation": 132953186451,
+      "supply": 11805.817985464
+    },
+    {
+      "name": "Anthropic PreStocks",
+      "symbol": "ANTHROPIC",
+      "description": "Anthropic is an AI research company developing Claude, a language model built with a strong focus on safety and interpretability. Their approach emphasizes ethical guardrails and transparent behavior to reduce the risk of harmful outputs while enabling sophisticated natural language capabilities.\n\nANTHROPIC is a PreStocks issued token backed 1:1 by SPV exposure that tracks the price of the underlying private company.",
+      "image": "https://www.prestocks.com/logos/anthropic.png",
+      "external_url": "https://www.prestocks.com/anthropic",
+      "contract_address": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+      "markPrice": 1038.36548931,
+      "markValuation": 1701198107306,
+      "tokenPrice": 1033.8545978160507,
+      "impliedValuation": 1693807722946,
+      "supply": 7381.816219677
+    },
+    {
+      "name": "Figure AI PreStocks",
+      "symbol": "FIGUREAI",
+      "description": "Figure AI builds general-purpose humanoid robots for homes and industrial work. Their robots learn to operate in unstructured real-world environments using neural networks.\n\nFIGUREAI is a PreStocks issued token backed 1:1 by SPV exposure that tracks the price of the underlying private company.",
+      "image": "https://www.prestocks.com/logos/figureai.png",
+      "external_url": "https://www.prestocks.com/figureai",
+      "contract_address": "PreZad18qfPtbxNpMtMuAuX2zVpvkEU8DnJx56faCWd",
+      "markPrice": 181.11547739,
+      "markValuation": 39488061299,
+      "tokenPrice": 178.82566843271894,
+      "impliedValuation": 38988821158,
+      "supply": 3012.857155916
+    },
+    {
+      "name": "Kalshi PreStocks",
+      "symbol": "KALSHI",
+      "description": "Kalshi is a CFTC-regulated prediction market where users trade event contracts on real-world outcomes. Contract prices reflect implied probabilities for events across politics, economics, sports, and more.\n\nKALSHI is a PreStocks issued token backed 1:1 by SPV exposure that tracks the price of the underlying private company.",
+      "image": "https://www.prestocks.com/logos/kalshi.png",
+      "external_url": "https://www.prestocks.com/kalshi",
+      "contract_address": "PreLWGkkeqG1s4HEfFZSy9moCrJ7btsHuUtfcCeoRua",
+      "markPrice": 883.30160708,
+      "markValuation": 32127492900,
+      "tokenPrice": 850.4971056939869,
+      "impliedValuation": 30934325836,
+      "supply": 904.867766516
+    },
+    {
+      "name": "Neuralink PreStocks",
+      "symbol": "NEURALINK",
+      "description": "Neuralink develops implantable brain-computer interfaces designed to enable direct communication between the human brain and computers. Their technology aims to treat neurological conditions and eventually augment human capabilities.\n\nNEURALINK is a PreStocks issued token backed 1:1 by SPV exposure that tracks the price of the underlying private company.",
+      "image": "https://www.prestocks.com/logos/neuralink.png",
+      "external_url": "https://www.prestocks.com/neuralink",
+      "contract_address": "PrekqLJvJ3qVdXmBGDiexvwUTF4rLFDa6HWS4HJbw9S",
+      "markPrice": 337.00122914,
+      "markValuation": 64197065828,
+      "tokenPrice": 442.60751551283636,
+      "impliedValuation": 84314540579,
+      "supply": 2595.285822012
+    },
+    {
+      "name": "OpenAI PreStocks",
+      "symbol": "OPENAI",
+      "description": "OpenAI pioneers large-language models like GPT and DALL·E, enabling advanced AI applications. Their research emphasizes both cutting-edge capability and responsible deployment strategies.\n\nOPENAI is a PreStocks issued token backed 1:1 by SPV exposure that tracks the price of the underlying private company.",
+      "image": "https://www.prestocks.com/logos/openai.png",
+      "external_url": "https://www.prestocks.com/openai",
+      "contract_address": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+      "markPrice": 1024.2541638049363,
+      "markValuation": 1268979516234,
+      "tokenPrice": 1336.3288505601827,
+      "impliedValuation": 1655618300847,
+      "supply": 2826.3538827586053
+    },
+    {
+      "name": "Polymarket PreStocks",
+      "symbol": "POLYMARKET",
+      "description": "Polymarket is a decentralized prediction market for real-world events. It leverages blockchain technology and market-driven pricing to provide real-time implied probabilities across politics, economics, sports, and more.\n\nPOLYMARKET is a PreStocks issued token backed 1:1 by SPV exposure that tracks the price of the underlying private company.",
+      "image": "https://www.prestocks.com/logos/polymarket.png",
+      "external_url": "https://www.prestocks.com/polymarket",
+      "contract_address": "Pre8AREmFPtoJFT8mQSXQLh56cwJmM7CFDRuoGBZiUP",
+      "markPrice": 144.35539659,
+      "markValuation": 14237161199,
+      "tokenPrice": 144.49918619638927,
+      "impliedValuation": 14251342559,
+      "supply": 4816.965563221
+    },
+    {
+      "name": "SpaceX PreStocks",
+      "symbol": "SPACEX",
+      "description": "SpaceX engineers reusable launch vehicles and the Starlink satellite constellation for global broadband. Their focus on rapid reusability and vertical integration drives down launch costs and accelerates space access.\n\nSPACEX is a PreStocks issued token backed 1:1 by SPV exposure that tracks the price of the underlying private company.",
+      "image": "https://www.prestocks.com/logos/spacex.png",
+      "external_url": "https://www.prestocks.com/spacex",
+      "contract_address": "PreANxuXjsy2pvisWWMNB6YaJNzr7681wJJr2rHsfTh",
+      "markPrice": 149.3910926818377,
+      "markValuation": 1958683215162,
+      "tokenPrice": 115.9932729262415,
+      "impliedValuation": 1520800689477,
+      "supply": 43712.532100135
+    }
+  ]
+}

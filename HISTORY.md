@@ -292,3 +292,20 @@ Research: PASS
 Fresh rerun: PASS
 Outstanding blockers: NONE
 Git SHA: recorded after this commit
+
+## 2026-09-24T03:35:00Z — Phase 13 snapshot and Render
+
+- Captured a mainnet read-only snapshot at slot 449906754, epoch 1041. The OPENAI mint fee in that account is 100 bps. Jupiter price v3 returned a live USD price. No mainnet transaction was sent.
+- Created the Render service `locate-api` in Frankfurt on the free plan. The first builds failed because `rootDir` was ignored inside `serviceDetails` and `tsc` emitted `dist/src/server.js`. `rootDir` is now the top-level field `backend`, and the TypeScript `rootDir` is `src`, so the start file is `dist/server.js`.
+- The production build command installs dev dependencies so `tsc` exists when Render sets `NODE_ENV=production`.
+
+PHASE 13 IN PROGRESS
+
+Implementation: PASS
+Tests: PASS
+Security: N/A
+Evidence: PASS for the snapshot
+Research: PASS
+Fresh rerun: FAIL
+Outstanding blockers: Render deploy has not gone live yet
+Git SHA: recorded after this commit

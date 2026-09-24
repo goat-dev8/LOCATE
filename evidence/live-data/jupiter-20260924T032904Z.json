@@ -1,0 +1,31 @@
+{
+  "fetchedAt": "2026-09-24T03:29:09.029Z",
+  "slot": 449906754,
+  "epoch": 1041,
+  "cluster": "mainnet-beta",
+  "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+  "price": {
+    "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF": {
+      "createdAt": "2025-09-13T15:42:46Z",
+      "liquidity": 906361.2467667104,
+      "usdPrice": 1328.9474057402047,
+      "blockId": 449906733,
+      "decimals": 9,
+      "priceChange24h": 2.805483808011628,
+      "stockData": {
+        "id": "prestocks",
+        "price": 1024.2541638049363,
+        "mcap": 1268979516234,
+        "updatedAt": "2026-09-24T03:25:16.806Z"
+      },
+      "scaledUiConfig": {
+        "multiplier": 1,
+        "newMultiplier": 1.4861347,
+        "newMultiplierEffectiveAt": "2026-07-17T16:30:00Z",
+        "circSupplyPrescaled": 1901.815416031,
+        "totalSupplyPrescaled": 1901.815416031,
+        "usdPricePrescaled": 1974.9948541454974
+      }
+    }
+  }
+}
