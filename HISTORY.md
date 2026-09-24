@@ -361,3 +361,20 @@ Research: PASS
 Fresh rerun: PASS
 Outstanding blockers: cold start has not been measured after 16 minutes idle
 Git SHA: recorded after this commit
+
+## 2026-09-24T03:48:00Z — Frontend checker
+
+- `FRONTEND/` is present. LOCATE did not edit it.
+- `node sdk/tools/check-frontend.mjs FRONTEND` exits 1. The app store seeds offers, loans, receipts, and balances, including SPACEX. The four `VITE_*` variables are missing. Details are in `docs/FRONTEND_DEFECTS.md` and `evidence/qa/checker.txt`.
+- GitHub Actions secrets `DIRECT_URL`, `DATABASE_URL`, and `RENDER_API_KEY` are set, along with variables `RENDER_SERVICE_ID` and `LOCATE_PROGRAM_ID`. The production environment exists. Secret values were not printed.
+
+PHASE 15 IN PROGRESS
+
+Implementation: PASS
+Tests: FAIL
+Security: PASS
+Evidence: PASS
+Research: PASS
+Fresh rerun: PASS
+Outstanding blockers: the delivered frontend still uses seeded state
+Git SHA: recorded after this commit

@@ -1,0 +1,19 @@
+FRONTEND\src\components\bits\ClickSpark.tsx matches a fake-data pattern
+FRONTEND\src\components\bits\DecryptionText.tsx matches a fake-data pattern
+FRONTEND\src\components\locate\app\drawers\TakeOfferDrawer.tsx matches a fake-data pattern
+FRONTEND\src\components\locate\app\hooks.ts matches a fake-data pattern
+FRONTEND\src\components\locate\app\views\CreateOffer.tsx matches a fake-data pattern
+FRONTEND\src\components\locate\app\views\LoanDetail.tsx matches a fake-data pattern
+FRONTEND\src\components\locate\landing\Footer.tsx matches a fake-data pattern
+FRONTEND\src\components\locate\landing\Opportunity.tsx matches a fake-data pattern
+FRONTEND\src\components\locate\landing\Problem.tsx matches a fake-data pattern
+FRONTEND\src\components\locate\LocateRoot.tsx matches a fake-data pattern
+FRONTEND\src\components\ui\sidebar.tsx matches a fake-data pattern
+FRONTEND\src\hooks\use-toast.ts matches a fake-data pattern
+FRONTEND\src\lib\locate\store.ts matches a fake-data pattern
+FRONTEND\src\lib\locate\useLiveMarket.ts matches a fake-data pattern
+missing VITE_API_BASE_URL
+missing VITE_SOLANA_CLUSTER
+missing VITE_SOLANA_RPC_URL
+missing VITE_LOCATE_PROGRAM_ID
+EXIT:1
