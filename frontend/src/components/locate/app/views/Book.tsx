@@ -99,7 +99,7 @@ function OfferCard({
   const asset = ASSETS.find((a) => a.id === offer.assetId)!;
   const live = useLiveMarket();
   const row = live.bySymbol(offer.assetId);
-  const pct = row && row.markPrice > 0 ? row.premiumPct : null;
+  const pct = row && row.markPrice != null && row.markPrice > 0 ? row.premiumPct : null;
   const net = netFromGross(offer.amount, asset.transferFeeBps);
   const cd = useCountdown(offer.expiryAt);
 

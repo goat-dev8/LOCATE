@@ -1,0 +1,24 @@
+{
+  "borrowerUsdcAfter": "999999950000",
+  "borrowerUsdcBefore": "1000000000000",
+  "createCode": null,
+  "createOk": true,
+  "deliveredRaw": "1998473",
+  "epoch": 1041,
+  "flags": {
+    "decimals": 9,
+    "feeBps": 100,
+    "feePending": false,
+    "hookSet": false,
+    "maxFee": "18446744073709551615",
+    "paused": false
+  },
+  "label": "Cloned Mainnet State — Local Execution",
+  "lenderRestored": true,
+  "loanClosed": true,
+  "mint": "PrekqLJvJ3qVdXmBGDiexvwUTF4rLFDa6HWS4HJbw9S",
+  "passed": true,
+  "requiredNetRaw": "1998473",
+  "takeCode": null,
+  "takeOk": true
+}

@@ -20,6 +20,15 @@
       "sha256": "dfeb33764984c2136e0139d22e846cc7cf41eedbd4c4ece46dc95c8e383787f4",
       "bytes": 82,
       "slot": 449882177
+    },
+    "neuralink_mint.json": {
+      "pubkey": "PrekqLJvJ3qVdXmBGDiexvwUTF4rLFDa6HWS4HJbw9S",
+      "sha256": "1c1da951f8f9d5c349a8684ff6cee7a83db9accb8646e96e651faedf07d4b22f",
+      "bytes": 911,
+      "slot": 450079771,
+      "epoch": 1041,
+      "fetchedAt": "2026-09-24T16:15:00Z",
+      "rpc": "https://api.mainnet-beta.solana.com"
     }
   },
   "disclosure": "Balances injected by direct account write in tests; mint and program bytes are real mainnet at the recorded slot."

@@ -82,7 +82,7 @@ export function useLiveMarket(pollMs = 60_000): LiveMarket {
                     termSecs: asText(best.termSecs),
                   }
                 : null,
-              action: best ? "TAKE_OFFER" : "LIST_YOURS",
+              action: (best ? "TAKE_OFFER" : "LIST_YOURS") as LiveRow["action"],
             };
           })
           .filter((row) => row.symbol && row.symbol !== "SPACEX");

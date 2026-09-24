@@ -1,0 +1,8 @@
+{
+  "label": "LiteSVM security, functional, and mutation suites. Not a mainnet transaction.",
+  "functional": { "passed": 17, "failed": 0 },
+  "security": { "passed": 14, "failed": 0 },
+  "mutation": { "passed": 10, "failed": 0 },
+  "backendVitest": { "passed": 20, "failed": 0, "files": 4 },
+  "mainnetTransaction": false
+}

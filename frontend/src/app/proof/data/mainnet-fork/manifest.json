@@ -1,0 +1,46 @@
+{
+  "accounts": {
+    "neuralink": {
+      "bytes": 911,
+      "executable": false,
+      "file": "neuralink_mint.json",
+      "lamports": 7241440,
+      "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "pubkey": "PrekqLJvJ3qVdXmBGDiexvwUTF4rLFDa6HWS4HJbw9S",
+      "sha256": "1c1da951f8f9d5c349a8684ff6cee7a83db9accb8646e96e651faedf07d4b22f",
+      "slot": 450079771
+    },
+    "openai": {
+      "bytes": 902,
+      "executable": false,
+      "file": "openai_mint.json",
+      "lamports": 362899490,
+      "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "pubkey": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+      "sha256": "d077e95d77a8215bef34aa6efddfd0cf66d8e183e8379de1e55c40e5dcb1d466",
+      "slot": 449882176
+    },
+    "usdc": {
+      "bytes": 82,
+      "executable": false,
+      "file": "usdc_mint.json",
+      "lamports": 534788257985,
+      "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "pubkey": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "sha256": "dfeb33764984c2136e0139d22e846cc7cf41eedbd4c4ece46dc95c8e383787f4",
+      "slot": 449882177
+    }
+  },
+  "balances": "Token balances in these runs are written into ATAs on the local machine after the cloned mint bytes are installed. The issuer did not mint them.",
+  "epochUsedForActiveFee": 1041,
+  "label": "Cloned Mainnet State — Local Execution",
+  "matrix": {
+    "failed": 0,
+    "passed": 16,
+    "total": 16
+  },
+  "notAMainnetTransaction": true,
+  "programId": "F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6",
+  "programSha256": "acb6b4a814edf90696beac9090018d5416cd7a89c2bfe406891d2ffad21fe3dd",
+  "token2022Program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+}

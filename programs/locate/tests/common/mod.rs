@@ -117,11 +117,18 @@ impl World {
     /// Real mainnet OPENAI and USDC account bytes. Token balances are written
     /// directly after the ATAs exist. The issuer did not mint them.
     pub fn fork(epoch: u64) -> Self {
+        Self::fork_fixture("openai_mint.json", epoch)
+    }
+
+    /// Cloned mainnet mint bytes plus the dumped USDC mint. Balances below are
+    /// written into ATAs created on this local machine. They are not issuer mints
+    /// and this execution is not a mainnet transaction.
+    pub fn fork_fixture(name: &str, epoch: u64) -> Self {
         let mut world = Self::new();
-        let openai = load_fixture("openai_mint.json");
+        let minted = load_fixture(name);
         let usdc = load_fixture("usdc_mint.json");
-        world.mint_id = openai.0;
-        world.svm.set_account(openai.0, openai.1).unwrap();
+        world.mint_id = minted.0;
+        world.svm.set_account(minted.0, minted.1).unwrap();
         world.svm.set_account(usdc.0, usdc.1).unwrap();
         world.set_clock(1_800_000_000, epoch);
         world.create_atas();
@@ -130,6 +137,12 @@ impl World {
         world.set_amount(&world.lender_usdc(), 1_000_000_000_000);
         world.set_amount(&world.borrower_usdc(), 1_000_000_000_000);
         world
+    }
+
+    pub fn live_fee(&self) -> (u16, u64) {
+        let acct = self.svm.get_account(&self.mint_id).expect("mint");
+        let flags = locate::token2022::read_mint_flags(&acct.data, self.epoch).expect("mint flags");
+        (flags.fee_bps, flags.max_fee)
     }
 
     pub fn set_amount(&mut self, account: &Address, amount: u64) {

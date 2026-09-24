@@ -1,0 +1,93 @@
+{
+  "cluster": "mainnet-beta",
+  "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+  "usdcMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "quoteSource": "jupiter /swap/v1/quote",
+  "decimals": 9,
+  "usdcDecimals": 6,
+  "feeBps": 100,
+  "maxFee": "18446744073709551615",
+  "loanAmountRaw": "2018660",
+  "loanAmountUi": "0.00201866",
+  "receivedNetRaw": "1998473",
+  "requiredReturnGrossRaw": "2039051",
+  "timestamp": "2026-09-24T16:35:38.837Z",
+  "mainnetTransaction": false,
+  "priorBuyback": {
+    "note": "Earlier ExactIn buy spending only the sell proceeds quoted fewer OPENAI raw units than were sold, and that simulation failed.",
+    "soldRaw": "2018660",
+    "usdcIn": "3987285",
+    "quotedOutRaw": "1983744",
+    "shortfallVsSoldRaw": "34916",
+    "simulation": "Jupiter custom 6001"
+  },
+  "id": "openai-buyback",
+  "test": "USDC to enough OPENAI",
+  "exactOutStatus": 400,
+  "exactOutError": {
+    "error": "No routes found",
+    "errorCode": "NO_ROUTES_FOUND"
+  },
+  "mode": "ExactIn",
+  "attempts": [
+    {
+      "usdcIn": "3915540",
+      "status": 200,
+      "outAmount": "1941976",
+      "fresh": true
+    },
+    {
+      "usdcIn": "4111270",
+      "status": 200,
+      "outAmount": "2039051",
+      "fresh": true
+    }
+  ],
+  "quoteTimestamp": "2026-09-24T16:35:31.754Z",
+  "inputAmountRaw": "4111270",
+  "inputAmountUi": "4.11127",
+  "outputAmountRaw": "2039051",
+  "outputAmountUi": "0.002039051",
+  "minimumAcceptableRaw": "2039051",
+  "otherAmountThreshold": "2018661",
+  "route": [
+    {
+      "label": "Meteora DLMM",
+      "amm": "3M9nHQhxRMrK66hxRVTGLEmrvEK6Pimds6C3f3WaaLyt",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "inAmount": "4111270",
+      "outAmount": "35138717"
+    },
+    {
+      "label": "Meteora DLMM",
+      "amm": "CoqYNCGKpiGgLJJ6DntdbcvKmqTZBrxdvQDrxDCfb9GH",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "outputMint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+      "inAmount": "35138717",
+      "outAmount": "2039051"
+    }
+  ],
+  "priceImpactPct": "0.0113526513285840031192705804",
+  "contextSlot": 450084569,
+  "usdcGapVsSellProceeds": "195730",
+  "simulation": {
+    "simulation": "PASS",
+    "error": null,
+    "unitsConsumed": 88088,
+    "messageBytes": 622,
+    "logTail": [
+      "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo consumed 40510 of 71649 compute units",
+      "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo success",
+      "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 invoke [2]",
+      "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 consumed 106 of 29112 compute units",
+      "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 success",
+      "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 consumed 87788 of 115808 compute units",
+      "Program return: JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 oBkfAAAAAAA=",
+      "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 success"
+    ],
+    "note": "simulateTransaction only. No mainnet transaction was sent."
+  },
+  "result": "PASS",
+  "simulationResult": "PASS"
+}

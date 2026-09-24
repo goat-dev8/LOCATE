@@ -1,0 +1,31 @@
+{
+  "cluster": "mainnet-beta",
+  "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+  "usdcMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "quoteSource": "jupiter /swap/v1/quote",
+  "decimals": 9,
+  "usdcDecimals": 6,
+  "feeBps": 100,
+  "maxFee": "18446744073709551615",
+  "loanAmountRaw": "2018660",
+  "loanAmountUi": "0.00201866",
+  "receivedNetRaw": "1998473",
+  "requiredReturnGrossRaw": "2039051",
+  "timestamp": "2026-09-24T16:35:38.837Z",
+  "mainnetTransaction": false,
+  "priorBuyback": {
+    "note": "Earlier ExactIn buy spending only the sell proceeds quoted fewer OPENAI raw units than were sold, and that simulation failed.",
+    "soldRaw": "2018660",
+    "usdcIn": "3987285",
+    "quotedOutRaw": "1983744",
+    "shortfallVsSoldRaw": "34916",
+    "simulation": "Jupiter custom 6001"
+  },
+  "id": "take-sell-size",
+  "test": "take delivery then sell that net amount",
+  "takeDeliversRaw": "1998473",
+  "sellInputRaw": "1998473",
+  "sellOutputUsdcRaw": "3915540",
+  "amountsMatch": true,
+  "result": "PASS"
+}

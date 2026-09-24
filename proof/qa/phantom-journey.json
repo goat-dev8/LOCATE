@@ -1,0 +1,19 @@
+{
+  "at": "2026-09-24T21:55:00Z",
+  "url": "http://localhost:3010/",
+  "clusterLabel": "DEVNET TEST MINT MIRRORING OPENAI'S EXTENSIONS; NOT A PRESTOCKS TOKEN",
+  "wallet": {
+    "connected": true,
+    "pubkeyPrefix": "Hbkp",
+    "pubkeySuffix": "TvaC",
+    "dopenaiUi": "1.485985334"
+  },
+  "views": {
+    "overview": "OPEN APP from landing opened the workspace with CONNECTED status",
+    "book": "NO OPEN OFFERS ON DEVNET RIGHT NOW. 0 live, 0 units. API mark OPENAI $1,319 +28.9% LIVE. Book does not invent supply.",
+    "verify": "PROOF ROOM listed verified on-chain receipts including create 3oW3dET9..., take 3BpyAK9e..., return 5YJGkxd9..., claim 2paQbq9P..."
+  },
+  "consoleErrors": [],
+  "phantomApproveThisSession": false,
+  "note": "Wallet was already connected in this Chrome profile. No new listing or take was signed in this session."
+}

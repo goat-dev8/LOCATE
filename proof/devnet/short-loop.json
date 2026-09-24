@@ -1,0 +1,39 @@
+{
+  "label": "DEVNET REPLICA / TEST ASSET — NOT A MAINNET PRESTOCK",
+  "cluster": "devnet",
+  "mint": "9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P",
+  "usdcMint": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
+  "mainnetTransaction": false,
+  "result": "FAIL",
+  "signedTransactions": [],
+  "jupiter": {
+    "status": 400,
+    "error": "The token 9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P is not tradable",
+    "errorCode": "TOKEN_NOT_TRADABLE"
+  },
+  "dlmm": {
+    "program": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+    "executableOnDevnet": true,
+    "instruction": "InitializeCustomizablePermissionlessLbPair2",
+    "error": "UnsupportedTokenMint",
+    "errorNumber": 6073,
+    "custom": "0x17b9",
+    "note": "The program executed on Devnet and refused the replica mint. initializeTokenBadge requires the DLMM admin, which this wallet is not. No pool was created and no swap was sent."
+  },
+  "otherPrograms": {
+    "raydiumV4": "account present but not executable",
+    "raydiumCpmm": "account present but not executable",
+    "orcaWhirlpool": "executable on devnet; not used because a second admin-gated token badge was not assumed to succeed"
+  },
+  "mintExtensions": [
+    "PermanentDelegate",
+    "DefaultAccountState",
+    "TransferFeeConfig",
+    "TransferHook",
+    "ScaledUiAmountConfig",
+    "MetadataPointer",
+    "PausableConfig",
+    "TokenMetadata"
+  ],
+  "transferHookProgram": "11111111111111111111111111111111"
+}

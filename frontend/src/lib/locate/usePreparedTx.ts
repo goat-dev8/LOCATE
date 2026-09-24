@@ -39,8 +39,14 @@ export function usePreparedTx() {
       setPhase("simulating");
       try {
         const result = await prepareInstructions(connection, publicKey, instructions);
-        if (!result.ok) {
-          setError(result.simulated ? `Simulation — not a transaction. ${result.error}` : result.error);
+        if (!result.ok || !("prepared" in result)) {
+          setError(
+            !result.ok
+              ? result.simulated
+                ? `Simulation — not a transaction. ${result.error}`
+                : result.error
+              : "Simulation did not return a prepared transaction.",
+          );
           setPhase("review");
           return;
         }

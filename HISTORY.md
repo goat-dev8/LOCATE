@@ -617,4 +617,265 @@ Implementation: IN PROGRESS
 Outstanding blockers: receipt POST 500 until Render deploy of v0 accountKeys fix; Vercel of this SHA; production Chrome; E-11 lighthouse
 Git SHA: pending this commit
 
+## 2026-09-24T06:10:00Z — Push, Vercel READY, Render receipt verify
+
+- Commit `1587ca2` on `origin/main`. Phantom list/cancel/take/return now confirm in the UI after approval. Book shows funded listings including yours.
+- Render `locate-api` gitSha `1587ca2`. `POST /v1/receipts/:signature` returns `verified` for the Phantom list, cancel, take, return, and the 60s claim. CORS allows `https://locate-blue.vercel.app` and `https://locate-iytdekmxy-goats-projects-3f023cc9.vercel.app`.
+- Vercel production `dpl_6WGnLHhipzeu1G8Vaked7EGuC6Vc` READY at that unique URL. Production landing on locate-blue shows live PreStocks prices and the Devnet mint banner.
+- Checker exits 0. SDK tests 10 passed.
+
+PHASE 15 IN PROGRESS
+
+Implementation: IN PROGRESS
+Outstanding blockers: E-11 lighthouse 390×844; confirm locate-blue alias is this SHA; PNG screenshots for every E-id
+Git SHA: 1587ca2 on origin/main
+
+## 2026-09-24T16:20:00Z — Mainnet execution gate, not a mainnet transaction
+
+- Added `scripts/mainnet-execution-gate.mjs`. Real mainnet create/take/return is a separate track. It stays off unless `LOCATE_MAINNET_EXECUTION_ENABLED=true`.
+- The local `.env` value is `false`. The gate wrote `proof/mainnet-execution/gate.json` and exited 2. It did not sign, deploy, or send.
+- Five prerequisite proof files are still missing, including the cloned-mainnet fork manifest and source/build correspondence.
+- Neuralink mainnet mint `PrekqLJvJ3qVdXmBGDiexvwUTF4rLFDa6HWS4HJbw9S` was fetched at slot 450079771, epoch 1041, sha256 `1c1da951f8f9d5c349a8684ff6cee7a83db9accb8646e96e651faedf07d4b22f`, 911 bytes. Fork execution of that snapshot has not been run yet.
+
+PHASE P0.5 GATE ONLY
+
+Implementation: gate present, execution not started
+Tests: not run for this track
+Mainnet signatures: none
+Outstanding blockers: fork proof, source/build correspondence, security suite, then an explicit owner flag before any mainnet signature
+Git SHA: uncommitted
+
+## 2026-09-24T16:27:24Z — Cloned mainnet fork proof
+
+- Command: `CARGO_TARGET_DIR=/tmp/locate-fork-target cargo test -p locate --test fork_proof -- --nocapture`
+- Result: 1 test, 16 cases, 16 passed, 0 failed. Finished in 5.63s. Exit 0.
+- Label on every artifact: Cloned Mainnet State — Local Execution. These are not mainnet transactions.
+- Program `F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6`. Binary sha256 `acb6b4a814edf90696beac9090018d5416cd7a89c2bfe406891d2ffad21fe3dd` (`target/deploy/locate.so`, 342712 bytes).
+- OpenAI mint slot 449882176, sha256 `d077e95d77a8215bef34aa6efddfd0cf66d8e183e8379de1e55c40e5dcb1d466`. Epoch 1041, fee 100 bps, not paused, no hook.
+- Neuralink mint slot 450079771, sha256 `1c1da951f8f9d5c349a8684ff6cee7a83db9accb8646e96e651faedf07d4b22f`. Same epoch and fee shape. Create, take, return passed. Delivered raw 1998473 against required net 1998473.
+- OpenAI return restored the lender token account. Borrower USDC fell by the 50000 fee. Vault after take held collateral 1000000, not the fee.
+- OpenAI claim after maturity plus grace moved 1050000 USDC raw to the lender. Early claim code 6015. Second claim and return-after-claim code 3012.
+- Token balances in the fork were written into local ATAs after the cloned mint bytes were installed. The issuer did not mint them.
+- Mainnet execution flag remains false. No mainnet signature was produced.
+
+PHASE P0 FORK
+
+Implementation: PASS
+Tests: 16/16
+Mainnet signatures: none
+Evidence: `proof/mainnet-fork/`
+Outstanding blockers: Jupiter round trip, Devnet DEX loop, 40 local-validator cases, property replay, proof page, source/build correspondence, owner flag before any mainnet send
+Git SHA: uncommitted
+
+## 2026-09-24T16:36:00Z — Jupiter mainnet round trip
+
+- Command: `node scripts/jupiter-roundtrip.mjs`. No mainnet transaction was sent. `mainnetTransaction` is false in every artifact.
+- Loan size stayed 2018660 raw. Transfer fee 100 bps. Borrower receives 1998473 raw. Return requires gross 2039051 raw so the lender receives the loan amount after the fee.
+- ExactOut for 2039051 returned no route. ExactIn search on Meteora DLMM found a quote.
+- Sell of 1998473 raw OPENAI quoted 3915540 USDC raw. Simulation PASS, 87164 compute units.
+- Buyback spent 4111270 USDC raw and quoted 2039051 OPENAI raw, equal to the required gross. Simulation PASS, 88088 compute units. The USDC gap versus the sell proceeds is 196730 raw.
+- The earlier buy that spent only the sell proceeds quoted 1983744 raw and simulated Jupiter custom 6001. That shortfall is stored on each new artifact and was not treated as a pass.
+- Files: `proof/jupiter-roundtrip/sell.json`, `buyback.json`, `take-sell-size.json`, `buy-return-size.json`. All four `result` fields are PASS.
+
+PHASE P1 JUPITER
+
+Implementation: PASS
+Tests: 4/4 quote-and-simulation artifacts
+Mainnet signatures: none
+Outstanding blockers: Devnet DEX short loop, 40 local-validator cases, property replay, proof page, source/build correspondence, owner flag before any mainnet send
+Git SHA: uncommitted
+
+## 2026-09-24T16:42:00Z — Devnet short loop blocked at the DEX
+
+- Jupiter quote for the Devnet replica mint `9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P` returned HTTP 400 `TOKEN_NOT_TRADABLE`.
+- DLMM program `LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo` is executable on Devnet. `InitializeCustomizablePermissionlessLbPair2` ran in simulation and failed with `UnsupportedTokenMint` 6073 (`0x17b9`). No pool transaction was confirmed.
+- The replica mint's transfer-hook program is the System Program. The mint also has a permanent delegate, transfer fee, pause, and scaled UI amount. DLMM token badges are created by the DLMM admin, not by this wallet.
+- Raydium v4 and Raydium CPMM accounts on this Devnet RPC are not executable. No swap signature exists.
+- Artifact: `proof/devnet/short-loop.json` with `result` FAIL. This is not recorded as a pass.
+
+PHASE P2 DEVNET DEX
+
+Implementation: blocked
+Tests: the pool creation simulation failed as recorded
+Signatures: none
+Outstanding blockers: a Devnet venue that accepts this Token-2022 mint without an admin badge; then list, take, sell, buyback, return
+Git SHA: uncommitted
+
+## 2026-09-24T17:16:12Z — Local validator suite
+
+- Built the devnet-feature program to `target/deploy/devnet-feature/locate.so`, 359712 bytes, sha256 `698862354901ab1a262c378fcac6c424ee349bf8fa229e496e4ff933db56abc2`. The earlier mainnet-feature binary remains `target/deploy/locate.so`, 342712 bytes.
+- `solana-test-validator` 4.1.2 executed 42 scenarios. Result: 42 passed, 0 failed. Exit 0. Elapsed about 136s, including the real clock wait through the 60s term and 30s grace.
+- Claim before maturity, inside the grace window, and a second claim were refused. Claim after term plus grace landed and closed the loan. Early claim code was 6015. Pause code was 6007. A set transfer hook was refused with 6008. Raising the transfer fee and returning with the old max gross was refused with 6013.
+- The USDC account is a local mint at the pinned devnet USDC address `4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU`. It is not mainnet USDC circulation.
+- Artifact: `proof/local-validator/suite.json`.
+
+PHASE P3 LOCAL VALIDATOR
+
+Implementation: PASS
+Tests: 42/42
+Mainnet signatures: none
+Outstanding blockers: Devnet DEX short loop, property replay, proof page, source/build correspondence, owner flag before any mainnet send
+Git SHA: uncommitted
+
+## 2026-09-24T17:32:00Z — Cross-runtime replay
+
+- `cargo test -p locate --test fee_prop --test replay_gen` exited 0. fee_prop: 5 passed, 0 failed, 0.71s. Four of those tests each ran 10,000 cases: `fz01_minimal_gross`, `fz02_epoch_fee_is_capped`, `fz03_schedule_matches_checked_add`, `fz04_collateral_add`. `fz01_svm_spot` is one LiteSVM return.
+- `write_cross_runtime_vectors` wrote 45,000 lines to `proof/replay/vectors.jsonl`. Seed `83903314482245`. Families: epoch_fee 10000, gross_for_net 10000, schedule 10000, collateral 10000, pda 5000. Program id `F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6`.
+- TypeScript `vitest run test/replay.test.ts test/unit.test.ts`: 2 files, 11 tests passed, 0 failed, 4.76s. Every line matched `sdk/src/fees.ts` and `sdk/src/pdas.ts` exactly, including overflow rows where both sides return no value. `grossForNet` was aligned to `programs/locate/src/token2022.rs`, including the 10000 bps branch and the `net + 8 < gross` stop.
+
+PHASE P4 CROSS-RUNTIME REPLAY
+
+Implementation: PASS
+Tests: fee_prop 5/5, replay vectors 45000/45000, vitest 11/11
+Mainnet signatures: none
+Outstanding blockers: Devnet DEX short loop, proof page, source/build correspondence, owner flag before any mainnet send
+Git SHA: uncommitted
+
+## 2026-09-24T17:33:25Z — Proof route and gate refresh
+
+- Re-ran `node scripts/mainnet-execution-gate.mjs`. Exit 2. Flag still false. Signed false. Sent false. Four fork artifacts are now present. The remaining missing prerequisite is `proof/verification/source-build.json`. Blocker text: `LOCATE_MAINNET_EXECUTION_ENABLED is not true. Mainnet signing is refused.`
+- `frontend/src/app/proof/page.tsx` reads the proof JSON files and rendered HTTP 200 on `http://localhost:3010/proof`. The HTML contained the recorded figures: fork 16/16, local validator 42/42, replay 45000, Devnet `TOKEN_NOT_TRADABLE` and DLMM 6073, Jupiter labeled not a mainnet transaction, mainnet execution not signed.
+
+PHASE P5 PROOF ROUTE
+
+Implementation: PASS for the artifact page
+Tests: HTTP 200, recorded strings present
+Mainnet signatures: none
+Outstanding blockers: Devnet DEX short loop, source/build correspondence, owner flag before any mainnet send
+Git SHA: uncommitted
+
+## 2026-09-24T17:40:00Z — Source/build record, settlement rows, Token-2022 matrix
+
+- `proof/verification/source-build.json` records `verified: false`. HEAD `1587ca2e23317f4f34c7a69f6b67f9c4b5e14370` with a dirty worktree. Local mainnet-feature binary is 342712 bytes, sha256 `acb6b4a814edf90696beac9090018d5416cd7a89c2bfe406891d2ffad21fe3dd`. Local devnet-feature binary is 359712 bytes, sha256 `698862354901ab1a262c378fcac6c424ee349bf8fa229e496e4ff933db56abc2`.
+- Devnet program `F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6` is executable at slot 503578692. Programdata `DSbRjFotfkpDqdKNPQ9dFshpTi5cg57bXL72VRxM7Vhh`. ELF starts at offset 45, 395683 bytes, sha256 `12f9355d6a5c9cc4478500a2dbdcd80f2112833a90d2c64b89d751d6589f878a`. It matches neither local binary. Mainnet `getAccountInfo` at slot 450098227 returned no account.
+- Toolchain observed: rustc 1.96.0, anchor-cli 1.2.0, solana-cli 4.1.2. `solana-verify` was not run.
+- The mainnet gate now also requires `verified === true` in that file. Re-run exit 2. Missing files: 0. Flag false. Signed false. Blocker remains the flag.
+- `/proof` HTTP 200 shows the unverified correspondence, the Devnet ELF hash, and the OpenAI fork settlement balances from `openai-full-lifecycle.json`, including deliveredRaw 1998473 and vaultAfterTake 1000000. Label remains cloned mainnet local execution.
+- `proof/token2022/matrix.json` records transfer fee, pause 6007, hook 6008, and memo-transfer as exercised. Freeze is recorded as weak because case 16 failed with 6010. Confidential transfer, CPI guard, and interest-bearing are not exercised.
+
+PHASE P7 SOURCE/BUILD
+
+Implementation: recorded, not verified
+Tests: gate exit 2, /proof HTTP 200
+Mainnet signatures: none
+Outstanding blockers: clean committed rebuild whose hash matches a deployed ELF, Devnet DEX short loop, owner flag before any mainnet send
+Git SHA: uncommitted
+
+## 2026-09-24T17:55:00Z — Security, functional, mutation
+
+- `cargo test -p locate --test security --test functional` exited 0. functional 17/17 in 2.82s. security 14/14 in 2.02s. Substituted vault, fake USDC, third-party return, missing delegation, CPI guard, closed ATAs, memo, stale terms, extreme amount, permanent-delegate burn then claim, and double-take while the loan is open are in that set.
+- Backend `npm test` exited 0. vitest 4 files, 20 tests passed, 12.34s.
+- Mutation suite `cargo test -p locate --test mutation` exited 0 after two harness fixes: `claim()` panics on the expected 6015, so the case now uses `claim_ix` plus `submit`; a borrower-signed create fails at `Transaction::sign` with NotEnoughSigners, which is treated as refusal. 10 passed, 0 failed, 1.43s.
+- Artifact: `proof/security/suite.json`. Not a mainnet transaction.
+
+PHASE P9 SECURITY AND MUTATION
+
+Implementation: PASS for LiteSVM and backend unit tests
+Tests: functional 17/17, security 14/14, mutation 10/10, backend 20/20
+Mainnet signatures: none
+Outstanding blockers: source/build correspondence, Devnet DEX short loop, owner flag before any mainnet send, production QA
+Git SHA: uncommitted
+
+## 2026-09-24T17:58:00Z — Frontend and backend typecheck
+
+- Backend `npx tsc --noEmit` exited 0.
+- Frontend `npx tsc --noEmit` first failed on leftover `examples/` and `locate/` vite files, DataRow tones `lime`/`muted`, Payline `total`, bigint literals under ES2017, a possibly-null market price, LiveRow action widening, and `prepared` not narrowed on the prepare union. After excluding `examples` and `locate`, targeting ES2020, rebuilding `@locate/sdk` dist, and those source fixes, `npx tsc --noEmit` exited 0.
+- Playwright config still points at `FRONTEND` and there are no `e2e` files. Lighthouse, Vercel, and Render were not rerun.
+
+PHASE P10 TYPECHECK
+
+Implementation: PASS for tsc
+Tests: frontend tsc 0, backend tsc 0
+Mainnet signatures: none
+Outstanding blockers: source/build correspondence, Devnet DEX short loop, owner flag, Playwright/Lighthouse/production deploy
+Git SHA: uncommitted
+
+## 2026-09-24T18:02:05Z — Lint, Devnet signatures on /proof, Lighthouse
+
+- ESLint on `src/app/proof`, `src/lib/locate`, and `parts.tsx` exited 0.
+- A mid-edit parse error on `/proof` was fixed. The page now lists the recorded Devnet replica create/take/return/claim signatures. `getTransaction` on Devnet with finalized commitment found create slot 503264904, take 503264909, return 503264913, claim 503265496, all `err: null`. Label remains DEVNET REPLICA / TEST ASSET — NOT A MAINNET PRESTOCK.
+- Mobile Lighthouse on `http://localhost:3010/proof`: accessibility 96, best-practices 92, SEO 100, agentic-browsing 100. Failed audits: errors-in-console, color-contrast, inspector-issues. Recorded, not chased to 100. Artifact `proof/qa/lighthouse-proof.json`.
+- Devnet DEX short loop remains FAIL. Mainnet execution remains not signed. Source/build remains not verified.
+
+PHASE P10 LIGHTHOUSE AND DEVNET LIFECYCLE DISPLAY
+
+Implementation: PASS for local proof page and recorded Devnet signatures
+Tests: eslint 0, lighthouse a11y 96
+Mainnet signatures: none
+Outstanding blockers: source/build correspondence, Devnet DEX, owner flag, Vercel/Render at this commit, Playwright package
+Git SHA: uncommitted
+
+## 2026-09-24T21:52:00Z — Playwright and live production SHA
+
+- `@playwright/test` 1.55.0 installed. Chromium Headless Shell 140 downloaded. First proof spec failed on a strict-mode locator: the replica label appears three times. After `.first()`, `npx playwright test` exited 0, 1 passed in 5.2s against `http://127.0.0.1:3010/proof`.
+- Proof JSON files were copied into `frontend/src/app/proof/data` so a frontend-only deploy can still read them. `next.config.ts` no longer ignores TypeScript build errors.
+- Live Render `GET https://locate-api-znz1.onrender.com/health` returned 200 with gitSha `1587ca2e23317f4f34c7a69f6b67f9c4b5e14370`. Live `https://locate-blue.vercel.app/proof` returned 404. Production is still the earlier SHA; this worktree is not deployed.
+- Mainnet execution remains disabled and unsigned. Source/build remains not verified.
+
+PHASE P10 PLAYWRIGHT
+
+Implementation: PASS for local /proof
+Tests: playwright 1/1
+Mainnet signatures: none
+Outstanding blockers: source/build correspondence, Devnet DEX, owner flag, production deploy of this worktree
+Git SHA: uncommitted
+
+## 2026-09-24T21:53:07Z — Next production build
+
+- `npx next build` exited 0 in 41.8s. TypeScript finished in 14.5s. Route `/proof` is listed as a dynamic server route. `ignoreBuildErrors` is false.
+- Turbopack warned that dynamic `existsSync`/`readFileSync` traced the whole project. The proof page now reads only `src/app/proof/data`.
+- This build was not copied to Vercel or Render. Live production remains SHA `1587ca2`.
+
+PHASE P10 NEXT BUILD
+
+Implementation: PASS locally
+Tests: next build exit 0
+Mainnet signatures: none
+Outstanding blockers: source/build correspondence, Devnet DEX, owner flag, production deploy of this worktree
+Git SHA: uncommitted
+
+## 2026-09-24T21:55:00Z — Phantom workspace journey
+
+- OPEN APP on `http://localhost:3010/` opened the workspace. Phantom was already connected as `Hbkp…TvaC`. Sidebar shows DEVNET and `DEVNET TEST MINT MIRRORING OPENAI'S EXTENSIONS; NOT A PRESTOCKS TOKEN`. Held dOPENAI UI amount 1.485985334.
+- Book: 0 live offers, 0 units, copy `NO OPEN OFFERS ON DEVNET RIGHT NOW.` Live OpenAI mark $1,319 +28.9%. The book did not invent supply.
+- Proof room listed verified receipts, including the recorded Devnet create/take/return/claim signatures. Console errors: none.
+- No new Phantom approve happened in this session. Artifact: `proof/qa/phantom-journey.json`.
+- Local binaries unchanged: mainnet-feature sha256 `acb6b4a814edf90696beac9090018d5416cd7a89c2bfe406891d2ffad21fe3dd`, devnet-feature `698862354901ab1a262c378fcac6c424ee349bf8fa229e496e4ff933db56abc2`. Source/build remains not verified. Mainnet execution remains off.
+
+PHASE PHANTOM JOURNEY
+
+Implementation: connected wallet + book + proof room observed
+Tests: none signed
+Mainnet signatures: none
+Outstanding blockers: source/build correspondence, Devnet DEX, owner flag, production deploy, Phantom approve of a new listing in this session
+Git SHA: uncommitted
+
+## 2026-09-24T21:58:57Z — Devnet program upgrade
+
+- `solana program deploy` of `target/deploy/devnet-feature/locate.so` to `F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6` on Devnet exited 0. Signature `4a5JjiAXiowvYAy2ey6c7LoAQoniNMtatCxLm9Wode2nVB66g9Tj7TzH81s7THNpS1skRgXpMeGcFGMgAEMJ9JK7`, slot 503673418, `err` null.
+- Programdata `DSbRjFotfkpDqdKNPQ9dFshpTi5cg57bXL72VRxM7Vhh` is 395728 bytes. ELF starts at offset 45. The first 359712 ELF bytes equal the local file, sha256 `698862354901ab1a262c378fcac6c424ee349bf8fa229e496e4ff933db56abc2`. The remaining ELF region is trailing zeros in a larger account; hashing that whole region is `12f9355d6a5c9cc4478500a2dbdcd80f2112833a90d2c64b89d751d6589f878a` and is not a fair compare to the .so.
+- The local mainnet-feature binary `acb6b4a814edf90696beac9090018d5416cd7a89c2bfe406891d2ffad21fe3dd` still does not match. `solana-verify` was not run. Worktree is dirty. Mainnet still has no program account. `verified` stays false. This was not a mainnet transaction.
+
+PHASE P7 DEVNET PAYLOAD MATCH
+
+Implementation: Devnet payload equals local devnet-feature .so; verified-build still false
+Tests: getTransaction finalized, byte-for-byte prefix match
+Mainnet signatures: none
+Outstanding blockers: solana-verify, clean commit, mainnet deploy, owner flag, Devnet DEX
+Git SHA: uncommitted
+
+## 2026-09-24T22:12:00Z — Execution-first P0 start
+
+- Goal replaced with the execution-first directive. Playwright, Lighthouse, and visual polish are deferred. `proof/EXECUTION_STATUS.json` written from existing artifacts: verifiedBuild false, mainnetProgramDeployed false, all mainnet execution flags false, Devnet DEX flags false.
+- `solana-verify` is not installed. Docker is not available inside the WSL distro (`docker` resolves to Docker Desktop's Windows binary and reports WSL integration is off). That is the current blocker for a solana-verify run. `verified` is not set to true.
+- `scripts/verify-source-build.mjs` writes `proof/verification/source-build.json` and exits 2 unless the tree is clean and solana-verify has actually run.
+
+PHASE P0 VERIFIED BUILD
+
+Implementation: recorder added, verified still false
+Tests: not yet rebuilt from a clean commit
+Mainnet signatures: none
+Outstanding blockers: Docker/WSL for solana-verify, clean commit, then rebuild and re-hash
+Git SHA: pending this commit
+
 

@@ -1,0 +1,63 @@
+{
+  "claim": "Devnet programdata payload matches the local devnet-feature .so. Full verified-build correspondence is not established.",
+  "verified": false,
+  "solanaVerify": "not run",
+  "reason": "HEAD is 1587ca2e23317f4f34c7a69f6b67f9c4b5e14370 and the worktree is dirty. solana-verify was not run. The mainnet-feature binary is a different hash. No program account exists at this id on mainnet. The Devnet programdata account is larger than the ELF; correspondence is the first 359712 bytes, which equal target/deploy/devnet-feature/locate.so.",
+  "head": "1587ca2e23317f4f34c7a69f6b67f9c4b5e14370",
+  "worktreeDirty": true,
+  "programId": "F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6",
+  "anchorToml": "1.2.0",
+  "toolchain": {
+    "rustc": "1.96.0 (ac68faa20 2026-05-25)",
+    "anchorCli": "1.2.0",
+    "solanaCli": "4.1.2 (src:182084b8; feat:c763ae0a, client:Agave)"
+  },
+  "localBinaries": [
+    {
+      "path": "target/deploy/locate.so",
+      "features": "mainnet default",
+      "bytes": 342712,
+      "sha256": "acb6b4a814edf90696beac9090018d5416cd7a89c2bfe406891d2ffad21fe3dd"
+    },
+    {
+      "path": "target/deploy/locate-mainnet.so",
+      "features": "mainnet default copy",
+      "bytes": 342712,
+      "sha256": "acb6b4a814edf90696beac9090018d5416cd7a89c2bfe406891d2ffad21fe3dd"
+    },
+    {
+      "path": "target/deploy/devnet-feature/locate.so",
+      "features": "devnet",
+      "bytes": 359712,
+      "sha256": "698862354901ab1a262c378fcac6c424ee349bf8fa229e496e4ff933db56abc2"
+    }
+  ],
+  "devnet": {
+    "cluster": "devnet",
+    "upgrade": {
+      "signature": "4a5JjiAXiowvYAy2ey6c7LoAQoniNMtatCxLm9Wode2nVB66g9Tj7TzH81s7THNpS1skRgXpMeGcFGMgAEMJ9JK7",
+      "slot": 503673418,
+      "err": null,
+      "explorer": "https://explorer.solana.com/tx/4a5JjiAXiowvYAy2ey6c7LoAQoniNMtatCxLm9Wode2nVB66g9Tj7TzH81s7THNpS1skRgXpMeGcFGMgAEMJ9JK7?cluster=devnet",
+      "binary": "target/deploy/devnet-feature/locate.so"
+    },
+    "slot": 503673856,
+    "executable": true,
+    "loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+    "programdata": "DSbRjFotfkpDqdKNPQ9dFshpTi5cg57bXL72VRxM7Vhh",
+    "upgradeAuthority": "Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC",
+    "programdataBytes": 395728,
+    "elfOffset": 45,
+    "elfRegionBytes": 395683,
+    "elfRegionSha256": "12f9355d6a5c9cc4478500a2dbdcd80f2112833a90d2c64b89d751d6589f878a",
+    "payloadBytes": 359712,
+    "payloadSha256": "698862354901ab1a262c378fcac6c424ee349bf8fa229e496e4ff933db56abc2",
+    "payloadEqualsLocalDevnetSo": true,
+    "matchesLocalMainnetBinary": false,
+    "matchesLocalDevnetBinary": true
+  },
+  "mainnet": {
+    "cluster": "mainnet-beta",
+    "programAccountExists": false
+  }
+}

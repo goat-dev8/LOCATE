@@ -1,0 +1,407 @@
+{
+  "label": "Local validator execution. Not a mainnet transaction.",
+  "cluster": "localnet",
+  "rpc": "http://172.21.142.55:18999",
+  "programId": "F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6",
+  "programBinary": "/mnt/d/route/sol/LOCATE/target/deploy/devnet-feature/locate.so",
+  "programBytes": 359712,
+  "programSha256": "698862354901ab1a262c378fcac6c424ee349bf8fa229e496e4ff933db56abc2",
+  "usdcMint": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
+  "usdcNote": "Local mint installed at the pinned devnet USDC address. Not mainnet circulation.",
+  "mint": "8RNZQ5ZoYdMKNaHyQAams2DoDcWnkN5f8EjA9vXXBdBD",
+  "passed": 42,
+  "failed": 0,
+  "total": 42,
+  "cases": [
+    {
+      "id": "01-create",
+      "expected": "offer account exists",
+      "result": "PASS",
+      "ok": true,
+      "code": null,
+      "detail": "",
+      "evidence": {}
+    },
+    {
+      "id": "02-cancel",
+      "expected": "offer closed",
+      "result": "PASS",
+      "ok": true,
+      "code": null,
+      "detail": "",
+      "evidence": {}
+    },
+    {
+      "id": "03-take",
+      "expected": "borrower receives net raw",
+      "result": "PASS",
+      "ok": true,
+      "code": null,
+      "detail": "",
+      "evidence": {
+        "delivered": "1998473",
+        "net": "1998473"
+      }
+    },
+    {
+      "id": "04-return",
+      "expected": "loan closed",
+      "result": "PASS",
+      "ok": true,
+      "code": null,
+      "detail": "",
+      "evidence": {}
+    },
+    {
+      "id": "05-early-claim",
+      "expected": "code 6015",
+      "result": "PASS",
+      "ok": false,
+      "code": 6015,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x177f. \nLogs: \n[\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1]\",\n  \"Program log: Instruction: ClaimCollateral\",\n  \"Program log: AnchorError thrown in programs/locate/src/instructions/claim_collateral.rs:16. Error Code: ClaimRefusedNotMatured. Error Number: 6015. E",
+      "evidence": {}
+    },
+    {
+      "id": "06-before-maturity",
+      "expected": "code 6015",
+      "result": "PASS",
+      "ok": false,
+      "code": 6015,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x177f. \nLogs: \n[\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1]\",\n  \"Program log: Instruction: ClaimCollateral\",\n  \"Program log: AnchorError thrown in programs/locate/src/instructions/claim_collateral.rs:16. Error Code: ClaimRefusedNotMatured. Error Number: 6015. E",
+      "evidence": {}
+    },
+    {
+      "id": "07-one-window-before-maturity",
+      "expected": "code 6015",
+      "result": "PASS",
+      "ok": false,
+      "code": 6015,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x177f. \nLogs: \n[\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1]\",\n  \"Program log: Instruction: ClaimCollateral\",\n  \"Program log: AnchorError thrown in programs/locate/src/instructions/claim_collateral.rs:16. Error Code: ClaimRefusedNotMatured. Error Number: 6015. E",
+      "evidence": {}
+    },
+    {
+      "id": "08-inside-grace",
+      "expected": "code 6015",
+      "result": "PASS",
+      "ok": false,
+      "code": 6015,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x177f. \nLogs: \n[\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1]\",\n  \"Program log: Instruction: ClaimCollateral\",\n  \"Program log: AnchorError thrown in programs/locate/src/instructions/claim_collateral.rs:16. Error Code: ClaimRefusedNotMatured. Error Number: 6015. E",
+      "evidence": {}
+    },
+    {
+      "id": "09-claim-after-grace",
+      "expected": "loan closed and claim lands",
+      "result": "PASS",
+      "ok": true,
+      "code": null,
+      "detail": "",
+      "evidence": {
+        "waitedMs": 95849
+      }
+    },
+    {
+      "id": "10-repeated-claim",
+      "expected": "second claim fails",
+      "result": "PASS",
+      "ok": false,
+      "code": 3012,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0xbc4. \nLogs: \n[\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1]\",\n  \"Program log: Instruction: ClaimCollateral\",\n  \"Program log: AnchorError caused by account: loan. Error Code: AccountNotInitialized. Error Number: 3012. Error Message: The program expected this acco",
+      "evidence": {}
+    },
+    {
+      "id": "11-return-after-claim",
+      "expected": "return fails",
+      "result": "PASS",
+      "ok": false,
+      "code": 3012,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0xbc4. \nLogs: \n[\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1]\",\n  \"Program log: Instruction: ReturnLoan\",\n  \"Program log: AnchorError caused by account: loan. Error Code: AccountNotInitialized. Error Number: 3012. Error Message: The program expected this account t",
+      "evidence": {}
+    },
+    {
+      "id": "12-transfer-fee-net",
+      "expected": "delivered equals raw minus fee",
+      "result": "PASS",
+      "ok": true,
+      "code": null,
+      "detail": "",
+      "evidence": {
+        "got": "1998473"
+      }
+    },
+    {
+      "id": "14-pause",
+      "expected": "code 6007",
+      "result": "PASS",
+      "ok": false,
+      "code": 6007,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x1777. \nLogs: \n[\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 37 of 159752 compute units\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3]\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBv",
+      "evidence": {}
+    },
+    {
+      "id": "15-resume-after-pause",
+      "expected": "take lands",
+      "result": "PASS",
+      "ok": true,
+      "code": null,
+      "detail": "",
+      "evidence": {}
+    },
+    {
+      "id": "16-freeze",
+      "expected": "frozen lender account refuses take",
+      "result": "PASS",
+      "ok": false,
+      "code": 6010,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x177a. \nLogs: \n[\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 37 of 164252 compute units\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3]\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBv",
+      "evidence": {}
+    },
+    {
+      "id": "17-transfer-hook",
+      "expected": "create or the following take is refused",
+      "result": "PASS",
+      "ok": false,
+      "code": 6008,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 1: custom program error: 0x1778. \nLogs: \n[\n  \"Program log: Instruction: ApproveChecked\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed 1581 of 400000 compute units\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb success\",\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke",
+      "evidence": {}
+    },
+    {
+      "id": "18-memo-requirement",
+      "expected": "program still executes",
+      "result": "PASS",
+      "ok": true,
+      "code": null,
+      "detail": "",
+      "evidence": {
+        "takeOk": true
+      }
+    },
+    {
+      "id": "19-self-take",
+      "expected": "refused",
+      "result": "PASS",
+      "ok": false,
+      "code": 2040,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x7f8. \nLogs: \n[\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 37 of 158828 compute units\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3]\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf",
+      "evidence": {}
+    },
+    {
+      "id": "20-zero-amount",
+      "expected": "refused",
+      "result": "PASS",
+      "ok": false,
+      "code": 6002,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 1: custom program error: 0x1772. \nLogs: \n[\n  \"Program log: Instruction: ApproveChecked\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed 1581 of 400000 compute units\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb success\",\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke",
+      "evidence": {}
+    },
+    {
+      "id": "21-term-below-min",
+      "expected": "refused",
+      "result": "PASS",
+      "ok": false,
+      "code": 6002,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 1: custom program error: 0x1772. \nLogs: \n[\n  \"Program log: Instruction: ApproveChecked\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed 1581 of 400000 compute units\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb success\",\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke",
+      "evidence": {}
+    },
+    {
+      "id": "22-grace-below-min",
+      "expected": "refused",
+      "result": "PASS",
+      "ok": false,
+      "code": 6002,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 1: custom program error: 0x1772. \nLogs: \n[\n  \"Program log: Instruction: ApproveChecked\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed 1581 of 400000 compute units\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb success\",\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke",
+      "evidence": {}
+    },
+    {
+      "id": "23-expected-amount-mismatch",
+      "expected": "refused",
+      "result": "PASS",
+      "ok": false,
+      "code": 6005,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x1775. \nLogs: \n[\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 37 of 158252 compute units\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3]\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBv",
+      "evidence": {}
+    },
+    {
+      "id": "24-wrong-usdc",
+      "expected": "refused",
+      "result": "PASS",
+      "ok": false,
+      "code": null,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: An account required by the instruction is missing. \nLogs: \n[\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1]\",\n  \"Program log: Instruction: TakeOffer\",\n  \"Program 11111111111111111111111111111111 invoke [2]\",\n  \"Program 11111111111111111111111111111111 success\",\n  \"Instruction references ",
+      "evidence": {}
+    },
+    {
+      "id": "25-wrong-vault",
+      "expected": "refused",
+      "result": "PASS",
+      "ok": false,
+      "code": null,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: An account required by the instruction is missing. \nLogs: \n[\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1]\",\n  \"Program log: Instruction: TakeOffer\",\n  \"Program 11111111111111111111111111111111 invoke [2]\",\n  \"Program 11111111111111111111111111111111 success\",\n  \"Instruction references ",
+      "evidence": {}
+    },
+    {
+      "id": "26-wrong-lender",
+      "expected": "refused",
+      "result": "PASS",
+      "ok": false,
+      "code": 2012,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x7dc. \nLogs: \n[\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success\",\n  \"Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL consumed 13510 of 176262 compute units\",\n  \"Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL success\",\n  \"Program log: AnchorError caused by acc",
+      "evidence": {}
+    },
+    {
+      "id": "27-wrong-mint",
+      "expected": "refused",
+      "result": "PASS",
+      "ok": false,
+      "code": 2014,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x7de. \nLogs: \n[\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1]\",\n  \"Program log: Instruction: TakeOffer\",\n  \"Program log: AnchorError caused by account: borrower_ata. Error Code: ConstraintTokenMint. Error Number: 2014. Error Message: A token mint constraint was vi",
+      "evidence": {}
+    },
+    {
+      "id": "28-wrong-offer-pda",
+      "expected": "refused",
+      "result": "PASS",
+      "ok": false,
+      "code": 3012,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0xbc4. \nLogs: \n[\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1]\",\n  \"Program log: Instruction: TakeOffer\",\n  \"Program log: AnchorError caused by account: offer. Error Code: AccountNotInitialized. Error Number: 3012. Error Message: The program expected this account t",
+      "evidence": {}
+    },
+    {
+      "id": "29-wrong-loan-pda",
+      "expected": "refused",
+      "result": "PASS",
+      "ok": false,
+      "code": 2006,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x7d6. \nLogs: \n[\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1]\",\n  \"Program log: Instruction: TakeOffer\",\n  \"Program log: AnchorError caused by account: loan. Error Code: ConstraintSeeds. Error Number: 2006. Error Message: A seeds constraint was violated.\",\n  \"Prog",
+      "evidence": {}
+    },
+    {
+      "id": "30-wrong-borrower-ata",
+      "expected": "refused",
+      "result": "PASS",
+      "ok": false,
+      "code": 2015,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x7df. \nLogs: \n[\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1]\",\n  \"Program log: Instruction: TakeOffer\",\n  \"Program log: AnchorError caused by account: borrower_ata. Error Code: ConstraintTokenOwner. Error Number: 2015. Error Message: A token owner constraint was ",
+      "evidence": {}
+    },
+    {
+      "id": "31-missing-delegate",
+      "expected": "create refused or later take refused",
+      "result": "PASS",
+      "ok": false,
+      "code": 6010,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x177a. \nLogs: \n[\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1]\",\n  \"Program log: Instruction: CreateOffer\",\n  \"Program 11111111111111111111111111111111 invoke [2]\",\n  \"Program 11111111111111111111111111111111 success\",\n  \"Program log: AnchorError thrown in program",
+      "evidence": {}
+    },
+    {
+      "id": "32-insufficient-delegation",
+      "expected": "refused",
+      "result": "PASS",
+      "ok": false,
+      "code": 6010,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 1: custom program error: 0x177a. \nLogs: \n[\n  \"Program log: Instruction: ApproveChecked\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed 1581 of 400000 compute units\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb success\",\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke",
+      "evidence": {}
+    },
+    {
+      "id": "33-delegation-revoked",
+      "expected": "take refused",
+      "result": "PASS",
+      "ok": false,
+      "code": 6010,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x177a. \nLogs: \n[\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 37 of 167259 compute units\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3]\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBv",
+      "evidence": {}
+    },
+    {
+      "id": "34-double-take",
+      "expected": "second take refused",
+      "result": "PASS",
+      "ok": false,
+      "code": 3012,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0xbc4. \nLogs: \n[\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1]\",\n  \"Program log: Instruction: TakeOffer\",\n  \"Program log: AnchorError caused by account: offer. Error Code: AccountNotInitialized. Error Number: 3012. Error Message: The program expected this account t",
+      "evidence": {}
+    },
+    {
+      "id": "35-double-return",
+      "expected": "second return refused",
+      "result": "PASS",
+      "ok": false,
+      "code": 3012,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0xbc4. \nLogs: \n[\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1]\",\n  \"Program log: Instruction: ReturnLoan\",\n  \"Program log: AnchorError caused by account: loan. Error Code: AccountNotInitialized. Error Number: 3012. Error Message: The program expected this account t",
+      "evidence": {}
+    },
+    {
+      "id": "36-claim-after-return",
+      "expected": "claim refused",
+      "result": "PASS",
+      "ok": false,
+      "code": 3012,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0xbc4. \nLogs: \n[\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1]\",\n  \"Program log: Instruction: ClaimCollateral\",\n  \"Program log: AnchorError caused by account: loan. Error Code: AccountNotInitialized. Error Number: 3012. Error Message: The program expected this acco",
+      "evidence": {}
+    },
+    {
+      "id": "37-closed-lender-ata",
+      "expected": "close or the following return executed",
+      "result": "PASS",
+      "ok": false,
+      "code": 11,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0xb. \nLogs: \n[\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb invoke [1]\",\n  \"Program log: Instruction: CloseAccount\",\n  \"Program log: Error: Non-native account can only be closed if its balance is zero\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed 965 of 20",
+      "evidence": {
+        "closeOk": false,
+        "code": 11
+      }
+    },
+    {
+      "id": "38-wrong-token-program",
+      "expected": "refused",
+      "result": "PASS",
+      "ok": false,
+      "code": 3008,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0xbc0. \nLogs: \n[\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1]\",\n  \"Program log: Instruction: TakeOffer\",\n  \"Program log: AnchorError caused by account: token_program. Error Code: InvalidProgramId. Error Number: 3008. Error Message: Program ID was not as expected.\"",
+      "evidence": {}
+    },
+    {
+      "id": "39-fake-usdc-account",
+      "expected": "refused",
+      "result": "PASS",
+      "ok": false,
+      "code": 3012,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0xbc4. \nLogs: \n[\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1]\",\n  \"Program log: Instruction: TakeOffer\",\n  \"Program log: AnchorError caused by account: borrower_usdc. Error Code: AccountNotInitialized. Error Number: 3012. Error Message: The program expected this a",
+      "evidence": {}
+    },
+    {
+      "id": "40-max-u64-amount",
+      "expected": "refused without a validator crash",
+      "result": "PASS",
+      "ok": false,
+      "code": 6010,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 1: custom program error: 0x177a. \nLogs: \n[\n  \"Program log: Instruction: ApproveChecked\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed 1581 of 400000 compute units\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb success\",\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke",
+      "evidence": {}
+    },
+    {
+      "id": "41-stranger-claim",
+      "expected": "refused",
+      "result": "PASS",
+      "ok": false,
+      "code": 6015,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x177f. \nLogs: \n[\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1]\",\n  \"Program log: Instruction: ClaimCollateral\",\n  \"Program log: AnchorError thrown in programs/locate/src/instructions/claim_collateral.rs:16. Error Code: ClaimRefusedNotMatured. Error Number: 6015. E",
+      "evidence": {}
+    },
+    {
+      "id": "42-cancel-by-other",
+      "expected": "refused",
+      "result": "PASS",
+      "ok": false,
+      "code": 3012,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0xbc4. \nLogs: \n[\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1]\",\n  \"Program log: Instruction: CancelOffer\",\n  \"Program log: AnchorError caused by account: offer. Error Code: AccountNotInitialized. Error Number: 3012. Error Message: The program expected this account",
+      "evidence": {}
+    },
+    {
+      "id": "13-changed-fee",
+      "expected": "old max gross is refused",
+      "result": "PASS",
+      "ok": false,
+      "code": 6013,
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 1: custom program error: 0x177d. \nLogs: \n[\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb invoke [1]\",\n  \"Program log: Instruction: ApproveChecked\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed 1635 of 400000 compute units\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb succ",
+      "evidence": {}
+    }
+  ]
+}

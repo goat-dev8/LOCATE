@@ -1,0 +1,71 @@
+{
+  "cluster": "mainnet-beta",
+  "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+  "usdcMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "quoteSource": "jupiter /swap/v1/quote",
+  "decimals": 9,
+  "usdcDecimals": 6,
+  "feeBps": 100,
+  "maxFee": "18446744073709551615",
+  "loanAmountRaw": "2018660",
+  "loanAmountUi": "0.00201866",
+  "receivedNetRaw": "1998473",
+  "requiredReturnGrossRaw": "2039051",
+  "timestamp": "2026-09-24T16:35:38.837Z",
+  "mainnetTransaction": false,
+  "priorBuyback": {
+    "note": "Earlier ExactIn buy spending only the sell proceeds quoted fewer OPENAI raw units than were sold, and that simulation failed.",
+    "soldRaw": "2018660",
+    "usdcIn": "3987285",
+    "quotedOutRaw": "1983744",
+    "shortfallVsSoldRaw": "34916",
+    "simulation": "Jupiter custom 6001"
+  },
+  "id": "openai-sell",
+  "test": "OPENAI to USDC",
+  "quoteStatus": 200,
+  "quoteTimestamp": "2026-09-24T16:35:27.391Z",
+  "inputAmountRaw": "1998473",
+  "inputAmountUi": "0.001998473",
+  "outputAmountRaw": "3915540",
+  "outputAmountUi": "3.91554",
+  "otherAmountThreshold": "3876385",
+  "route": [
+    {
+      "label": "Meteora DLMM",
+      "amm": "At5v892Xr2KQmAsSQr1fsXHzLUJxMPKEZThjTHwhLaz9",
+      "inputMint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "inAmount": "1998473",
+      "outAmount": "33480680"
+    },
+    {
+      "label": "Meteora DLMM",
+      "amm": "HTvjzsfX3yU6BUodCjZ5vZkUrAxMDTrBs3CJaq43ashR",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inAmount": "33480680",
+      "outAmount": "3915540"
+    }
+  ],
+  "priceImpactPct": "0.0171119319935328544754302222",
+  "contextSlot": 450084555,
+  "simulation": {
+    "simulation": "PASS",
+    "error": null,
+    "unitsConsumed": 87164,
+    "messageBytes": 530,
+    "logTail": [
+      "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo consumed 33241 of 57253 compute units",
+      "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo success",
+      "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 invoke [2]",
+      "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 consumed 106 of 21998 compute units",
+      "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 success",
+      "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 consumed 86864 of 107770 compute units",
+      "Program return: JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 4sM7AAAAAAA=",
+      "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 success"
+    ],
+    "note": "simulateTransaction only. No mainnet transaction was sent."
+  },
+  "result": "PASS"
+}

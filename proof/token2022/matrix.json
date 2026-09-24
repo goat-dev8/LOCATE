@@ -1,0 +1,49 @@
+{
+  "label": "Token-2022 coverage from recorded LOCATE runs. An extension is exercised only when a recorded case used it.",
+  "exercised": [
+    {
+      "extension": "TransferFee",
+      "evidence": "proof/local-validator/suite.json case 12-transfer-fee-net passed, and case 13-changed-fee refused return with 6013. Fork OpenAI lifecycle delivered 1998473 raw from a 2018660 loan at 100 bps."
+    },
+    {
+      "extension": "Pausable",
+      "evidence": "Local validator case 14-pause refused take with 6007. Case 15-resume-after-pause passed after resume."
+    },
+    {
+      "extension": "TransferHook",
+      "evidence": "Local validator case 17-transfer-hook refused with 6008."
+    },
+    {
+      "extension": "MemoTransfer",
+      "evidence": "Local validator case 18-memo-requirement passed with takeOk true after the memo-transfer requirement was enabled."
+    }
+  ],
+  "refusedOrWeak": [
+    {
+      "extension": "Freeze",
+      "evidence": "Local validator case 16-freeze expected a frozen lender account to refuse take. The take failed with 6010, which is TakeRefusedUnfunded. That code is also used for missing and insufficient delegation, so this case does not isolate a freeze error."
+    }
+  ],
+  "presentButNotUsedAsAProtocolPath": [
+    {
+      "extension": "PermanentDelegate",
+      "evidence": "Listed on the Devnet replica mint in proof/devnet/short-loop.json. No LOCATE instruction used a permanent delegate."
+    },
+    {
+      "extension": "DefaultAccountState",
+      "evidence": "Listed on the Devnet replica mint. No case changed or asserted default account state."
+    },
+    {
+      "extension": "ScaledUiAmount",
+      "evidence": "The replica mint carries a UI multiplier. LOCATE math in the recorded runs uses raw amounts, not the scaled UI amount."
+    }
+  ],
+  "notExercised": [
+    "ConfidentialTransfer",
+    "CpiGuard",
+    "InterestBearing",
+    "TransferFee on a live issuer update during a mainnet transaction",
+    "Non-transferable",
+    "Token metadata as a protocol constraint"
+  ]
+}

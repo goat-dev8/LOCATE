@@ -1,0 +1,24 @@
+{
+  "verifiedBuild": false,
+  "mainnetProgramDeployed": false,
+  "mainnetCreate": false,
+  "mainnetTake": false,
+  "mainnetReturn": false,
+  "mainnetClaim": false,
+  "devnetDexSell": false,
+  "devnetDexBuyback": false,
+  "devnetReturnAfterBuyback": false,
+  "frontendExecutionWired": false,
+  "chromeManualVerification": false,
+  "evidence": {
+    "fork": "proof/mainnet-fork/manifest.json 16/16",
+    "localValidator": "proof/local-validator/suite.json 42/42",
+    "replay": "proof/replay/manifest.json 45000",
+    "jupiter": "proof/jupiter-roundtrip sell and buyback result PASS, mainnetTransaction false",
+    "devnetLifecycle": "proof/devnet/lifecycle.json create/take/return/claim signatures finalized",
+    "devnetDex": "proof/devnet/short-loop.json result FAIL",
+    "sourceBuild": "proof/verification/source-build.json verified false",
+    "mainnetGate": "proof/mainnet-execution/gate.json enabled false signed false"
+  },
+  "updatedAt": "2026-09-24T22:10:00Z"
+}

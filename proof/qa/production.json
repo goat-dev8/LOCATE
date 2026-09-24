@@ -1,0 +1,18 @@
+{
+  "vercel": {
+    "url": "https://locate-blue.vercel.app/proof",
+    "status": 404,
+    "gitSha": "1587ca2e23317f4f34c7a69f6b67f9c4b5e14370",
+    "note": "/proof is not on this production SHA. The route exists only in the dirty worktree."
+  },
+  "render": {
+    "url": "https://locate-api-znz1.onrender.com/health",
+    "status": 200,
+    "body": { "ok": true, "version": "0.1.0", "gitSha": "1587ca2e23317f4f34c7a69f6b67f9c4b5e14370" }
+  },
+  "mainnetExecution": {
+    "enabled": false,
+    "signed": false,
+    "sourceBuildVerified": false
+  }
+}

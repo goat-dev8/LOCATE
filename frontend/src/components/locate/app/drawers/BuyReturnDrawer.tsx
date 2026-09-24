@@ -63,7 +63,7 @@ function Body({ loanId, onClose }: { loanId: string; onClose: () => void }) {
   const asset = loan ? locateAsset(loan.assetId) : undefined;
   const gross = loan && asset ? grossForNet(loan.netRequired, asset.transferFeeBps) : 0;
   const shortfall = Math.max(0, gross - held);
-  const coverCost = asset ? shortfall * asset.marketPrice : 0;
+  const coverCost = asset ? shortfall * (asset.marketPrice ?? 0) : 0;
 
   const steps =
     shortfall > 0

@@ -128,7 +128,7 @@ export function DataRow({
 }: {
   label: string;
   value: React.ReactNode;
-  tone?: "default" | "strong" | "accent" | "ember" | "refuse";
+  tone?: "default" | "strong" | "accent" | "ember" | "refuse" | "lime" | "muted";
 }) {
   return (
     <div className="flex items-baseline justify-between gap-6 border-b border-line/70 py-3 last:border-b-0">
@@ -140,7 +140,7 @@ export function DataRow({
           "font-mono text-[13px] tabular-nums",
           tone === "strong"
             ? "font-bold text-white"
-            : tone === "accent"
+            : tone === "accent" || tone === "lime"
               ? "font-semibold text-lime-deep"
               : tone === "ember"
                 ? "font-semibold text-ember"
@@ -164,7 +164,7 @@ export function Payline({
 }: {
   label: string;
   value: string;
-  variant?: "dark" | "light" | "ember";
+  variant?: "dark" | "light" | "ember" | "total";
 }) {
   return (
     <div

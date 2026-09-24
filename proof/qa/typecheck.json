@@ -1,0 +1,14 @@
+{
+  "frontendTsc": { "command": "npx tsc --noEmit", "exit": 0 },
+  "backendTsc": { "command": "npx tsc --noEmit", "exit": 0 },
+  "backendVitest": { "passed": 20, "failed": 0 },
+  "playwright": {
+    "config": "playwright.config.ts",
+    "testDir": "e2e",
+    "files": 0,
+    "note": "Config points at a FRONTEND preview server. No e2e test files exist in this tree."
+  },
+  "lighthouse": "not rerun this session",
+  "vercel": "not redeployed this session",
+  "render": "not redeployed this session"
+}

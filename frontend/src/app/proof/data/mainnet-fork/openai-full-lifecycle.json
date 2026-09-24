@@ -1,0 +1,29 @@
+{
+  "balances": {
+    "borrowerTokenAfterTake": "1000001998473",
+    "borrowerTokenBefore": "1000000000000",
+    "borrowerUsdcAfterReturn": "999999950000",
+    "borrowerUsdcBefore": "1000000000000",
+    "deliveredRaw": "1998473",
+    "lenderTokenAfterReturn": "1000000000000",
+    "lenderTokenAfterTake": "999997981340",
+    "lenderTokenBefore": "1000000000000",
+    "loanClosed": true,
+    "requiredNetRaw": "1998473",
+    "secondReturnCode": 3012,
+    "secondReturnRefused": true,
+    "vaultAfterTake": "1000000"
+  },
+  "epoch": 1041,
+  "flags": {
+    "decimals": 9,
+    "feeBps": 100,
+    "feePending": false,
+    "hookSet": false,
+    "maxFee": "18446744073709551615",
+    "paused": false
+  },
+  "label": "Cloned Mainnet State — Local Execution",
+  "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+  "passed": true
+}

@@ -1,0 +1,15 @@
+{
+  "url": "http://localhost:3010/proof",
+  "device": "mobile",
+  "viewport": "390x844 requested before audit",
+  "lighthouseVersion": "13.4.1",
+  "fetchTime": "2026-09-24T18:02:05.362Z",
+  "scores": {
+    "accessibility": 96,
+    "bestPractices": 92,
+    "seo": 100,
+    "agenticBrowsing": 100
+  },
+  "failedAudits": ["errors-in-console", "color-contrast", "inspector-issues"],
+  "note": "Recorded, not chased to 100. Localhost HTTP. Not a production deploy."
+}

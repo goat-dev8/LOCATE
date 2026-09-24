@@ -1,0 +1,8 @@
+{
+  "command": "npx playwright test --config=playwright.config.ts",
+  "exit": 0,
+  "passed": 1,
+  "failed": 0,
+  "baseURL": "http://127.0.0.1:3010",
+  "spec": "e2e/proof.spec.ts"
+}

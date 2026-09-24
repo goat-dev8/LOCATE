@@ -20,6 +20,10 @@ dist/
 coverage/
 *.log
 npm-debug.log*
+frontend/.zscripts/
+frontend/test-results/
+frontend/db/
+
 
 # scratch dumps (committed fixtures live in tests/fixtures/mainnet with a provenance manifest)
 tests/fixtures/scratch/

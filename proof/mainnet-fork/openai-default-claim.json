@@ -1,0 +1,16 @@
+{
+  "claimOk": true,
+  "delta": "1050000",
+  "earlyClaimCode": 6015,
+  "epoch": 1041,
+  "label": "Cloned Mainnet State — Local Execution",
+  "lenderUsdcAfter": "1000001050000",
+  "lenderUsdcBefore": "1000000000000",
+  "loanClosed": true,
+  "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+  "passed": true,
+  "returnAfterClaimCode": 3012,
+  "returnAfterClaimRefused": true,
+  "secondClaimCode": 3012,
+  "secondClaimRefused": true
+}

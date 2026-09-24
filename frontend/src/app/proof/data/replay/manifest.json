@@ -1,0 +1,12 @@
+{
+  "families": {
+    "collateral": 10000,
+    "epoch_fee": 10000,
+    "gross_for_net": 10000,
+    "pda": 5000,
+    "schedule": 10000
+  },
+  "programId": "F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6",
+  "seed": "83903314482245",
+  "total": 45000
+}

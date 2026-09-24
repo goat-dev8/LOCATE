@@ -1,0 +1,19 @@
+{
+  "track": "MAINNET EXECUTION",
+  "label": "Not a mainnet transaction",
+  "flag": "LOCATE_MAINNET_EXECUTION_ENABLED",
+  "enabled": false,
+  "signed": false,
+  "sent": false,
+  "sourceBuildVerified": false,
+  "prerequisitesPresent": [
+    "proof/mainnet-fork/manifest.json",
+    "proof/mainnet-fork/openai-full-lifecycle.json",
+    "proof/mainnet-fork/openai-default-claim.json",
+    "proof/mainnet-fork/failure-matrix.json",
+    "proof/verification/source-build.json"
+  ],
+  "prerequisitesMissing": [],
+  "blocker": "LOCATE_MAINNET_EXECUTION_ENABLED is not true. Mainnet signing is refused.",
+  "timestamp": "2026-09-24T17:38:15.245Z"
+}
