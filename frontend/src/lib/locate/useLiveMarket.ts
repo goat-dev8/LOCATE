@@ -1,33 +1,39 @@
 "use client";
 
 /**
- * LOCATE — live PreStock market hook.
- *
- * Consumes the server proxy (`/api/prestocks`) which reads the real
- * product data source (prestocks.com). Polls once per minute; surfaces
- * honest loading / live / unavailable states so the UI never fakes data.
+ * LOCATE — live PreStock market hook from GET /v1/opportunities.
  */
 
 import { useEffect, useState } from "react";
+import { locateApi } from "./env";
+
+export interface LiveBestOffer {
+  pubkey: string;
+  amountRaw: string;
+  collateralUsdc: string;
+  feeUsdc: string;
+  termSecs: string;
+}
 
 export interface LiveRow {
   symbol: string;
+  mint: string;
+  state: string;
   tokenPrice: number | null;
   markPrice: number | null;
   premiumPct: number | null;
-  thirtyDayChange: number | null;
-  holderCount: number | null;
+  fundedRaw: number;
+  bestOffer: LiveBestOffer | null;
+  action: "TAKE_OFFER" | "LIST_YOURS";
 }
 
-export type LiveStatus = "loading" | "live" | "unavailable";
+export type LiveStatus = "loading" | "waking" | "live" | "stale" | "unavailable";
 
 export interface LiveMarket {
   status: LiveStatus;
   rows: LiveRow[];
   at: number | null;
-  /** Row lookup by symbol. */
   bySymbol: (symbol: string) => LiveRow | undefined;
-  /** Rows sorted by premium, widest first. */
   byPremium: LiveRow[];
 }
 
@@ -39,9 +45,9 @@ const EMPTY: LiveMarket = {
   byPremium: [],
 };
 
-const publicEnv = {
-  api: process.env.VITE_API_BASE_URL ?? "https://locate-api-znz1.onrender.com",
-};
+function asText(value: unknown): string {
+  return typeof value === "string" ? value : value == null ? "" : String(value);
+}
 
 export function useLiveMarket(pollMs = 60_000): LiveMarket {
   const [state, setState] = useState<LiveMarket>(EMPTY);
@@ -50,40 +56,53 @@ export function useLiveMarket(pollMs = 60_000): LiveMarket {
     let alive = true;
     const load = async () => {
       try {
-        const res = await fetch(publicEnv.api + "/v1/opportunities", { cache: "no-store" });
-        if (!res.ok) throw new Error("bad status");
-        const data = (await res.json()) as {
-          fetchedAt?: string;
-          opportunities?: Array<{
-            symbol: string;
-            tokenPrice: string | null;
-            markPrice: string | null;
-            premiumBps: string | null;
-            state: string;
-          }>;
-        };
+        const data = await locateApi.opportunities();
         if (!alive) return;
         const rows: LiveRow[] = (data.opportunities ?? [])
-          .filter((row) => row.symbol !== "SPACEX")
-          .map((row) => ({
-            symbol: row.symbol,
-            tokenPrice: row.tokenPrice ? Number(row.tokenPrice) / 1_000_000 : null,
-            markPrice: row.markPrice ? Number(row.markPrice) / 1_000_000 : null,
-            premiumPct: row.premiumBps ? Number(row.premiumBps) / 100 : null,
-            thirtyDayChange: null,
-            holderCount: null,
-          }));
+          .map((raw) => {
+            const symbol = asText(raw.symbol);
+            const best = raw.bestOffer && typeof raw.bestOffer === "object" ? (raw.bestOffer as Record<string, unknown>) : null;
+            const token = raw.tokenPrice == null ? null : Number(raw.tokenPrice) / 1_000_000;
+            const mark = raw.markPrice == null ? null : Number(raw.markPrice) / 1_000_000;
+            const premiumBps = raw.premiumBps == null ? null : Number(raw.premiumBps);
+            return {
+              symbol,
+              mint: asText(raw.mint),
+              state: asText(raw.state),
+              tokenPrice: Number.isFinite(token) ? token : null,
+              markPrice: Number.isFinite(mark) ? mark : null,
+              premiumPct: premiumBps == null || !Number.isFinite(premiumBps) ? null : premiumBps / 100,
+              fundedRaw: Number(raw.fundedRaw ?? 0) / 1e9,
+              bestOffer: best
+                ? {
+                    pubkey: asText(best.pubkey),
+                    amountRaw: asText(best.amountRaw),
+                    collateralUsdc: asText(best.collateralUsdc),
+                    feeUsdc: asText(best.feeUsdc),
+                    termSecs: asText(best.termSecs),
+                  }
+                : null,
+              action: best ? "TAKE_OFFER" : "LIST_YOURS",
+            };
+          })
+          .filter((row) => row.symbol && row.symbol !== "SPACEX");
         const map = new Map(rows.map((r) => [r.symbol, r]));
+        const stale = rows.length > 0 && rows.every((row) => row.state === "STALE_DATA" || row.tokenPrice == null);
+        const live = rows.some((row) => row.tokenPrice != null && row.markPrice != null);
         setState({
-          status: rows.some((row) => row.tokenPrice && row.markPrice) ? "live" : "unavailable",
+          status: live ? "live" : stale ? "stale" : "unavailable",
           rows,
-          at: data.fetchedAt ? Date.parse(data.fetchedAt) : Date.now(),
+          at: typeof data.fetchedAt === "string" ? Date.parse(data.fetchedAt) : Date.now(),
           bySymbol: (s) => map.get(s),
           byPremium: [...rows].sort((a, b) => (b.premiumPct ?? -1) - (a.premiumPct ?? -1)),
         });
       } catch {
         if (!alive) return;
-        setState((s) => (s.rows.length > 0 ? s : { ...EMPTY, status: "unavailable" }));
+        setState((s) =>
+          s.rows.length > 0
+            ? { ...s, status: s.status === "live" ? "live" : "waking" }
+            : { ...EMPTY, status: "waking" },
+        );
       }
     };
     load();

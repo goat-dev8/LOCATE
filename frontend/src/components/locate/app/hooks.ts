@@ -2,19 +2,7 @@
 
 /**
  * LOCATE app workspace — shared hooks.
- *
- * CLOCK MODEL
- * -----------
- * Seed data is authored relative to a fixed `EPOCH` (hydration-safe first
- * paint), while the store stamps any entity created during the session with
- * the real wall clock. The workspace therefore runs a *simulated* clock:
- *
- *   now = EPOCH + (wall clock − session anchor)
- *
- * `simTime(ts)` maps any timestamp onto that clock — EPOCH-relative seeds pass
- * through untouched, session-created (wall-clock) timestamps are translated
- * back onto the EPOCH timeline. Every countdown/ring/date in the app reads
- * `useNow()` and `simTime()`, never raw `Date.now()`.
+ * Countdowns in the workspace use the wall clock from `parts.useNow`.
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";

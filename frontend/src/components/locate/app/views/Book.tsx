@@ -14,6 +14,7 @@ import {
   fmtToken,
   netFromGross,
 } from "@/lib/locate/seed";
+import type { Offer } from "@/lib/locate/types";
 import { useLiveMarket } from "@/lib/locate/useLiveMarket";
 import { AssetLogo } from "../../landing/parts";
 import { EmptyState, Segmented, StatusChip, useCountdown, ViewHead } from "../parts";

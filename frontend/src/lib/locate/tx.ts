@@ -3,12 +3,27 @@
 import { Connection, PublicKey, TransactionMessage, VersionedTransaction, type TransactionInstruction } from "@solana/web3.js";
 import { DEVNET_USDC, LOCATE_PROGRAM_ID, buildCancelTx, buildClaimTx, buildListTx, buildReturnTx, grossForNet, simulateAndDecode, type OfferTerms } from "@locate/sdk";
 import type { Loan, Offer } from "./types";
-
-const api = process.env.VITE_API_BASE_URL ?? "https://locate-api-znz1.onrender.com";
+import { DEVNET_MINT, locateApi } from "./env";
 
 export type TxResult =
   | { ok: true; signature: string; verified: boolean }
   | { ok: false; error: string; simulated: boolean };
+
+async function sendOnce(
+  connection: Connection,
+  payer: PublicKey,
+  send: (tx: VersionedTransaction, connection: Connection) => Promise<string>,
+  instructions: TransactionInstruction[],
+): Promise<{ signature: string; blockhash: string; lastValidBlockHeight: number }> {
+  const latest = await connection.getLatestBlockhash("confirmed");
+  const message = new TransactionMessage({
+    payerKey: payer,
+    recentBlockhash: latest.blockhash,
+    instructions,
+  }).compileToV0Message();
+  const signature = await send(new VersionedTransaction(message), connection);
+  return { signature, blockhash: latest.blockhash, lastValidBlockHeight: latest.lastValidBlockHeight };
+}
 
 export async function submitInstructions(
   connection: Connection,
@@ -20,33 +35,39 @@ export async function submitInstructions(
   if (preview.err) {
     return { ok: false, simulated: true, error: preview.name ?? "Simulation failed. No transaction was sent." };
   }
-  const latest = await connection.getLatestBlockhash("confirmed");
-  const message = new TransactionMessage({
-    payerKey: payer,
-    recentBlockhash: latest.blockhash,
-    instructions,
-  }).compileToV0Message();
-  let signature: string;
+  let sent: { signature: string; blockhash: string; lastValidBlockHeight: number };
   try {
-    signature = await send(new VersionedTransaction(message), connection);
+    sent = await sendOnce(connection, payer, send, instructions);
   } catch (error) {
     const messageText = error instanceof Error ? error.message : "";
     if (/reject/i.test(messageText)) return { ok: false, simulated: false, error: "Signing was rejected." };
-    return { ok: false, simulated: false, error: messageText || "The wallet did not send the transaction." };
+    if (/blockhash|expired/i.test(messageText)) {
+      const again = await simulateAndDecode(connection, payer, instructions);
+      if (again.err) return { ok: false, simulated: true, error: again.name ?? "Simulation failed. No transaction was sent." };
+      try {
+        sent = await sendOnce(connection, payer, send, instructions);
+      } catch (retryError) {
+        const retryText = retryError instanceof Error ? retryError.message : "";
+        if (/reject/i.test(retryText)) return { ok: false, simulated: false, error: "Signing was rejected." };
+        return { ok: false, simulated: false, error: retryText || "The wallet did not send the transaction." };
+      }
+    } else {
+      return { ok: false, simulated: false, error: messageText || "The wallet did not send the transaction." };
+    }
   }
   const confirmed = await connection.confirmTransaction(
-    { signature, blockhash: latest.blockhash, lastValidBlockHeight: latest.lastValidBlockHeight },
+    { signature: sent.signature, blockhash: sent.blockhash, lastValidBlockHeight: sent.lastValidBlockHeight },
     "confirmed",
   );
   if (confirmed.value.err) return { ok: false, simulated: false, error: "The transaction was sent but not confirmed." };
   let verified = false;
   try {
-    const posted = await fetch(api + "/v1/receipts/" + signature, { method: "POST" });
-    verified = posted.ok;
+    const posted = await locateApi.postReceipt(sent.signature);
+    verified = posted.status === "verified";
   } catch {
     verified = false;
   }
-  return { ok: true, signature, verified };
+  return { ok: true, signature: sent.signature, verified };
 }
 
 type Sender = (tx: VersionedTransaction, connection: Connection) => Promise<string>;
@@ -89,7 +110,7 @@ export async function listOnChain(
   input: { amount: number; collateralUsdc: number; feeUsdc: number; termDays: number; expiryHours: number },
 ) {
   const now = BigInt(Math.floor(Date.now() / 1000));
-  const mint = new PublicKey("9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P");
+  const mint = new PublicKey(DEVNET_MINT);
   const terms: OfferTerms = {
     lender: payer,
     mint,
@@ -113,10 +134,24 @@ export async function cancelOnChain(connection: Connection, payer: PublicKey, se
 }
 
 async function offerTerms(pubkey: string): Promise<OfferTerms | null> {
-  const res = await fetch(api + "/v1/offers/" + pubkey, { cache: "no-store" });
-  if (!res.ok) return null;
-  const body = (await res.json()) as { offer?: Parameters<typeof termsFromRow>[0] };
-  return body.offer ? termsFromRow(body.offer) : null;
+  try {
+    const body = await locateApi.offer(pubkey);
+    const row = body.offer as Record<string, unknown> | undefined;
+    if (!row) return null;
+    return termsFromRow({
+      lender: String(row.lender),
+      mint: String(row.mint),
+      nonce: String(row.nonce),
+      amountRaw: String(row.amountRaw),
+      collateralUsdc: String(row.collateralUsdc),
+      feeUsdc: String(row.feeUsdc),
+      termSecs: String(row.termSecs),
+      graceSecs: String(row.graceSecs),
+      expiresAt: String(row.expiresAt),
+    });
+  } catch {
+    return null;
+  }
 }
 
 export async function returnOnChain(connection: Connection, payer: PublicKey, send: Sender, loan: Loan) {

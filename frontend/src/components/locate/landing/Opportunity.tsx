@@ -14,7 +14,7 @@ import { ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { ClickSpark, FadeContent } from "@/components/bits";
 import { useLocate } from "@/lib/locate/store";
-import { ASSETS, fmtUsd } from "@/lib/locate/seed";
+import { catalogAsset, fmtUsdMaybe } from "@/lib/locate/seed";
 import { useLiveMarket } from "@/lib/locate/useLiveMarket";
 import { LiveIndicator } from "./LiveIndicator";
 import { AssetLogo, EASE, Eyebrow, RevealHeadline, Section } from "./parts";
@@ -54,7 +54,7 @@ const THEN_STEPS = ["BORROW", "SHORT", "RETURN", "VERIFY"] as const;
 const EDGE_PCT = 5;
 
 function assetFor(symbol: string) {
-  return ASSETS.find((a) => a.id === symbol);
+  return catalogAsset(symbol);
 }
 
 function fmtPremium(pct: number): string {
@@ -161,24 +161,31 @@ export function Opportunity() {
                   </div>
                 ))}
 
-              {live.status === "unavailable" && (
+              {live.status === "waking" && (
                 <div className="flex flex-col items-center gap-3 px-6 py-14 text-center">
                   <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-2">
-                    Live PreStock market data unavailable right now.
-                  </p>
-                  <p className="max-w-xs text-[13px] leading-[1.6] text-ink-3">
-                    The Opportunity Layer reads real product data — when the
-                    feed is unreachable, it says so instead of inventing
-                    numbers.
+                    API waking up — retrying.
                   </p>
                 </div>
               )}
 
-              {live.status === "live" &&
+              {live.status === "unavailable" && (
+                <div className="flex flex-col items-center gap-3 px-6 py-14 text-center">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-2">
+                    Market data unavailable.
+                  </p>
+                  <p className="max-w-xs text-[13px] leading-[1.6] text-ink-3">
+                    The Opportunity Layer reads live PreStocks catalog data from the LOCATE API.
+                    It does not invent numbers.
+                  </p>
+                </div>
+              )}
+
+              {(live.status === "live" || live.status === "stale") &&
                 live.byPremium.map((r, i) => {
                   const asset = assetFor(r.symbol);
-                  if (!asset) return null;
-                  const edge = r.premiumPct >= EDGE_PCT;
+                  const edge = (r.premiumPct ?? 0) >= EDGE_PCT;
+                  const canTake = Boolean(r.bestOffer);
                   return (
                     <motion.button
                       key={r.symbol}
@@ -186,9 +193,12 @@ export function Opportunity() {
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.4, ease: EASE, delay: 0.04 * i }}
-                      onClick={openBook}
+                      onClick={() => {
+                        openApp();
+                        navigate(canTake ? "book" : "create");
+                      }}
                       className="group flex w-full items-center gap-4 border-b border-line/60 px-5 py-[13px] text-left transition-colors last:border-b-0 hover:bg-[#18181B] sm:grid sm:grid-cols-[1.5fr_1fr_1fr_auto] sm:gap-4 sm:px-6"
-                      aria-label={`${asset.name} — reference ${fmtUsd(r.markPrice)}, market ${fmtUsd(r.tokenPrice)}, premium ${fmtPremium(r.premiumPct)}. Open the book.`}
+                      aria-label={`${asset.name} — reference ${fmtUsdMaybe(r.markPrice)}, market ${fmtUsdMaybe(r.tokenPrice)}, premium ${r.premiumPct == null ? "unavailable" : fmtPremium(r.premiumPct)}.`}
                     >
                       <span className="flex min-w-0 items-center gap-3">
                         <AssetLogo asset={asset} size={36} className="rounded-lg" />
@@ -197,24 +207,30 @@ export function Opportunity() {
                             {asset.symbol}
                           </span>
                           <span className="block font-mono text-[9px] uppercase tracking-[0.12em] text-ink-3 sm:hidden">
-                            REF {fmtUsd(r.markPrice)} · MKT {fmtUsd(r.tokenPrice)}
+                            {canTake ? "TAKE OFFER" : "NO BORROWABLE SUPPLY"}
                           </span>
                         </span>
                       </span>
                       <span className="hidden text-right font-mono text-[12px] tabular-nums text-ink-2 sm:block">
-                        {fmtUsd(r.markPrice)}
+                        {fmtUsdMaybe(r.markPrice)}
                       </span>
                       <span className="hidden text-right font-mono text-[12px] tabular-nums text-white sm:block">
-                        {fmtUsd(r.tokenPrice)}
+                        {fmtUsdMaybe(r.tokenPrice)}
                       </span>
                       <span className="ml-auto flex w-[92px] shrink-0 items-center justify-end gap-2">
                         <span
                           className={cn(
                             "font-mono text-[12.5px] font-bold tabular-nums",
-                            edge ? "text-ember" : r.premiumPct >= 0 ? "text-ink-2" : "text-ink-3",
+                            r.premiumPct == null
+                              ? "text-ink-3"
+                              : edge
+                                ? "text-ember"
+                                : r.premiumPct >= 0
+                                  ? "text-ink-2"
+                                  : "text-ink-3",
                           )}
                         >
-                          {fmtPremium(r.premiumPct)}
+                          {r.premiumPct == null ? "—" : fmtPremium(r.premiumPct)}
                         </span>
                         <ArrowUpRight
                           className="h-3.5 w-3.5 text-ink-3 opacity-0 transition-opacity group-hover:opacity-100"

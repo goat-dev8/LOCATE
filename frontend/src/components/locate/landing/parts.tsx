@@ -7,7 +7,6 @@
  */
 
 import { motion, useReducedMotion } from "framer-motion";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 import type { Asset } from "@/lib/locate/types";
 
@@ -29,19 +28,13 @@ export function AssetLogo({
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 select-none items-center justify-center overflow-hidden rounded-xl bg-cream ring-1 ring-line/80",
+        "inline-flex shrink-0 select-none items-center justify-center overflow-hidden rounded-xl bg-[#141416] font-mono font-bold uppercase tracking-[0.08em] text-white ring-1 ring-line/80",
         className,
       )}
-      style={{ width: size, height: size }}
+      style={{ width: size, height: size, fontSize: Math.max(9, size * 0.28) }}
       aria-hidden
     >
-      <Image
-        src={asset.logo}
-        alt=""
-        width={size * 2}
-        height={size * 2}
-        className="h-full w-full object-cover"
-      />
+      {asset.symbol.slice(0, 2)}
     </span>
   );
 }

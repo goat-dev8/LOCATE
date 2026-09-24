@@ -71,7 +71,7 @@ export function FinalCTA() {
                 </FadeContent>
                 <FadeContent delay={0.5}>
                   <p className="mt-6 font-mono text-[10.5px] uppercase tracking-[0.16em] text-ink-3">
-                    Illustrative preview · sample market state · no real funds
+                    Devnet protocol · live API · profit is not guaranteed
                   </p>
                 </FadeContent>
               </div>

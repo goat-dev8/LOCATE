@@ -6,9 +6,13 @@
  */
 
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { useEffect, useState } from "react";
+import { PublicKey } from "@solana/web3.js";
+import { TOKEN_2022, ata } from "@locate/sdk";
 import { returnOnChain } from "@/lib/locate/tx";
 import { useLocate, locateAsset } from "@/lib/locate/store";
 import { fmtToken, fmtUsd, grossForNet } from "@/lib/locate/seed";
+import { DEVNET_MINT } from "@/lib/locate/env";
 import { ClickSpark } from "@/components/bits";
 import { useDrawerFlow } from "../hooks";
 import { DataRow, DoneState, Note, Payline, StagedProgress } from "../parts";
@@ -38,14 +42,25 @@ export function BuyReturnDrawer({
 
 function Body({ loanId, onClose }: { loanId: string; onClose: () => void }) {
   const loan = useLocate((s) => s.loans.find((l) => l.id === loanId));
-  const tokenBalances = useLocate((s) => s.tokenBalances);
   const navigate = useLocate((s) => s.navigate);
   const { connection } = useConnection();
   const { publicKey, sendTransaction } = useWallet();
+  const [held, setHeld] = useState(0);
+
+  useEffect(() => {
+    if (!publicKey) {
+      setHeld(0);
+      return;
+    }
+    const mint = new PublicKey(loan?.mint || DEVNET_MINT);
+    connection
+      .getTokenAccountBalance(ata(publicKey, mint, TOKEN_2022), "confirmed")
+      .then((result) => setHeld(Number(result.value.uiAmountString ?? result.value.uiAmount ?? 0)))
+      .catch(() => setHeld(0));
+  }, [connection, publicKey, loan?.mint]);
 
   const asset = loan ? locateAsset(loan.assetId) : undefined;
   const gross = loan && asset ? grossForNet(loan.netRequired, asset.transferFeeBps) : 0;
-  const held = loan ? (tokenBalances[loan.assetId] ?? 0) : 0;
   const shortfall = Math.max(0, gross - held);
   const coverCost = asset ? shortfall * asset.marketPrice : 0;
 
@@ -156,7 +171,7 @@ function Body({ loanId, onClose }: { loanId: string; onClose: () => void }) {
 
       {flow.stage === "done" && (
         <DoneState
-          title="RETURN VERIFIED — COLLATERAL RELEASED"
+          title={flow.result?.error ? "Confirmed" : "RETURN CONFIRMED"}
           body={`Full net delivery of ${fmtToken(loan.netRequired)} ${asset.symbol} confirmed. ${fmtUsd(
             loan.collateralUsdc,
           )} USDC is back in your wallet.`}

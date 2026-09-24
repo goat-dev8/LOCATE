@@ -1,14 +1,16 @@
 "use client";
 
 /**
- * LOCATE — Verify: the proof room. Every loan ends in a receipt.
+ * LOCATE — Verify: receipts from the live API, plus optional browser re-check.
  */
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle2, XCircle, ChevronDown, Coins } from "lucide-react";
+import { verifyReceiptInBrowser } from "@locate/sdk";
 import { DecryptionText, FadeContent } from "@/components/bits";
 import type { Receipt } from "@/lib/locate/types";
+import { locateApi, SOLANA_RPC_URL, LOCATE_PROGRAM_ID_TEXT } from "@/lib/locate/env";
 import { Segmented, ViewHead } from "../parts";
 import { cn } from "@/lib/utils";
 
@@ -22,25 +24,36 @@ export function VerifyView() {
     let alive = true;
     const load = async () => {
       try {
-        const res = await fetch("https://locate-api-znz1.onrender.com/v1/receipts?limit=50", { cache: "no-store" });
-        if (!res.ok) throw new Error(String(res.status));
-        const body = (await res.json()) as { receipts?: Array<{ signature: string; kind: string; loan: string | null; slot: number }> };
+        const [stored, evidence] = await Promise.all([
+          locateApi.receipts({ limit: 50 }),
+          locateApi.evidence().catch(() => ({ receipts: [] as Array<Record<string, unknown>> })),
+        ]);
         if (!alive) return;
-        setReceipts((body.receipts ?? []).map((row) => ({
-          id: row.signature + ":" + row.kind,
-          loanId: row.loan ?? "",
-          assetId: "OPENAI",
-          status: row.kind === "loan_claimed" ? "CLAIMED" : "VERIFIED",
-          code: row.kind,
-          lines: [
-            { label: "SIGNATURE", value: row.signature },
-            { label: "KIND", value: row.kind },
-            { label: "SLOT", value: String(row.slot) },
-          ],
-          sig: row.signature,
-          at: 0,
-          yours: false,
-        })));
+        const evidenceSigs = new Set((evidence.receipts ?? []).map((row) => String(row.signature)));
+        setReceipts(
+          (stored.receipts ?? []).map((row) => {
+            const signature = String(row.signature);
+            const kind = String(row.kind);
+            const commitment = String(row.commitment ?? "");
+            const verified = commitment === "finalized" || evidenceSigs.has(signature);
+            return {
+              id: signature + ":" + kind,
+              loanId: row.loan ? String(row.loan) : "",
+              assetId: "OPENAI",
+              status: kind === "loan_claimed" ? "CLAIMED" : verified ? "VERIFIED" : "PENDING",
+              code: kind,
+              lines: [
+                { label: "SIGNATURE", value: signature },
+                { label: "KIND", value: kind },
+                { label: "SLOT", value: String(row.slot ?? "") },
+                { label: "COMMITMENT", value: commitment || "unknown" },
+              ],
+              sig: signature,
+              at: 0,
+              yours: false,
+            };
+          }),
+        );
         setNotice("");
       } catch {
         if (alive) setNotice("API waking up — retrying.");
@@ -72,7 +85,7 @@ export function VerifyView() {
       <FadeContent distance={16}>
         <div className="mb-6">
           <Segmented
-            options={["ALL", "VERIFIED", "REFUSED", "CLAIMED"]}
+            options={["ALL", "VERIFIED", "PENDING", "CLAIMED"]}
             value={filter}
             onChange={setFilter}
             ariaLabel="Filter receipts"
@@ -90,7 +103,7 @@ export function VerifyView() {
           </p>
           <p className="max-w-sm text-[13.5px] leading-[1.6] text-ink-2">
             Settle a loan — return the net tokens or claim the collateral — and
-            the receipt lands here.
+            the receipt lands here after backend verification.
           </p>
         </div>
       ) : (
@@ -119,8 +132,11 @@ function ReceiptCard({
   expanded: boolean;
   onToggle: () => void;
 }) {
+  const [browser, setBrowser] = useState<string | null>(null);
   const refused = receipt.status === "REFUSED";
   const claimed = receipt.status === "CLAIMED";
+  const verified = receipt.status === "VERIFIED";
+  const title = verified ? "Verified on-chain" : claimed ? "CLAIMED" : receipt.status;
 
   return (
     <article
@@ -149,25 +165,20 @@ function ReceiptCard({
                 refused ? "text-refuse" : claimed ? "text-ember" : "text-lime-deep",
               )}
             >
-              {receipt.status === "VERIFIED" ? "Verified on-chain" : receipt.status}
+              {title}
             </span>
             <span className="mt-0.5 block font-mono text-[9.5px] uppercase tracking-[0.12em] text-ink-3">
-              {receipt.id} · LOAN {receipt.loanId} · {receipt.assetId}
+              {receipt.sig} · {receipt.code}
             </span>
           </span>
         </span>
-        <span className="flex items-center gap-3">
-          <span className="hidden font-mono text-[9.5px] uppercase tracking-[0.12em] text-ink-3 sm:inline">
-            {receipt.yours ? "YOUR LOAN" : "NETWORK"}
-          </span>
-          <ChevronDown
-            className={cn(
-              "h-4 w-4 text-ink-3 transition-transform duration-300",
-              expanded && "rotate-180",
-            )}
-            aria-hidden
-          />
-        </span>
+        <ChevronDown
+          className={cn(
+            "h-4 w-4 text-ink-3 transition-transform duration-300",
+            expanded && "rotate-180",
+          )}
+          aria-hidden
+        />
       </button>
 
       <div className="border-t border-line/70 px-5 py-4">
@@ -179,11 +190,6 @@ function ReceiptCard({
         >
           {receipt.code}
         </p>
-        {receipt.reason && (
-          <p className="mt-2 border-l-2 border-refuse/50 pl-3 text-[13px] italic leading-[1.55] text-ink-2">
-            “{receipt.reason}”
-          </p>
-        )}
 
         <AnimatePresence initial={false}>
           {expanded && (
@@ -203,27 +209,40 @@ function ReceiptCard({
                     <span className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-ink-3">
                       {l.label}
                     </span>
-                    <span className="font-mono text-[12.5px] tabular-nums text-white">
+                    <span className="break-all text-right font-mono text-[12.5px] tabular-nums text-white">
                       {l.value}
                     </span>
                   </div>
                 ))}
-                <p className="mt-4 font-mono text-[9.5px] uppercase tracking-[0.12em] text-ink-3">
-                  {receipt.sig} · NON-PRODUCTION PREVIEW SIGNATURE
-                </p>
+                <a
+                  href={`https://explorer.solana.com/tx/${receipt.sig}?cluster=devnet`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-4 inline-block font-mono text-[9.5px] uppercase tracking-[0.12em] text-lime-deep"
+                >
+                  OPEN DEVNET EXPLORER
+                </a>
+                <button
+                  className="mt-3 block font-mono text-[10px] uppercase tracking-[0.12em] text-ink-2"
+                  onClick={() => {
+                    setBrowser("Checking Devnet…");
+                    void verifyReceiptInBrowser(receipt.sig, SOLANA_RPC_URL, LOCATE_PROGRAM_ID_TEXT).then((result) => {
+                      setBrowser(
+                        result.ok && result.status === "verified"
+                          ? "Verified on-chain"
+                          : result.ok
+                            ? "Confirmed — not yet finalized"
+                            : `Browser check: ${result.reason}`,
+                      );
+                    });
+                  }}
+                >
+                  {browser ?? "RE-CHECK IN BROWSER"}
+                </button>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
-
-        {!expanded && (
-          <button
-            onClick={onToggle}
-            className="mt-3 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-lime-deep transition-opacity hover:opacity-80"
-          >
-            VIEW LINES →
-          </button>
-        )}
       </div>
     </article>
   );

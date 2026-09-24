@@ -394,3 +394,25 @@ export function EmptyState({
     </div>
   );
 }
+
+export function Note({
+  tone = "ink",
+  children,
+}: {
+  tone?: "ink" | "lime" | "ember" | "refuse";
+  children: React.ReactNode;
+}) {
+  const cls =
+    tone === "refuse"
+      ? "border-refuse/30 bg-refuse-soft text-refuse"
+      : tone === "ember"
+        ? "border-ember/30 bg-ember-soft text-ember"
+        : tone === "lime"
+          ? "border-lime/25 bg-lime-soft text-lime-deep"
+          : "border-line bg-[#101012] text-ink-2";
+  return (
+    <p className={`rounded-xl border px-4 py-3 font-mono text-[10px] uppercase leading-relaxed tracking-[0.1em] ${cls}`}>
+      {children}
+    </p>
+  );
+}

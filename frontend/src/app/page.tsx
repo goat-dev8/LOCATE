@@ -1,9 +1,7 @@
 'use client'
 
 /**
- * LOCATE — PreStocks token-lending & short-supply rail.
- * Frontend preview build: one route, two experiences
- * (marketing landing + the app workspace), all state simulated client-side.
+ * LOCATE — one route, two experiences: marketing landing + the live app workspace.
  */
 
 import LocateRoot from "@/components/locate/LocateRoot";

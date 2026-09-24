@@ -4,8 +4,10 @@
  * LOCATE — CreateOffer: one focused panel + confirm drawer.
  */
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { PublicKey } from "@solana/web3.js";
+import { TOKEN_2022, ata } from "@locate/sdk";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { listOnChain } from "@/lib/locate/tx";
 import { useLocate } from "@/lib/locate/store";
@@ -71,14 +73,25 @@ function NumberField({
 }
 
 export function CreateOfferView() {
-  const { tokenBalances, createOffer, navigate } = useLocate();
-  const lendable = ASSETS.filter((a) => (tokenBalances[a.id] ?? 0) > 0);
+  const navigate = useLocate((s) => s.navigate);
+  const { connection } = useConnection();
+  const { publicKey } = useWallet();
+  const [balance, setBalance] = useState(0);
 
-  const [assetId, setAssetId] = useState(
-    lendable[0]?.id ?? "OPENAI",
-  );
+  const [assetId, setAssetId] = useState("OPENAI");
   const asset = ASSETS.find((a) => a.id === assetId)!;
-  const balance = tokenBalances[assetId] ?? 0;
+  useEffect(() => {
+    if (!publicKey) {
+      setBalance(0);
+      return;
+    }
+    const mint = new PublicKey("9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P");
+    const account = ata(publicKey, mint, TOKEN_2022);
+    connection
+      .getTokenAccountBalance(account, "confirmed")
+      .then((result) => setBalance(Number(result.value.uiAmountString ?? result.value.uiAmount ?? 0)))
+      .catch(() => setBalance(0));
+  }, [connection, publicKey]);
 
   const [amount, setAmount] = useState("0.005");
   const [collateral, setCollateral] = useState("12.50");
@@ -93,7 +106,7 @@ export function CreateOfferView() {
   const feeNum = parseFloat(fee) || 0;
 
   const collateralization = useMemo(() => {
-    if (amountNum <= 0) return 0;
+    if (amountNum <= 0 || !asset.marketPrice) return null;
     return (collateralNum / (amountNum * asset.marketPrice)) * 100;
   }, [amountNum, collateralNum, asset.marketPrice]);
 
@@ -135,14 +148,13 @@ export function CreateOfferView() {
             <p className="lc-label mb-2.5">PRESTOCK</p>
             <div className="flex flex-wrap gap-2">
               {ASSETS.map((a) => {
-                const bal = tokenBalances[a.id] ?? 0;
                 const selected = a.id === assetId;
                 return (
                   <button
                     key={a.id}
                     onClick={() => {
                       setAssetId(a.id);
-                      setAmount(bal > 0 ? String(bal) : "0");
+                      setAmount(balance > 0 ? String(Math.min(balance, 0.005)) : "0");
                     }}
                     className={cn(
                       "flex items-center gap-2.5 rounded-xl border px-3 py-2.5 transition-colors",
@@ -163,7 +175,7 @@ export function CreateOfferView() {
                         {a.symbol}
                       </span>
                       <span className="block font-mono text-[9px] uppercase tracking-[0.1em] text-ink-3">
-                        {fmtToken(bal)}
+                        {fmtToken(balance)}
                       </span>
                     </span>
                   </button>
@@ -231,11 +243,11 @@ export function CreateOfferView() {
           <DataRow label="EXPIRY" value={expiry} />
           <DataRow
             label="COLLATERALIZATION"
-            value={collateralization > 0 ? `${collateralization.toFixed(0)}%` : "—"}
-            tone={collateralization > 0 && collateralization < 150 ? "ember" : "strong"}
+            value={collateralization !== null ? `${collateralization.toFixed(0)}%` : "not a settlement input"}
+            tone={collateralization !== null && collateralization < 150 ? "ember" : "strong"}
           />
 
-          {collateralization > 0 && collateralization < 150 && (
+          {collateralization !== null && collateralization < 150 && (
             <p className="mt-3 rounded-xl border border-ember/30 bg-ember-soft px-4 py-3 font-mono text-[10px] uppercase leading-relaxed tracking-[0.1em] text-ember">
               THIN COLLATERAL — DEFAULTS PROTECT YOU LESS
             </p>

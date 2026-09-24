@@ -57,7 +57,7 @@ function ReceiptCard({
             {id}
           </span>
           <span className="rounded-full border border-line bg-[#161619] px-2 py-0.5 font-mono text-[8.5px] font-medium uppercase tracking-[0.12em] text-ink-3">
-            SAMPLE · PREVIEW
+            LAYOUT EXAMPLE
           </span>
         </span>
       </div>
@@ -209,8 +209,8 @@ export function Proof() {
           >
             <FileText className="h-4 w-4 text-lime-deep" aria-hidden />
             <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-2">
-              Receipts live in the app — every loan ends in one. Samples shown
-              from the preview workspace.
+            Receipts live in the app after backend verification. These cards
+            show receipt layout only — not live verified loans.
             </p>
           </SpotlightCard>
         </div>

@@ -2,8 +2,6 @@
 
 /**
  * LOCATE — live-data status pill.
- * Honest state surface for the real PreStocks product data feed:
- * RESOLVING… / LIVE / UNAVAILABLE. Never fakes a live state.
  */
 
 import { cn } from "@/lib/utils";
@@ -25,6 +23,16 @@ export function LiveIndicator({
   at: number | null;
   className?: string;
 }) {
+  const label =
+    status === "live"
+      ? "LIVE"
+      : status === "stale"
+        ? "STALE DATA"
+        : status === "waking"
+          ? "API WAKING UP — RETRYING"
+          : status === "loading"
+            ? "RESOLVING LIVE DATA…"
+            : "LIVE DATA UNAVAILABLE";
   return (
     <span
       className={cn(
@@ -39,23 +47,13 @@ export function LiveIndicator({
         className={cn(
           "inline-block h-[6px] w-[6px] rounded-[2px]",
           status === "live" && "bg-lime animate-pulse-dot",
-          status === "loading" && "bg-ink-3 animate-pulse-dot",
-          status === "unavailable" && "bg-ink-3",
+          (status === "loading" || status === "waking") && "bg-ink-3 animate-pulse-dot",
+          (status === "unavailable" || status === "stale") && "bg-ink-3",
         )}
       />
-      {status === "live" && (
-        <>
-          <span className="text-lime-deep">LIVE</span>
-          <span className="text-ink-3">
-            · PRESTOCKS{at != null ? ` · ${fmtTime(at)}` : ""}
-          </span>
-        </>
-      )}
-      {status === "loading" && (
-        <span className="text-ink-3">RESOLVING LIVE DATA…</span>
-      )}
-      {status === "unavailable" && (
-        <span className="text-ink-3">LIVE DATA UNAVAILABLE</span>
+      <span className={status === "live" ? "text-lime-deep" : "text-ink-3"}>{label}</span>
+      {status === "live" && at != null && (
+        <span className="text-ink-3">· PRESTOCKS · {fmtTime(at)}</span>
       )}
     </span>
   );

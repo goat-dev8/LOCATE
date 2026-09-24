@@ -11,10 +11,11 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
-import { ASSETS } from "@/lib/locate/seed";
+import { catalogAsset } from "@/lib/locate/seed";
+import { useLiveMarket } from "@/lib/locate/useLiveMarket";
 import type { Asset } from "@/lib/locate/types";
 import { cn } from "@/lib/utils";
+import { AssetLogo } from "./parts";
 
 const BASE_SPEED = 42; // px/s — premium-slow drift
 const HOVER_SPEED = 12; // px/s — gentle slow-down on hover
@@ -24,20 +25,7 @@ const COPY_HEADROOM = 2;
 function MarqueeItem({ asset }: { asset: Asset }) {
   return (
     <div className="flex select-none items-center gap-3.5 pr-16 sm:pr-20">
-      <span
-        className="inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[14px] bg-cream ring-1 ring-line/80"
-        style={{ width: 44, height: 44 }}
-        aria-hidden
-      >
-        <Image
-          src={asset.logo}
-          alt=""
-          width={88}
-          height={88}
-          className="h-full w-full object-cover"
-          draggable={false}
-        />
-      </span>
+      <AssetLogo asset={asset} size={44} className="rounded-[14px]" />
       <span className="whitespace-nowrap font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-ink-2">
         {asset.symbol}
       </span>
@@ -46,6 +34,7 @@ function MarqueeItem({ asset }: { asset: Asset }) {
 }
 
 export function LogoMarquee({ className }: { className?: string }) {
+  const live = useLiveMarket();
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const seqRef = useRef<HTMLDivElement>(null);
@@ -118,7 +107,10 @@ export function LogoMarquee({ className }: { className?: string }) {
     return () => cancelAnimationFrame(raf);
   }, [reduced, hovered]);
 
-  const items = useMemo(() => ASSETS, []);
+  const items = useMemo(
+    () => live.rows.filter((row) => row.symbol !== "SPACEX").map((row) => catalogAsset(row.symbol)),
+    [live.rows],
+  );
 
   return (
     <section
@@ -133,7 +125,11 @@ export function LogoMarquee({ className }: { className?: string }) {
           THE PRESTOCK UNIVERSE · LIVE CATALOG · ONE BORROWABLE RAIL
         </p>
 
-        {reduced ? (
+        {items.length === 0 ? (
+          <p className="mt-8 text-center font-mono text-[10px] uppercase tracking-[0.16em] text-ink-3">
+            {live.status === "waking" ? "API waking up — retrying." : "Live catalog unavailable."}
+          </p>
+        ) : reduced ? (
           /* static, honest fallback — logos wrap centered, no motion */
           <ul className="mx-auto mt-8 flex max-w-4xl flex-wrap items-center justify-center gap-x-8 gap-y-5 px-5">
             {items.map((a) => (

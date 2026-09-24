@@ -49,7 +49,7 @@ export function OverviewView() {
         <div className="lc-card overflow-hidden">
           <div className="flex flex-wrap items-center justify-between gap-5 border-b border-line px-6 py-5">
             <div className="flex items-center gap-4">
-              <AssetLogo asset={{ id: "OPENAI", symbol: "OPENAI", name: "OpenAI PreStock", logo: "/logos/openai.webp", refPrice: openai?.markPrice ?? 0, marketPrice: openai?.tokenPrice ?? 0, transferFeeBps: 100, standard: "TOKEN-2022", blurb: "" }} size={52} className="rounded-2xl" />
+              <AssetLogo asset={{ id: "OPENAI", symbol: "OPENAI", name: "OpenAI PreStock", logo: "", refPrice: openai?.markPrice ?? null, marketPrice: openai?.tokenPrice ?? null, transferFeeBps: 100, standard: "TOKEN-2022", blurb: "" }} size={52} className="rounded-2xl" />
               <div>
                 <p className="font-sans text-[17px] font-semibold tracking-[-0.01em] text-white">
                   OpenAI PreStock

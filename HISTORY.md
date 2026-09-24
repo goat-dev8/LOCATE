@@ -505,3 +505,33 @@ PHASE 15 IN PROGRESS
 Implementation: IN PROGRESS
 Outstanding blockers: Phantom list/take/return/claim signatures, Vercel, production CORS for the Vercel origin
 Git SHA: pending this commit
+
+## 2026-09-24T04:50:00Z — Vercel production
+
+- Project `locate` (`prj_yAPOlf69pkEGaMRb1m0mEyRbTbuX`) deployed `dpl_EHrZCbXs8vD3aH5BNk1EBRJ4ZnsA` from `aff058b`. Ready state READY. SSO protection is null.
+- Public URLs return 200: `https://locate-blue.vercel.app` and `https://locate-efdyy1g9g-goats-projects-3f023cc9.vercel.app`. HTML includes the devnet mint banner and does not include SPACEX.
+- Render CORS now includes those Vercel origins. `GET /v1/config` from origin `https://locate-blue.vercel.app` returns `Access-Control-Allow-Origin: https://locate-blue.vercel.app`.
+- SDK tests 8 passed. Backend tests 19 passed. Listing still needs a live ATA balance on the create form; that fix is local and not in `aff058b`.
+
+PHASE 15 IN PROGRESS
+
+Implementation: IN PROGRESS
+Outstanding blockers: live ATA balance on list, Phantom signed list/take/return/claim, production Chrome after the ATA fix
+Git SHA: aff058b on origin/main
+
+## 2026-09-24T05:10:00Z — Live ATA, SDK API client, seeded path removed
+
+- The delivered frontend originally used seeded offers, loans, receipts, and a local 250 USDC balance. That production seed path is gone. The zustand store starts empty. Offers come from `GET /v1/offers`. Loans come from `GET /v1/loans`. Receipts come from `GET /v1/receipts` plus `GET /v1/evidence`.
+- Create Offer and the wallet chip read Token-2022 / USDC ATA balances from Devnet RPC. Listing is no longer disabled by a fake zero store balance.
+- Cancel, return, and claim drawers that still called the local store stubs now call `buildCancelTx` / `buildReturnTx` / `buildClaimTx` through simulate → sign → confirm → `POST /v1/receipts/:signature`. Early claim remains simulate-only.
+- Discover reads `api.opportunities()` for the live catalog. SPACEX is filtered. TAKE OFFER is shown only when `bestOffer` exists.
+- Take includes `GET /v1/offers/:pubkey/economics` and `quoteEconomics`. On Devnet, Jupiter quotes are not used, so the UI shows "Break-even unavailable". Thesis POST is optional and does not block Take.
+- SDK `createLocateApi` now covers config, markets, opportunities, offers, economics, loans, receipts, evidence, activity, theses. `verifyReceiptInBrowser` re-checks a signature on RPC. SDK tests 9 passed. Backend tests 19 passed. Frontend checker exits 0. `npx next build` passed.
+
+PHASE 15 IN PROGRESS
+
+Implementation: IN PROGRESS
+Tests: SDK 9, backend 19, checker 0, frontend build PASS
+Outstanding blockers: Chrome QA E-01..E-12 screenshots, Phantom signed list/take/return/claim, Vercel redeploy of this commit, production Chrome
+Git SHA: pending this commit
+

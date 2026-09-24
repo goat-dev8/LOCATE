@@ -173,8 +173,7 @@ export function UIPreviews() {
             </TiltedCard>
             <p className="max-w-sm text-center text-[13.5px] leading-[1.6] text-ink-2">
               Take an offer with the full cost visible up front — collateral, fee,
-              and the estimated cost of covering the return. Illustrative terms
-              from the preview workspace.
+              and the return obligation. Layout preview only; live numbers live in the book.
             </p>
           </div>
         </FadeContent>

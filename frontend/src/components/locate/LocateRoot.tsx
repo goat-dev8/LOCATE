@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle2, Info, X } from "lucide-react";
+import { locateApi, DEVNET_MINT } from "@/lib/locate/env";
 import { useLocate } from "@/lib/locate/store";
 import { Landing } from "./landing/Landing";
 import { AppShell } from "./app/AppShell";
@@ -102,47 +103,29 @@ export default function LocateRoot() {
     let alive = true;
     const load = async () => {
       try {
-        const res = await fetch("https://locate-api-znz1.onrender.com/v1/offers", { cache: "no-store" });
-        if (!res.ok) return;
-        const data = (await res.json()) as {
-          offers?: Array<{
-            pubkey: string;
-            mint: string;
-            lender: string;
-            amountRaw: string;
-            collateralUsdc: string;
-            feeUsdc: string;
-            termSecs: string;
-            graceSecs: string;
-            nonce: string;
-            expiresAt: string;
-            createdAt: string;
-            funded?: boolean;
-          }>;
-        };
+        const data = await locateApi.offers();
         if (!alive) return;
-        const devnetMint = "9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P";
         setOffers(
           (data.offers ?? [])
-            .filter((row) => row.funded && row.mint === devnetMint)
+            .filter((row) => Boolean(row.funded) && String(row.mint) === DEVNET_MINT)
             .map((row) => ({
-              id: row.pubkey,
-              assetId: "OPENAI" as const,
+              id: String(row.pubkey),
+              assetId: "OPENAI",
               amount: Number(row.amountRaw) / 1e9,
               collateralUsdc: Number(row.collateralUsdc) / 1e6,
               feeUsdc: Number(row.feeUsdc) / 1e6,
               termDays: Math.max(1, Math.round(Number(row.termSecs) / 86_400)),
               expiryAt: Number(row.expiresAt) * 1000,
-              lender: row.lender,
-              mint: row.mint,
-              nonce: row.nonce,
-              amountRaw: row.amountRaw,
-              collateralRaw: row.collateralUsdc,
-              feeRaw: row.feeUsdc,
-              termSecs: row.termSecs,
-              graceSecs: row.graceSecs,
-              expiresAtSec: row.expiresAt,
-              isYours: publicKey ? row.lender === publicKey.toBase58() : false,
+              lender: String(row.lender),
+              mint: String(row.mint),
+              nonce: String(row.nonce),
+              amountRaw: String(row.amountRaw),
+              collateralRaw: String(row.collateralUsdc),
+              feeRaw: String(row.feeUsdc),
+              termSecs: String(row.termSecs),
+              graceSecs: String(row.graceSecs),
+              expiresAtSec: String(row.expiresAt),
+              isYours: publicKey ? String(row.lender) === publicKey.toBase58() : false,
               status: "ACTIVE" as const,
               createdAt: Number(row.createdAt) * 1000,
             })),
@@ -169,10 +152,12 @@ export default function LocateRoot() {
     const load = async () => {
       const rows: Array<Record<string, string | number | boolean>> = [];
       for (const role of ["borrower", "lender"] as const) {
-        const res = await fetch(`https://locate-api-znz1.onrender.com/v1/loans?wallet=${wallet}&role=${role}`, { cache: "no-store" });
-        if (!res.ok) continue;
-        const body = (await res.json()) as { loans?: Array<Record<string, string | number | boolean>> };
-        for (const loan of body.loans ?? []) rows.push({ ...loan, role });
+        try {
+          const body = await locateApi.loans({ wallet, role });
+          for (const loan of body.loans ?? []) rows.push({ ...loan, role });
+        } catch {
+          /* keep other role results; do not invent loans */
+        }
       }
       if (!alive) return;
       setLoans(rows.map((loan) => ({

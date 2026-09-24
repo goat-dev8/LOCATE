@@ -2,10 +2,7 @@
 
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
 import { useEffect, useState } from "react";
-
-const endpoint = process.env.VITE_SOLANA_RPC_URL ?? "https://api.devnet.solana.com";
-const expectedProgram = process.env.VITE_LOCATE_PROGRAM_ID ?? "F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6";
-const api = process.env.VITE_API_BASE_URL ?? "https://locate-api-znz1.onrender.com";
+import { LOCATE_PROGRAM_ID_TEXT, SOLANA_RPC_URL, locateApi } from "@/lib/locate/env";
 
 export function WalletProviders({ children }: { children: React.ReactNode }) {
   const [block, setBlock] = useState<string | null>(null);
@@ -14,13 +11,8 @@ export function WalletProviders({ children }: { children: React.ReactNode }) {
     let alive = true;
     const check = async () => {
       try {
-        const res = await fetch(api + "/v1/config", { cache: "no-store" });
-        if (!res.ok) {
-          if (alive) setBlock("API waking up — retrying.");
-          return;
-        }
-        const body = (await res.json()) as { programId?: string; cluster?: string };
-        if (body.programId !== expectedProgram) {
+        const body = await locateApi.config();
+        if (body.programId !== LOCATE_PROGRAM_ID_TEXT) {
           if (alive) setBlock("Configuration error: the frontend program id does not match the backend.");
           return;
         }
@@ -50,7 +42,7 @@ export function WalletProviders({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <ConnectionProvider endpoint={endpoint}>
+    <ConnectionProvider endpoint={SOLANA_RPC_URL}>
       <WalletProvider wallets={[]} autoConnect>
         {children}
       </WalletProvider>

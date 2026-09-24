@@ -4,7 +4,7 @@
  * LOCATE app shell — dark ink sidebar + workspace surface.
  */
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   LayoutGrid,
@@ -15,10 +15,11 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { DecryptionText } from "@/components/bits";
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { PublicKey } from "@solana/web3.js";
+import { DEVNET_USDC, TOKEN, TOKEN_2022, ata } from "@locate/sdk";
 import { useLocate, type View } from "@/lib/locate/store";
 import { useLiveMarket } from "@/lib/locate/useLiveMarket";
-import { ASSETS, fmtToken } from "@/lib/locate/seed";
 import { Wordmark } from "../landing/parts";
 import { OverviewView } from "./views/Overview";
 import { BookView } from "./views/Book";
@@ -48,9 +49,24 @@ const VIEW_TITLES: Record<View, string> = {
 };
 
 function Wallet() {
-  const tokens = useLocate((s) => s.tokenBalances);
-  const held = ASSETS.filter((a) => (tokens[a.id] ?? 0) > 0);
+  const { connection } = useConnection();
   const { publicKey, connected, connecting, wallets, select, connect, disconnect } = useWallet();
+  const [usdc, setUsdc] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+  useEffect(() => {
+    if (!publicKey) {
+      setUsdc(null);
+      setToken(null);
+      return;
+    }
+    const mint = new PublicKey("9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P");
+    connection.getTokenAccountBalance(ata(publicKey, DEVNET_USDC, TOKEN), "confirmed")
+      .then((result) => setUsdc(result.value.uiAmountString ?? "0"))
+      .catch(() => setUsdc("0"));
+    connection.getTokenAccountBalance(ata(publicKey, mint, TOKEN_2022), "confirmed")
+      .then((result) => setToken(result.value.uiAmountString ?? "0"))
+      .catch(() => setToken("0"));
+  }, [connection, publicKey]);
   const onConnect = () => {
     const phantom = wallets.find((w) => w.adapter.name === "Phantom") ?? wallets[0];
     if (!phantom) return;
@@ -75,21 +91,15 @@ function Wallet() {
         )}
       </div>
       <div className="mt-2.5 border-t border-shell-line pt-2.5">
-        {held.length === 0 ? (
-          <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-shell-ink-2">
-            NO PRESTOCK BALANCES
-          </p>
+        {token && Number(token) > 0 ? (
+          <div className="flex items-baseline justify-between py-0.5">
+            <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-shell-ink-2">dOPENAI</span>
+            <span className="font-mono text-[11.5px] tabular-nums text-shell-ink">{token}</span>
+          </div>
         ) : (
-          held.map((a) => (
-            <div key={a.id} className="flex items-baseline justify-between py-0.5">
-              <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-shell-ink-2">
-                {a.symbol}
-              </span>
-              <span className="font-mono text-[11.5px] tabular-nums text-shell-ink">
-                {fmtToken(tokens[a.id] ?? 0)}
-              </span>
-            </div>
-          ))
+          <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-shell-ink-2">
+            {connected ? `USDC ${usdc ?? "…"}` : "NO PRESTOCK BALANCES"}
+          </p>
         )}
       </div>
     </div>
@@ -146,17 +156,20 @@ function SidebarNav({
 }
 
 export function AppShell() {
-  const { view, navigate, goLanding, offers, loans, ensureArrivals, activeLoanId } = useLocate();
+  const { view, navigate, goLanding, offers, loans, activeLoanId } = useLocate();
   const openApp = useLocate((s) => s.openApp);
   const live = useLiveMarket();
   const openai = live.bySymbol("OPENAI");
-  const premiumLabel = openai?.tokenPrice && openai.markPrice && openai.premiumPct !== null
-    ? `OPENAI $${Math.round(openai.tokenPrice).toLocaleString("en-US")} · ${openai.premiumPct >= 0 ? "+" : ""}${openai.premiumPct.toFixed(1)}%`
-    : "Market data unavailable";
-
-  useEffect(() => {
-    ensureArrivals();
-  }, [ensureArrivals]);
+  const premiumLabel =
+    live.status === "loading"
+      ? "Resolving live data…"
+      : live.status === "waking"
+        ? "API waking up — retrying."
+        : live.status === "stale"
+          ? "Market data unavailable."
+          : openai?.tokenPrice && openai.markPrice && openai.premiumPct !== null
+            ? `OPENAI $${Math.round(openai.tokenPrice).toLocaleString("en-US")} · ${openai.premiumPct >= 0 ? "+" : ""}${openai.premiumPct.toFixed(1)}%`
+            : "Market data unavailable.";
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
@@ -185,6 +198,9 @@ export function AppShell() {
           <Wordmark dark />
         </button>
         <p className="lc-label-dark mt-3">DEVNET</p>
+        <p className="mt-2 font-mono text-[8.5px] uppercase leading-relaxed tracking-[0.1em] text-shell-ink-2">
+          devnet test mint mirroring OPENAI&apos;s extensions; not a PreStocks token
+        </p>
 
         <SidebarNav view={view} navigate={navigate} counts={counts} />
 
@@ -216,7 +232,7 @@ export function AppShell() {
               <span className="lc-chip">{premiumLabel}</span>
               <span className="hidden sm:inline-flex">
                 <span className="lc-chip-lime">
-                  <DecryptionText text={live.status === "live" ? "LIVE" : "UNAVAILABLE"} speed={60} revealDelay={200} />
+                  <DecryptionText text={live.status === "live" ? "LIVE" : live.status === "waking" ? "WAKING" : live.status === "stale" ? "STALE" : "UNAVAILABLE"} speed={60} revealDelay={200} />
                 </span>
               </span>
             </div>

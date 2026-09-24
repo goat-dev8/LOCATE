@@ -1,22 +1,16 @@
 "use client";
 
 /**
- * LOCATE — workspace state. Offers, loans, and receipts start empty and are filled from the live API.
+ * LOCATE — workspace state. Offers and loans start empty and are filled from the live API.
  */
 
 import { create } from "zustand";
-import {
-  ASSETS,
-  seedLoans,
-  seedOffers,
-  seedReceipts,
-} from "./seed";
+import { ASSETS } from "./seed";
 import type {
   Asset,
   CreateOfferInput,
   Loan,
   Offer,
-  Receipt,
   ToastPayload,
   ToastTone,
 } from "./types";
@@ -43,16 +37,10 @@ interface LocateState {
   view: View;
   activeLoanId: string | null;
 
-  usdcBalance: number;
-  tokenBalances: Record<string, number>;
-
   offers: Offer[];
   loans: Loan[];
-  receipts: Receipt[];
 
   toast: ToastPayload | null;
-  /** one-shot simulation guards */
-  arrivalsStarted: boolean;
 
   openApp: () => void;
   goLanding: () => void;
@@ -68,7 +56,6 @@ interface LocateState {
   buyAndReturn: (loanId: string) => ActionResult;
   claimCollateral: (loanId: string) => ActionResult;
 
-  ensureArrivals: () => void;
   pushToast: (title: string, body?: string, tone?: ToastTone) => void;
   dismissToast: () => void;
   setOffers: (offers: Offer[]) => void;
@@ -82,15 +69,10 @@ export const useLocate = create<LocateState>((set, get) => ({
   view: "overview",
   activeLoanId: null,
 
-  usdcBalance: 0,
-  tokenBalances: {},
-
-  offers: seedOffers(),
-  loans: seedLoans(),
-  receipts: seedReceipts(),
+  offers: [],
+  loans: [],
 
   toast: null,
-  arrivalsStarted: false,
 
   openApp: () => set({ mode: "app", view: "overview", activeLoanId: null }),
   goLanding: () => set({ mode: "landing" }),
@@ -105,7 +87,6 @@ export const useLocate = create<LocateState>((set, get) => ({
   cancelOffer: () => ({ ok: false, error: "Connect a Devnet wallet. Cancel is a real transaction." }),
   buyAndReturn: () => ({ ok: false, error: "Connect a Devnet wallet. Return is a real transaction." }),
   claimCollateral: () => ({ ok: false, error: "Connect a Devnet wallet. Claim is a real transaction after maturity." }),
-  ensureArrivals: () => set({ arrivalsStarted: true }),
 
   pushToast: (title, body, tone = "ink") => {
     set({ toast: { id: toastSeq++, title, body, tone } });
@@ -115,5 +96,15 @@ export const useLocate = create<LocateState>((set, get) => ({
   setLoans: (loans) => set({ loans }),
 }));
 
-export const locateAsset = (id: string) => ASSETS.find((a) => a.id === id);
+export const locateAsset = (id: string) => ASSETS.find((a) => a.id === id) ?? {
+  id,
+  symbol: id,
+  name: id,
+  logo: "",
+  refPrice: null,
+  marketPrice: null,
+  transferFeeBps: 100,
+  standard: "TOKEN-2022" as const,
+  blurb: "",
+};
 export const locateEpoch = 0;

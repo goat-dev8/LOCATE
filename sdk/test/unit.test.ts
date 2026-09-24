@@ -4,6 +4,7 @@ import { DEVNET_USDC, JUPITER_V6, LOCATE_PROGRAM_ID, TOKEN_2022 } from "../src/c
 import { ata, offerPda, loanPda } from "../src/pdas.js";
 import { epochFee, grossForNet, rawToUi, uiToRaw } from "../src/fees.js";
 import { quoteEconomics } from "../src/economics.js";
+import { createLocateApi } from "../src/api.js";
 import { buildCancelTx, buildClaimTx, buildListTx, buildReturnTx, buildTakeTx, type OfferTerms } from "../src/builders.js";
 import { guardSwap, jupiterQuote } from "../src/jupiter.js";
 import { decodeProgramError } from "../src/simulate.js";
@@ -98,5 +99,23 @@ describe("sdk", () => {
 
   it("decodes ClaimRefusedNotMatured", () => {
     expect(decodeProgramError({ InstructionError: [0, { Custom: 6015 }] }).name).toBe("ClaimRefusedNotMatured");
+  });
+
+  it("createLocateApi exposes the live LOCATE routes", () => {
+    const api = createLocateApi("https://example.test");
+    expect(typeof api.config).toBe("function");
+    expect(typeof api.markets).toBe("function");
+    expect(typeof api.opportunities).toBe("function");
+    expect(typeof api.offers).toBe("function");
+    expect(typeof api.offer).toBe("function");
+    expect(typeof api.offerEconomics).toBe("function");
+    expect(typeof api.loans).toBe("function");
+    expect(typeof api.loan).toBe("function");
+    expect(typeof api.receipts).toBe("function");
+    expect(typeof api.evidence).toBe("function");
+    expect(typeof api.activity).toBe("function");
+    expect(typeof api.theses).toBe("function");
+    expect(typeof api.postThesis).toBe("function");
+    expect(typeof api.postReceipt).toBe("function");
   });
 });

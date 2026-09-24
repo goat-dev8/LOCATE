@@ -1,4 +1,4 @@
-import type { Asset, Loan, Offer, Receipt } from "./types";
+import type { Asset } from "./types";
 
 export const EPOCH = 0;
 export const HOUR = 3_600_000;
@@ -81,21 +81,33 @@ export const OPENAI_MARK: Asset = {
   id: "OPENAI",
   symbol: "OPENAI",
   name: "OpenAI PreStock",
-  logo: "/logos/openai.webp",
-  refPrice: 0,
-  marketPrice: 0,
+  logo: "",
+  refPrice: null,
+  marketPrice: null,
   transferFeeBps: 100,
   standard: "TOKEN-2022",
-  blurb: "",
+  blurb: "devnet test mint mirroring OPENAI's extensions; not a PreStocks token",
 };
 
 export const ASSETS: Asset[] = [OPENAI_MARK];
-export function seedOffers(): Offer[] {
-  return [];
+
+export function catalogAsset(symbol: string): Asset {
+  return (
+    ASSETS.find((a) => a.id === symbol || a.symbol === symbol) ?? {
+      id: symbol,
+      symbol,
+      name: `${symbol} PreStock`,
+      logo: "",
+      refPrice: null,
+      marketPrice: null,
+      transferFeeBps: 100,
+      standard: "TOKEN-2022",
+      blurb: "",
+    }
+  );
 }
-export function seedLoans(): Loan[] {
-  return [];
-}
-export function seedReceipts(): Receipt[] {
-  return [];
+
+export function fmtUsdMaybe(n: number | null | undefined): string {
+  if (n == null || !Number.isFinite(n)) return "unavailable";
+  return fmtUsd(n);
 }

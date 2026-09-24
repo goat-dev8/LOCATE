@@ -5,13 +5,13 @@
  */
 
 import { useState } from "react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useLocate } from "@/lib/locate/store";
 import { ASSETS, fmtUsd, fmtToken } from "@/lib/locate/seed";
 import type { Offer } from "@/lib/locate/types";
 import { AssetLogo } from "../../landing/parts";
-import { DataRow, DoneState, EmptyState, Segmented, StatusChip, ViewHead } from "../parts";
+import { EmptyState, Segmented, StatusChip, ViewHead } from "../parts";
 import { FadeContent } from "@/components/bits";
+import { CancelOfferDrawer } from "../drawers/CancelOfferDrawer";
 
 export function MyOffersView() {
   const { offers, loans, navigate } = useLocate();
@@ -120,95 +120,13 @@ export function MyOffersView() {
         </FadeContent>
       )}
 
-      <CancelOfferDrawer offer={cancelling} onClose={() => setCancelling(null)} />
+      <CancelOfferDrawer
+        offerId={cancelling?.id ?? null}
+        open={!!cancelling}
+        onOpenChange={(open) => {
+          if (!open) setCancelling(null);
+        }}
+      />
     </div>
-  );
-}
-
-function CancelOfferDrawer({
-  offer,
-  onClose,
-}: {
-  offer: Offer | null;
-  onClose: () => void;
-}) {
-  return (
-    <Sheet open={!!offer} onOpenChange={(o) => !o && onClose()}>
-      <SheetContent
-        side="right"
-        className="w-full gap-0 overflow-y-auto border-line bg-background p-0 sm:max-w-md"
-      >
-        {offer && <CancelOfferInner key={offer.id} offer={offer} onClose={onClose} />}
-      </SheetContent>
-    </Sheet>
-  );
-}
-
-function CancelOfferInner({
-  offer,
-  onClose,
-}: {
-  offer: Offer;
-  onClose: () => void;
-}) {
-  const cancelOffer = useLocate((s) => s.cancelOffer);
-  const [stage, setStage] = useState<"review" | "done">("review");
-  const [error, setError] = useState<string | null>(null);
-
-  const asset = ASSETS.find((a) => a.id === offer.assetId)!;
-
-  const confirm = () => {
-    const res = cancelOffer(offer.id);
-    if (res.ok) setStage("done");
-    else setError(res.error ?? "Cancel failed.");
-  };
-
-  return (
-    <>
-        <SheetHeader className="space-y-1 border-b border-line px-6 pb-4 pt-6">
-          <SheetTitle className="flex items-center gap-2.5 font-mono text-[13px] font-bold uppercase tracking-[0.16em] text-white">
-            <span className="inline-block h-[7px] w-[7px] rounded-[2px] bg-ember" aria-hidden />
-            CANCEL OFFER
-          </SheetTitle>
-          <SheetDescription className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-ink-3">
-            {offer.id} · {asset.symbol}
-          </SheetDescription>
-        </SheetHeader>
-
-        <div className="px-6 py-5">
-          {stage === "review" && (
-            <>
-              <DataRow label="AMOUNT LISTED" value={`${fmtToken(offer.amount)} ${asset.symbol}`} />
-              <DataRow label="COLLATERAL REQUIRED" value={fmtUsd(offer.collateralUsdc)} />
-              <DataRow label="UPFRONT FEE" value={fmtUsd(offer.feeUsdc)} />
-
-              <p className="mt-4 rounded-xl border border-lime/25 bg-lime-soft px-4 py-3 font-mono text-[10px] uppercase leading-relaxed tracking-[0.1em] text-lime-deep">
-                YOUR TOKENS NEVER LEFT YOUR WALLET — NOTHING TO RECOVER.
-              </p>
-
-              {error && (
-                <p className="mt-4 font-mono text-[10.5px] uppercase tracking-[0.1em] text-refuse">
-                  {error}
-                </p>
-              )}
-
-              <button onClick={confirm} className="lc-btn lc-btn-ink mt-5 w-full">
-                CONFIRM — CANCEL LISTING
-              </button>
-            </>
-          )}
-
-          {stage === "done" && (
-            <DoneState
-              title="OFFER CANCELLED"
-              body="The listing is off the book. Your PreStocks stay exactly where they were."
-            >
-              <button onClick={onClose} className="lc-btn lc-btn-ghost lc-btn-sm">
-                CLOSE
-              </button>
-            </DoneState>
-          )}
-        </div>
-    </>
   );
 }

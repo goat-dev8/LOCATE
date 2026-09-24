@@ -4,14 +4,16 @@
  * LOCATE — TakeOfferDrawer: lock USDC, receive net tokens.
  */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
-import { DEVNET_USDC, LOCATE_PROGRAM_ID, buildTakeTx } from "@locate/sdk";
+import { DEVNET_USDC, ILLUSTRATIVE, LOCATE_PROGRAM_ID, buildTakeTx, quoteEconomics } from "@locate/sdk";
 import { submitInstructions } from "@/lib/locate/tx";
 import { useLocate } from "@/lib/locate/store";
-import { ASSETS, fmtUsd, fmtToken, netFromGross, premium } from "@/lib/locate/seed";
+import { ASSETS, fmtUsd, fmtToken, netFromGross } from "@/lib/locate/seed";
+import { locateApi } from "@/lib/locate/env";
+import { useLiveMarket } from "@/lib/locate/useLiveMarket";
 import type { Offer } from "@/lib/locate/types";
 import { AssetLogo } from "../../landing/parts";
 import { DoneState, DataRow, Payline, StagedProgress } from "../parts";
@@ -52,19 +54,43 @@ function TakeOfferInner({
   const navigate = useLocate((s) => s.navigate);
   const { connection } = useConnection();
   const { publicKey, sendTransaction } = useWallet();
+  const live = useLiveMarket();
+  const row = live.bySymbol(offer.assetId);
   const [stage, setStage] = useState<"review" | "busy" | "done">("review");
-  const [step, setStep] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [newLoanId, setNewLoanId] = useState<string | null>(null);
   const [verified, setVerified] = useState(false);
-  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const [economics, setEconomics] = useState<Record<string, unknown> | null>(null);
+  const [breakEven, setBreakEven] = useState("Break-even unavailable");
+  const [thesisKind, setThesisKind] = useState<"premium_compression" | "skip">("skip");
 
-  useEffect(
-    () => () => {
-      timers.current.forEach(clearTimeout);
-    },
-    [],
-  );
+  useEffect(() => {
+    let alive = true;
+    locateApi
+      .offerEconomics(offer.id)
+      .then((facts) => {
+        if (!alive) return;
+        setEconomics(facts);
+        const quoted = quoteEconomics({
+          receivedRaw: BigInt(String(facts.receivedRaw ?? 0)),
+          returnGrossRaw: BigInt(String(facts.returnGrossRaw ?? 0)),
+          feeUsdc: BigInt(String(facts.maxLossUsdc ?? facts.collateralUsdc ?? 0)),
+          proceedsMin: null,
+          buyOut: null,
+          quoteAgeMs: 0,
+        });
+        setBreakEven(quoted.breakeven ? `${quoted.breakeven.dropBps.toString()} bps` : "Break-even unavailable");
+      })
+      .catch(() => {
+        if (alive) {
+          setEconomics(null);
+          setBreakEven("Break-even unavailable");
+        }
+      });
+    return () => {
+      alive = false;
+    };
+  }, [offer.id]);
 
   const asset = ASSETS.find((a) => a.id === offer.assetId)!;
   const net = netFromGross(offer.amount, asset.transferFeeBps);
@@ -74,6 +100,20 @@ function TakeOfferInner({
     if (!publicKey || !offer.mint || !offer.nonce || !offer.amountRaw || !offer.collateralRaw || !offer.feeRaw || !offer.termSecs || !offer.graceSecs || !offer.expiresAtSec) {
       setError("Connect a Devnet wallet. This offer has no on-chain terms.");
       return;
+    }
+    if (thesisKind !== "skip" && publicKey && offer.mint) {
+      try {
+        await locateApi.postThesis({
+          wallet: publicKey.toBase58(),
+          mint: offer.mint,
+          offer: offer.id,
+          kind: "premium_compression",
+          note: "Optional non-binding thesis. Does not change take bytes.",
+          acknowledgedNonBinding: true,
+        });
+      } catch {
+        /* thesis is optional; take still proceeds */
+      }
     }
     setStage("busy");
     setError(null);
@@ -108,8 +148,7 @@ function TakeOfferInner({
             TAKE OFFER
           </SheetTitle>
           <SheetDescription className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-ink-3">
-            {offer.id} · {asset.symbol} · {premium(asset.refPrice, asset.marketPrice) >= 0 ? "+" : ""}
-            {premium(asset.refPrice, asset.marketPrice).toFixed(1)}% PREMIUM
+            {offer.id} · {asset.symbol} · {row?.premiumPct == null ? "PREMIUM UNAVAILABLE" : `${row.premiumPct >= 0 ? "+" : ""}${row.premiumPct.toFixed(1)}% PREMIUM`}
           </SheetDescription>
         </SheetHeader>
 
@@ -141,6 +180,31 @@ function TakeOfferInner({
 
               <Payline label="TOTAL LOCKED AT TAKE" value={fmtUsd(total)} variant="light" />
 
+              <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-3">WHY SHORT</p>
+              <DataRow label="RECEIVED RAW" value={economics?.receivedRaw ? String(economics.receivedRaw) : "unavailable"} />
+              <DataRow label="RETURN GROSS" value={economics?.returnGrossRaw ? String(economics.returnGrossRaw) : "unavailable"} />
+              <DataRow label="BREAK-EVEN" value={breakEven} />
+              <p className="mt-2 font-mono text-[9.5px] uppercase leading-relaxed tracking-[0.1em] text-ink-3">
+                {ILLUSTRATIVE} Jupiter quotes are not used on Devnet.
+              </p>
+
+              <div className="mt-4 flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setThesisKind("skip")}
+                  className={thesisKind === "skip" ? "lc-btn lc-btn-ink lc-btn-sm" : "lc-btn lc-btn-ghost lc-btn-sm"}
+                >
+                  SKIP THESIS
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setThesisKind("premium_compression")}
+                  className={thesisKind === "premium_compression" ? "lc-btn lc-btn-ink lc-btn-sm" : "lc-btn lc-btn-ghost lc-btn-sm"}
+                >
+                  PREMIUM COMPRESSION
+                </button>
+              </div>
+
               {error && (
                 <p className="mt-4 rounded-xl border border-refuse/30 bg-refuse-soft px-4 py-3 font-mono text-[10.5px] uppercase leading-relaxed tracking-[0.1em] text-refuse">
                   {error}
@@ -164,7 +228,7 @@ function TakeOfferInner({
 
           {stage === "busy" && (
             <div className="py-6">
-              <StagedProgress steps={STAGES} activeIndex={step} />
+              <StagedProgress steps={STAGES} activeIndex={1} />
             </div>
           )}
 
