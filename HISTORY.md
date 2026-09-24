@@ -202,3 +202,22 @@ Research: PASS
 Fresh rerun: PASS
 Outstanding blockers: NONE
 Git SHA: recorded after this commit
+
+## 2026-09-24T03:01:00Z — Phase 11 SDK started
+
+- Added `@locate/sdk` with PDA helpers, fee math, wallet-flow builders, Jupiter program-id and protected-account guards, error decoding, and a typed API client.
+- Vitest: 8 tests passed, including the 100 bps inverse fee, the recorded scaled UI amount, instruction order, a stale quote refetch, and rejection of a non-Jupiter swap that names the vault.
+- `tsc --noEmit` passed after adding `@types/node`.
+- `docs/FRONTEND_INTEGRATION.md` and `sdk/tools/check-frontend.mjs` are in place. No `FRONTEND/` directory was created.
+- Still open: the devnet address lookup table, the SDK devnet cycle, and the mainnet quote size simulation.
+
+PHASE 11 IN PROGRESS
+
+Implementation: PASS for the package
+Tests: PASS for U-01, U-03, U-04, U-05 through U-10, U-12, I-05
+Security: PASS for the Jupiter guard
+Evidence: FAIL
+Research: PASS
+Fresh rerun: PASS
+Outstanding blockers: devnet ALT, SDK cycle signatures, transaction-size evidence
+Git SHA: recorded after this commit

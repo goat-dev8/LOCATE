@@ -1,0 +1,27 @@
+{
+  "name": "@locate/sdk",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "pack:tgz": "npm pack --pack-destination ."
+  },
+  "dependencies": {
+    "@solana/web3.js": "1.99.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.6",
+    "typescript": "7.0.2",
+    "vitest": "5.0.1"
+  }
+}
