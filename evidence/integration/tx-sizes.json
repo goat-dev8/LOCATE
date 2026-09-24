@@ -2,19 +2,60 @@
   "kind": "mainnet-simulation",
   "cluster": "mainnet-beta",
   "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
-  "holder": null,
+  "holder": "5CEbueQnq1Ym2uSSx2xXds3jQAqT1BDnkA59RZobSPAG",
+  "holderSource": "largest postTokenBalance in recent mint transactions after getTokenLargestAccounts was rate limited",
   "holderError": "largest Too many requests for a specific RPC call",
   "amountRaw": "2018660",
   "exactOutStatus": 400,
-  "quoteOutAmount": "4028368",
-  "otherAmountThreshold": "3988085",
-  "swapProgramId": null,
-  "messageBytes": null,
+  "quoteOutAmount": "3987285",
+  "otherAmountThreshold": "3947413",
+  "swapProgramId": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+  "messageBytes": 464,
+  "takePlusSellBytes": 822,
+  "takePlusSellError": null,
+  "decision": "atomic",
   "headroomLimit": 1112,
-  "fitsAtomicHeadroom": null,
+  "fitsAtomicHeadroom": true,
   "simulationErr": null,
-  "unitsConsumed": null,
-  "logTail": [],
-  "fetchedAt": "2026-09-24T03:07:14.726Z",
-  "note": "Holder lookup was rate limited. Quote recorded. No simulation was claimed."
+  "unitsConsumed": 48672,
+  "logTail": [
+    "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo consumed 40133 of 54526 compute units",
+    "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo success",
+    "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 invoke [2]",
+    "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 consumed 106 of 12366 compute units",
+    "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 success",
+    "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 consumed 48372 of 59655 compute units",
+    "Program return: JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 Vdc8AAAAAAA=",
+    "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 success"
+  ],
+  "fetchedAt": "2026-09-24T03:22:05.289Z",
+  "note": "simulateTransaction only. No mainnet transaction was sent.",
+  "buyLeg": {
+    "simulation": true,
+    "usdcIn": "3987285",
+    "outAmount": "1983744",
+    "otherAmountThreshold": "1963907",
+    "messageBytes": 390,
+    "swapProgramId": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+    "err": {
+      "InstructionError": [
+        2,
+        {
+          "Custom": 6001
+        }
+      ]
+    },
+    "unitsConsumed": 22450,
+    "logTail": [
+      "Program MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms success",
+      "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 invoke [2]",
+      "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 consumed 106 of 5835 compute units",
+      "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 success",
+      "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 consumed 22150 of 27003 compute units",
+      "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 failed: custom program error: 0x1771"
+    ],
+    "note": "simulateTransaction only. No mainnet transaction was sent.",
+    "shortfallVsSoldRaw": "34916",
+    "shortfallNote": "Quote gap only. The buy simulation failed with Jupiter custom 6001 (0x1771) after the route ran. No mainnet transaction was sent."
+  }
 }

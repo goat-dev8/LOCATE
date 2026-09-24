@@ -1,12 +1,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import {
-  AddressLookupTableAccount,
-  Connection,
-  PublicKey,
-  TransactionInstruction,
-  TransactionMessage,
-  VersionedTransaction,
-} from "@solana/web3.js";
+import { Connection, Keypair, PublicKey, TransactionInstruction, TransactionMessage, VersionedTransaction } from "@solana/web3.js";
+import { buildTakeTx } from "../sdk/dist/builders.js";
+import { MAINNET_USDC } from "../sdk/dist/constants.js";
 
 const OPENAI = new PublicKey("PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF");
 const USDC = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
@@ -49,19 +44,32 @@ async function largestOnce(url) {
 }
 let holder = null;
 let holderError = null;
+let holderSource = null;
 try {
-  let holderAtaAddress;
-  try {
-    holderAtaAddress = await largestOnce("https://api.mainnet-beta.solana.com");
-  } catch (error) {
-    holderError = error.message;
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    holderAtaAddress = await largestOnce(envValue("SOLANA_RPC_URL_MAINNET"));
-  }
+  const holderAtaAddress = await largestOnce(envValue("SOLANA_RPC_URL_MAINNET"));
   const parsed = await connection.getParsedAccountInfo(new PublicKey(holderAtaAddress));
   holder = new PublicKey(parsed.value.data.parsed.info.owner);
+  holderSource = "getTokenLargestAccounts";
 } catch (error) {
   holderError = error.message;
+  const sigs = await connection.getSignaturesForAddress(OPENAI, { limit: 8 });
+  let best = null;
+  for (const row of sigs) {
+    let tx = null;
+    try {
+      tx = await connection.getTransaction(row.signature, { commitment: "confirmed", maxSupportedTransactionVersion: 0 });
+    } catch {
+      continue;
+    }
+    for (const balance of tx?.meta?.postTokenBalances ?? []) {
+      if (balance.mint !== OPENAI.toBase58() || !balance.owner) continue;
+      const amount = BigInt(balance.uiTokenAmount.amount);
+      if (!best || amount > best.amount) best = { owner: balance.owner, amount };
+    }
+  }
+  if (!best) throw new Error("no holder in recent mint transactions");
+  holder = new PublicKey(best.owner);
+  holderSource = "largest postTokenBalance in recent mint transactions after getTokenLargestAccounts was rate limited";
 }
 
 const exactOut = await fetch(base + "/swap/v1/quote?" + new URLSearchParams({
@@ -84,6 +92,8 @@ if (!quoteResponse.ok) throw new Error("quote " + quoteResponse.status);
 const quote = await quoteResponse.json();
 
 let bytes = null;
+let composedBytes = null;
+let composedError = null;
 let swapProgramId = null;
 let simulationErr = null;
 let unitsConsumed = null;
@@ -117,6 +127,29 @@ if (holder) {
     instructions,
   }).compileToV0Message(alts);
   bytes = message.serialize().length;
+  const takeTerms = {
+    lender: Keypair.generate().publicKey,
+    mint: OPENAI,
+    usdcMint: MAINNET_USDC,
+    nonce: 1n,
+    amountRaw: BigInt(AMOUNT),
+    collateralUsdc: 1_000_000n,
+    feeUsdc: 50_000n,
+    termSecs: 3600n,
+    graceSecs: 30n,
+    expiresAt: 2_000_000_000n,
+    decimals: 9,
+  };
+  try {
+    const composed = new TransactionMessage({
+      payerKey: holder,
+      recentBlockhash: message.recentBlockhash,
+      instructions: [...buildTakeTx(holder, takeTerms), ...instructions],
+    }).compileToV0Message(alts);
+    composedBytes = composed.serialize().length;
+  } catch (error) {
+    composedError = error.message;
+  }
   const sim = await connection.simulateTransaction(new VersionedTransaction(message), { sigVerify: false, replaceRecentBlockhash: true });
   simulationErr = sim.value.err;
   unitsConsumed = sim.value.unitsConsumed;
@@ -128,6 +161,7 @@ const evidence = {
   cluster: "mainnet-beta",
   mint: OPENAI.toBase58(),
   holder: holder ? holder.toBase58() : null,
+  holderSource,
   holderError,
   amountRaw: AMOUNT,
   exactOutStatus: exactOut.status,
@@ -135,8 +169,11 @@ const evidence = {
   otherAmountThreshold: quote.otherAmountThreshold,
   swapProgramId,
   messageBytes: bytes,
+  takePlusSellBytes: composedBytes,
+  takePlusSellError: composedError,
+  decision: composedBytes !== null && composedBytes <= 1112 ? "atomic" : "two-transaction",
   headroomLimit: 1112,
-  fitsAtomicHeadroom: bytes === null ? null : bytes <= 1112,
+  fitsAtomicHeadroom: composedBytes === null ? null : composedBytes <= 1112,
   simulationErr,
   unitsConsumed,
   logTail,
@@ -145,4 +182,4 @@ const evidence = {
 };
 mkdirSync(new URL("../evidence/integration/", import.meta.url), { recursive: true });
 writeFileSync(new URL("../evidence/integration/tx-sizes.json", import.meta.url), JSON.stringify(evidence, null, 2));
-console.log(JSON.stringify({ bytes, exactOut: exactOut.status, holder: Boolean(holder), err: simulationErr, units: unitsConsumed }));
+console.log(JSON.stringify({ bytes, composedBytes, decision: composedBytes !== null && composedBytes <= 1112 ? "atomic" : "two-transaction", exactOut: exactOut.status, holder: Boolean(holder), err: simulationErr, units: unitsConsumed }));

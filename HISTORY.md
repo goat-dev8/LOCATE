@@ -256,3 +256,21 @@ Research: PASS
 Fresh rerun: PASS
 Outstanding blockers: mainnet holder lookup and transaction-size simulation
 Git SHA: recorded after this commit
+
+## 2026-09-24T03:23:00Z — Phase 11 size and simulation
+
+- `getTokenLargestAccounts` still returned 429. The holder `5CEbueQnq1Ym2uSSx2xXds3jQAqT1BDnkA59RZobSPAG` was taken from the largest `postTokenBalances` owner in recent OPENAI mint transactions. That address is public chain data.
+- ExactOut remained HTTP 400. The ExactIn sell of 2018660 raw quoted `outAmount` 3987285. The compiled sell message is 464 bytes. Take plus that sell, using the Jupiter address lookup tables, is 822 bytes. The headroom limit is 1112, so the decision is atomic.
+- The sell `simulateTransaction` returned err null and used 48672 compute units. The swap program id is `JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4`. No mainnet transaction was sent.
+- The buy leg, spending the quoted 3987285 USDC raw, quoted 1983744 OPENAI raw, a shortfall of 34916 raw versus the sold amount. Its simulation failed with Jupiter custom 6001 (0x1771) after the route ran. That failure is recorded and is not a transaction.
+
+PHASE 11 COMPLETE
+
+Implementation: PASS
+Tests: PASS
+Security: PASS
+Evidence: PASS
+Research: PASS
+Fresh rerun: PASS
+Outstanding blockers: NONE
+Git SHA: recorded after this commit
