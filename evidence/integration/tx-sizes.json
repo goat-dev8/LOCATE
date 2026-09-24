@@ -1,0 +1,20 @@
+{
+  "kind": "mainnet-simulation",
+  "cluster": "mainnet-beta",
+  "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+  "holder": null,
+  "holderError": "largest Too many requests for a specific RPC call",
+  "amountRaw": "2018660",
+  "exactOutStatus": 400,
+  "quoteOutAmount": "4028368",
+  "otherAmountThreshold": "3988085",
+  "swapProgramId": null,
+  "messageBytes": null,
+  "headroomLimit": 1112,
+  "fitsAtomicHeadroom": null,
+  "simulationErr": null,
+  "unitsConsumed": null,
+  "logTail": [],
+  "fetchedAt": "2026-09-24T03:07:14.726Z",
+  "note": "Holder lookup was rate limited. Quote recorded. No simulation was claimed."
+}

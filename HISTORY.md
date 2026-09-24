@@ -221,3 +221,20 @@ Research: PASS
 Fresh rerun: PASS
 Outstanding blockers: devnet ALT, SDK cycle signatures, transaction-size evidence
 Git SHA: recorded after this commit
+
+## 2026-09-24T03:08:00Z — Phase 11 lookup table and quote
+
+- Created the devnet LOCATE address lookup table `8P6TGYmg3LKfxR21PHrApjuj127SV9rRDBRP2bqwpQAU` with 9 addresses. Create signature `2yBUd2TZZGVkEzJEg9q3SkZ9gA6L6WgVaqT8UHd4euBD7VoUNLvpAEgtjGxGug4YeUQWSqHa6svBBQ3aqrcauky3`. Extend signature `XNbFTm8R5p6WZ2zBfWentvS7TPTEqA7uXo5nVEgXji6nLU9p8yztdkbVieUxwXBpcD7E5zzLLMvWbGWojA4GJc8`. Slot 503264162.
+- Jupiter ExactOut for OPENAI returned HTTP 400. The ExactIn sell quote for 2018660 raw returned `outAmount` 4028368 and `otherAmountThreshold` 3988085.
+- `getTokenLargestAccounts` returned 429 on both the public mainnet RPC and the project RPC, so no holder address was chosen and no mainnet simulation was recorded.
+
+PHASE 11 IN PROGRESS
+
+Implementation: PASS
+Tests: PASS
+Security: PASS
+Evidence: FAIL
+Research: PASS
+Fresh rerun: PASS
+Outstanding blockers: SDK devnet cycle; mainnet size simulation after the holder lookup is available
+Git SHA: recorded after this commit

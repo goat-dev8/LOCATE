@@ -1,0 +1,21 @@
+{
+  "cluster": "devnet",
+  "lookupTable": "8P6TGYmg3LKfxR21PHrApjuj127SV9rRDBRP2bqwpQAU",
+  "authority": "Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC",
+  "createSignature": "2yBUd2TZZGVkEzJEg9q3SkZ9gA6L6WgVaqT8UHd4euBD7VoUNLvpAEgtjGxGug4YeUQWSqHa6svBBQ3aqrcauky3",
+  "extendSignature": "XNbFTm8R5p6WZ2zBfWentvS7TPTEqA7uXo5nVEgXji6nLU9p8yztdkbVieUxwXBpcD7E5zzLLMvWbGWojA4GJc8",
+  "addresses": [
+    "F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6",
+    "8j2VgW5ycsuYBtqud9fMf9uNJz5oqeUTMiBxX6LDnTme",
+    "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+    "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+    "11111111111111111111111111111111",
+    "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
+    "9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P"
+  ],
+  "slot": 503264162,
+  "fetchedAt": "2026-09-24T03:08:02.484Z",
+  "mintLabel": "devnet test mint mirroring OPENAI's extensions; not a PreStocks token"
+}
