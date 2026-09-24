@@ -59,6 +59,7 @@ pub struct World {
     pub lender: Keypair,
     pub borrower: Keypair,
     pub mint: Keypair,
+    pub mint_id: Address,
     pub now: i64,
     pub epoch: u64,
     pub nonce: u64,
@@ -89,12 +90,15 @@ impl World {
             svm.add_program_from_file(TOKEN_2022, &elf)
                 .unwrap_or_else(|e| panic!("load dumped token2022: {e}"));
         }
+        let mint = Keypair::new();
+        let mint_id = mint.pubkey();
         let mut world = Self {
             svm,
             issuer: Keypair::new(),
             lender: Keypair::new(),
             borrower: Keypair::new(),
-            mint: Keypair::new(),
+            mint,
+            mint_id,
             now: 1_700_000_000,
             epoch: 10,
             nonce: 1,
@@ -108,6 +112,30 @@ impl World {
         world.create_atas();
         world.mint_supply();
         world
+    }
+
+    /// Real mainnet OPENAI and USDC account bytes. Token balances are written
+    /// directly after the ATAs exist. The issuer did not mint them.
+    pub fn fork(epoch: u64) -> Self {
+        let mut world = Self::new();
+        let openai = load_fixture("openai_mint.json");
+        let usdc = load_fixture("usdc_mint.json");
+        world.mint_id = openai.0;
+        world.svm.set_account(openai.0, openai.1).unwrap();
+        world.svm.set_account(usdc.0, usdc.1).unwrap();
+        world.set_clock(1_800_000_000, epoch);
+        world.create_atas();
+        world.set_amount(&world.lender_ata(), 1_000_000_000_000);
+        world.set_amount(&world.borrower_ata(), 1_000_000_000_000);
+        world.set_amount(&world.lender_usdc(), 1_000_000_000_000);
+        world.set_amount(&world.borrower_usdc(), 1_000_000_000_000);
+        world
+    }
+
+    pub fn set_amount(&mut self, account: &Address, amount: u64) {
+        let mut acct = self.svm.get_account(account).expect("token account");
+        acct.data[64..72].copy_from_slice(&amount.to_le_bytes());
+        self.svm.set_account(*account, acct).unwrap();
     }
 
     pub fn set_clock(&mut self, unix: i64, epoch: u64) {
@@ -163,7 +191,7 @@ impl World {
         ];
         let space = ExtensionType::try_calculate_account_len::<Mint2022>(&extensions).unwrap();
         let lamports = self.svm.minimum_balance_for_rent_exemption(space);
-        let mint = self.mint.pubkey();
+        let mint = self.mint_id;
         let payer = self.issuer.pubkey();
         let create = solana_system_interface::instruction::create_account(
             &payer,
@@ -201,7 +229,7 @@ impl World {
     }
 
     fn create_atas(&mut self) {
-        let mint = self.mint.pubkey();
+        let mint = self.mint_id;
         for owner in [self.lender.pubkey(), self.borrower.pubkey()] {
             let ix = create_associated_token_account_idempotent(
                 &self.issuer.pubkey(),
@@ -221,7 +249,7 @@ impl World {
     }
 
     fn mint_supply(&mut self) {
-        let mint = self.mint.pubkey();
+        let mint = self.mint_id;
         let lender_ata = ata(&self.lender.pubkey(), &mint, &TOKEN_2022);
         let issuer = self.issuer.pubkey();
         let ix = mint_to_checked(&TOKEN_2022, &mint, &lender_ata, &issuer, &[], 1_000_000_000_000, 9).unwrap();
@@ -298,7 +326,7 @@ impl World {
             &[
                 b"offer",
                 self.lender.pubkey().as_ref(),
-                self.mint.pubkey().as_ref(),
+                self.mint_id.as_ref(),
                 &nonce.to_le_bytes(),
             ],
             &PROGRAM_ID,
@@ -314,11 +342,11 @@ impl World {
     }
 
     pub fn lender_ata(&self) -> Address {
-        ata(&self.lender.pubkey(), &self.mint.pubkey(), &TOKEN_2022)
+        ata(&self.lender.pubkey(), &self.mint_id, &TOKEN_2022)
     }
 
     pub fn borrower_ata(&self) -> Address {
-        ata(&self.borrower.pubkey(), &self.mint.pubkey(), &TOKEN_2022)
+        ata(&self.borrower.pubkey(), &self.mint_id, &TOKEN_2022)
     }
 
     pub fn lender_usdc(&self) -> Address {
@@ -350,7 +378,7 @@ impl World {
         let ix = approve_checked(
             &TOKEN_2022,
             &self.lender_ata(),
-            &self.mint.pubkey(),
+            &self.mint_id,
             &offer,
             &self.lender.pubkey(),
             &[],
@@ -365,7 +393,7 @@ impl World {
         let ix = approve_checked(
             &TOKEN_2022,
             &self.borrower_ata(),
-            &self.mint.pubkey(),
+            &self.mint_id,
             loan,
             &self.borrower.pubkey(),
             &[],
@@ -389,7 +417,7 @@ impl World {
             program_id: PROGRAM_ID,
             accounts: vec![
                 AccountMeta::new(self.lender.pubkey(), true),
-                AccountMeta::new_readonly(self.mint.pubkey(), false),
+                AccountMeta::new_readonly(self.mint_id, false),
                 AccountMeta::new(self.lender_ata(), false),
                 AccountMeta::new(offer, false),
                 AccountMeta::new_readonly(USDC_MINT, false),
@@ -428,7 +456,7 @@ impl World {
                 AccountMeta::new(self.borrower.pubkey(), true),
                 AccountMeta::new(self.lender.pubkey(), false),
                 AccountMeta::new(offer, false),
-                AccountMeta::new_readonly(self.mint.pubkey(), false),
+                AccountMeta::new_readonly(self.mint_id, false),
                 AccountMeta::new(self.lender_ata(), false),
                 AccountMeta::new(self.borrower_ata(), false),
                 AccountMeta::new(loan, false),
@@ -465,7 +493,7 @@ impl World {
             accounts: vec![
                 AccountMeta::new(self.borrower.pubkey(), true),
                 AccountMeta::new(loan, false),
-                AccountMeta::new_readonly(self.mint.pubkey(), false),
+                AccountMeta::new_readonly(self.mint_id, false),
                 AccountMeta::new(self.borrower_ata(), false),
                 AccountMeta::new(self.lender.pubkey(), false),
                 AccountMeta::new(self.lender_ata(), false),
@@ -488,11 +516,13 @@ impl World {
         let (offer, _) = self.offer_pda(nonce);
         let (loan, _) = self.loan_pda(&offer);
         let gross = gross_for_net(100, u64::MAX, N).unwrap();
-        let mint = self.mint.pubkey();
-        let dest = self.borrower_ata();
-        let issuer = self.issuer.pubkey();
-        let top = mint_to_checked(&TOKEN_2022, &mint, &dest, &issuer, &[], gross, 9).unwrap();
-        self.submit_ok("issuer", vec![top]);
+        if self.mint.pubkey() == self.mint_id {
+            let mint = self.mint_id;
+            let dest = self.borrower_ata();
+            let issuer = self.issuer.pubkey();
+            let top = mint_to_checked(&TOKEN_2022, &mint, &dest, &issuer, &[], gross, 9).unwrap();
+            self.submit_ok("issuer", vec![top]);
+        }
         self.approve_return(&loan, gross);
         let ix = self.return_ix(nonce, gross);
         let result = self.submit_ok("borrower", vec![ix]);
@@ -510,7 +540,7 @@ impl World {
                 AccountMeta::new(loan, false),
                 AccountMeta::new(self.borrower.pubkey(), false),
                 AccountMeta::new_readonly(self.lender.pubkey(), false),
-                AccountMeta::new_readonly(self.mint.pubkey(), false),
+                AccountMeta::new_readonly(self.mint_id, false),
                 AccountMeta::new(self.vault(&loan), false),
                 AccountMeta::new(self.lender_usdc(), false),
                 AccountMeta::new_readonly(USDC_MINT, false),
@@ -549,19 +579,19 @@ impl World {
     }
 
     pub fn pause_mint(&mut self) {
-        let ix = pause(&TOKEN_2022, &self.mint.pubkey(), &self.issuer.pubkey(), &[]).unwrap();
+        let ix = pause(&TOKEN_2022, &self.mint_id, &self.issuer.pubkey(), &[]).unwrap();
         self.submit_ok("issuer", vec![ix]);
     }
 
     pub fn resume_mint(&mut self) {
-        let ix = resume(&TOKEN_2022, &self.mint.pubkey(), &self.issuer.pubkey(), &[]).unwrap();
+        let ix = resume(&TOKEN_2022, &self.mint_id, &self.issuer.pubkey(), &[]).unwrap();
         self.submit_ok("issuer", vec![ix]);
     }
 
     pub fn set_hook(&mut self, program: Option<Address>) {
         let ix = update_hook(
             &TOKEN_2022,
-            &self.mint.pubkey(),
+            &self.mint_id,
             &self.issuer.pubkey(),
             &[],
             program,
@@ -573,7 +603,7 @@ impl World {
     pub fn schedule_fee(&mut self, bps: u16) {
         let ix = set_transfer_fee(
             &TOKEN_2022,
-            &self.mint.pubkey(),
+            &self.mint_id,
             &self.issuer.pubkey(),
             &[],
             bps,
@@ -631,4 +661,25 @@ pub fn custom_code(err: &TransactionError) -> Option<u32> {
 pub fn expect_code(result: &IxResult, code: u32) {
     assert!(!result.ok, "expected failure {code}, {}", result.detail);
     assert_eq!(result.code, Some(code), "{}", result.detail);
+}
+
+pub fn load_fixture(name: &str) -> (Address, Account) {
+    let path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../tests/fixtures/mainnet").join(name);
+    let text = std::fs::read_to_string(&path).unwrap_or_else(|e| panic!("read {path:?}: {e}"));
+    let doc: serde_json::Value = serde_json::from_str(&text).unwrap();
+    let pubkey = doc["pubkey"].as_str().unwrap().parse::<Address>().unwrap();
+    let owner = doc["owner"].as_str().unwrap().parse::<Address>().unwrap();
+    let data = base64::Engine::decode(
+        &base64::engine::general_purpose::STANDARD,
+        doc["data"].as_str().unwrap(),
+    )
+    .unwrap();
+    let account = Account {
+        lamports: doc["lamports"].as_u64().unwrap(),
+        data,
+        owner,
+        executable: doc["executable"].as_bool().unwrap(),
+        rent_epoch: doc["rentEpoch"].as_u64().unwrap_or(0),
+    };
+    (pubkey, account)
 }

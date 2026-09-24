@@ -1,7 +1,26 @@
 {
-  "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
-  "file": "token2022.so",
-  "bytes": 1382016,
-  "sha256": "0999dbf708971e723b08d1caafc988826a59c6001ed6dc02260da07defbe1469",
-  "fetchedAt": "2026-09-24T01:22:52Z"
+  "slot": 449882174,
+  "epoch": 1041,
+  "fetchedAt": "2026-09-24T01:40:37Z",
+  "token2022": {
+    "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+    "file": "token2022.so",
+    "bytes": 1382016,
+    "sha256": "0999dbf708971e723b08d1caafc988826a59c6001ed6dc02260da07defbe1469"
+  },
+  "accounts": {
+    "openai_mint.json": {
+      "pubkey": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+      "sha256": "d077e95d77a8215bef34aa6efddfd0cf66d8e183e8379de1e55c40e5dcb1d466",
+      "bytes": 902,
+      "slot": 449882176
+    },
+    "usdc_mint.json": {
+      "pubkey": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "sha256": "dfeb33764984c2136e0139d22e846cc7cf41eedbd4c4ece46dc95c8e383787f4",
+      "bytes": 82,
+      "slot": 449882177
+    }
+  },
+  "disclosure": "Balances injected by direct account write in tests; mint and program bytes are real mainnet at the recorded slot."
 }

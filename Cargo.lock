@@ -1808,8 +1808,10 @@ version = "0.1.0"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
+ "base64 0.22.1",
  "litesvm",
  "proptest",
+ "serde_json",
  "sha2 0.10.9",
  "solana-account",
  "solana-address 2.6.1",

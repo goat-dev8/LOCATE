@@ -87,3 +87,22 @@ Research: PASS (Token-2022 reallocate, CPI Guard, memo transfer, permanent deleg
 Fresh rerun: PASS
 Outstanding blockers: NONE
 Git SHA: recorded after this commit
+
+## 2026-09-24T02:55:00Z — Phase 6 real-mint fork
+
+- Dumped the mainnet OPENAI mint `PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF` (902 bytes, sha256 `d077e95d77a8215bef34aa6efddfd0cf66d8e183e8379de1e55c40e5dcb1d466`, slot 449882176) and mainnet USDC (82 bytes, sha256 `dfeb33764984c2136e0139d22e846cc7cf41eedbd4c4ece46dc95c8e383787f4`).
+- `getEpochInfo` at the same fetch: epoch 1041, slot 449882174.
+- The fork suite loads those bytes plus the dumped Token-2022 ELF. Token balances are written into the ATA after creation. The issuer did not mint them. This is not a devnet synthetic mint and not a mainnet transaction.
+- F-01 through F-06 passed. At epoch 1041 the borrower receives `N - fee(N)` at 100 bps, and return leaves the lender at or above the starting balance. Epoch 1038 refuses the take because the 100 bps fee is still pending (the active fee is the older 50 bps). The parser reads `paused = false`, no hook, 100 bps at epoch 1041, and 50 bps pending at epoch 1038.
+- The optional solana-test-validator clone harness was not run. LiteSVM is the fork proof.
+
+PHASE 6 COMPLETE
+
+Implementation: PASS
+Tests: PASS
+Security: PASS
+Evidence: PASS
+Research: PASS (live getAccountInfo and getEpochInfo)
+Fresh rerun: PASS
+Outstanding blockers: NONE
+Git SHA: recorded after this commit
