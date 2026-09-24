@@ -535,3 +535,18 @@ Tests: SDK 9, backend 19, checker 0, frontend build PASS
 Outstanding blockers: Chrome QA E-01..E-12 screenshots, Phantom signed list/take/return/claim, Vercel redeploy of this commit, production Chrome
 Git SHA: pending this commit
 
+## 2026-09-24T05:16:00Z — Commit, push, Chrome local QA, Vercel rebuild
+
+- Commit `340be66` pushed to `origin/main`. It removes leftover store-backed cancel/return/claim drawers, reads Token-2022 ATA balances from Devnet RPC, and uses the expanded SDK API client.
+- Chrome at `http://127.0.0.1:3010`: Phantom is connected as `Hbkp…TvaC`. Overview shows live OpenAI reference $1,024 / market $1,339 / premium +30.7%. The book is empty: "NO OPEN OFFERS ON DEVNET RIGHT NOW." Verify lists real `offer_created` / `loan_taken` / `loan_returned` / `loan_claimed` receipts. Wallet chip shows `USDC 10` from RPC, not a seeded 250 USDC. Create Offer shows `BALANCE 0` and disables list because the dOPENAI ATA does not exist on this wallet.
+- API calls from the browser: `/v1/config`, `/v1/opportunities`, `/v1/offers`, `/v1/loans`. RPC: `api.devnet.solana.com`. Remaining `ERR_FAILED` is `chrome-extension://invalid/`. No Supabase request.
+- Vercel deployment `dpl_JDQANGAj3oPA6fvcwfEvuFwKsx3g` created from this SHA. Alias pending READY.
+
+PHASE 15 IN PROGRESS
+
+Implementation: IN PROGRESS
+Tests: checker 0, SDK 9, backend 19, frontend build PASS, local Chrome live API PASS
+Outstanding blockers: mint dOPENAI into the connected Phantom wallet so list/take/return/claim can be signed; Vercel READY + production Chrome; persist QA screenshots under evidence/qa
+Git SHA: 340be66 on origin/main
+
+

@@ -10,7 +10,8 @@ function envValue(name) {
 
 const token = envValue("VERCEL_TOKEN");
 const teamId = envValue("VERCEL_TEAM_ID");
-const id = "dpl_EHrZCbXs8vD3aH5BNk1EBRJ4ZnsA";
+const id = process.argv[2];
+if (!id) throw new Error("usage: node scripts/vercel-wait.mjs <deploymentId>");
 const deadline = Date.now() + 240000;
 let last = "unknown";
 while (Date.now() < deadline) {

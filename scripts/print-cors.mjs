@@ -18,6 +18,7 @@ const value = [
   "https://locate-blue.vercel.app",
   "https://locate-goats-projects-3f023cc9.vercel.app",
   "https://locate-efdyy1g9g-goats-projects-3f023cc9.vercel.app",
+  "https://locate-g0gmzgyhq-goats-projects-3f023cc9.vercel.app",
   "https://locate-git-main-goats-projects-3f023cc9.vercel.app",
 ].join(",");
 const updated = await fetch("https://api.render.com/v1/services/srv-daq9ilgjo6nc73dkv78g/env-vars/CORS_ALLOWED_ORIGINS", {
