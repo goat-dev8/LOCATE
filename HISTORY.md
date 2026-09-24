@@ -128,3 +128,21 @@ Research: PASS (devnet RPC deploy, mint display, getTransaction)
 Fresh rerun: PASS
 Outstanding blockers: NONE
 Git SHA: recorded after this commit
+
+## 2026-09-24T02:34:00Z — Phase 8 backend scaffold and schema
+
+- Added the Fastify backend with zod config, `/health`, and `/ready`. `/health` does not touch the database. `/ready` requires migration `002` and a live RPC slot, and returns 503 when the database is unreachable.
+- Applied `locate` through `DIRECT_URL`. Tables: `schema_migrations`, `receipts`, `ingest_cursor`, `theses`. RLS is on and there are no policies. `anon` and `authenticated` are revoked. The second migration run applied nothing.
+- The `public` table list was identical before and after. The pooled `DATABASE_URL` connection uses `prepare: false` and read the migration versions.
+- B-01 and B-03 passed under vitest. `tsc --noEmit` passed. TypeScript is 7.0.2, the version named in the plan.
+
+PHASE 8 COMPLETE
+
+Implementation: PASS
+Tests: PASS
+Security: PASS
+Evidence: PASS
+Research: PASS (postgres.js prepare:false, RLS with no policies)
+Fresh rerun: PASS
+Outstanding blockers: NONE
+Git SHA: recorded after this commit

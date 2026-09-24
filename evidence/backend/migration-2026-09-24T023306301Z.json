@@ -1,0 +1,23 @@
+{
+  "ran": [
+    "001",
+    "002"
+  ],
+  "versions": [
+    "001",
+    "002"
+  ],
+  "pooledVersions": [
+    "001",
+    "002"
+  ],
+  "locateTables": [
+    "ingest_cursor",
+    "receipts",
+    "schema_migrations",
+    "theses"
+  ],
+  "publicUnchanged": true,
+  "publicTableCount": 0,
+  "fetchedAt": "2026-09-24T02:33:06.301Z"
+}
