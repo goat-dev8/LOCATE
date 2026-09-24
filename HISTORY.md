@@ -309,3 +309,21 @@ Research: PASS
 Fresh rerun: FAIL
 Outstanding blockers: Render deploy has not gone live yet
 Git SHA: recorded after this commit
+
+## 2026-09-24T03:40:00Z — Render API is live
+
+- `locate-api` is live at `https://locate-api-znz1.onrender.com`. Deploy `dep-daq9mkgu01pc73fcf5j0`.
+- `/health` 200, `/ready` 200 with migration `002` and slot 503275650, `/v1/config` program `F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6` on devnet, `/v1/offers` 200 with an empty book.
+- The database URL in `.env` is quoted. The first boot passed those quotes through and postgres.js rejected the URL. The deploy script now strips one pair of surrounding quotes. `DIRECT_URL` is not set on the service.
+- Evidence: `evidence/backend/render-smoke.json`.
+
+PHASE 14 IN PROGRESS
+
+Implementation: PASS
+Tests: PASS
+Security: PASS
+Evidence: PASS
+Research: PASS
+Fresh rerun: PASS
+Outstanding blockers: release receipts are not backfilled; cold start has not been measured
+Git SHA: recorded after this commit

@@ -1,0 +1,42 @@
+{
+  "url": "https://locate-api-znz1.onrender.com",
+  "fetchedAt": "2026-09-24T03:40:13.699Z",
+  "routes": {
+    "/health": {
+      "status": 200,
+      "ok": true,
+      "migration": null,
+      "slot": null,
+      "programId": null,
+      "cluster": null,
+      "offerCount": null
+    },
+    "/ready": {
+      "status": 200,
+      "ok": true,
+      "migration": "002",
+      "slot": 503275787,
+      "programId": null,
+      "cluster": null,
+      "offerCount": null
+    },
+    "/v1/config": {
+      "status": 200,
+      "ok": null,
+      "migration": null,
+      "slot": null,
+      "programId": "F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6",
+      "cluster": "devnet",
+      "offerCount": null
+    },
+    "/v1/offers": {
+      "status": 200,
+      "ok": null,
+      "migration": null,
+      "slot": 503275787,
+      "programId": null,
+      "cluster": null,
+      "offerCount": 0
+    }
+  }
+}
