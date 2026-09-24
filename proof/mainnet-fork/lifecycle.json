@@ -1,0 +1,77 @@
+{
+  "claim": {
+    "claimOk": true,
+    "delta": "1050000",
+    "earlyClaimCode": 6015,
+    "epoch": 1041,
+    "label": "Cloned Mainnet State — Local Execution",
+    "lenderUsdcAfter": "1000001050000",
+    "lenderUsdcBefore": "1000000000000",
+    "loanClosed": true,
+    "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+    "passed": true,
+    "returnAfterClaimCode": 3012,
+    "returnAfterClaimRefused": true,
+    "secondClaimCode": 3012,
+    "secondClaimRefused": true
+  },
+  "dexBuybackExecution": false,
+  "dexNote": "The cloned environment did not execute a DEX CPI. Quote retrieval is not DEX execution. External Mainnet DEX remains a separate layer.",
+  "dexSellExecution": false,
+  "label": "Cloned Mainnet State — Local Execution",
+  "network": "mainnet-fork",
+  "neuralink": {
+    "borrowerUsdcAfter": "999999950000",
+    "borrowerUsdcBefore": "1000000000000",
+    "createCode": null,
+    "createOk": true,
+    "deliveredRaw": "1998473",
+    "epoch": 1041,
+    "flags": {
+      "decimals": 9,
+      "feeBps": 100,
+      "feePending": false,
+      "hookSet": false,
+      "maxFee": "18446744073709551615",
+      "paused": false
+    },
+    "label": "Cloned Mainnet State — Local Execution",
+    "lenderRestored": true,
+    "loanClosed": true,
+    "mint": "PrekqLJvJ3qVdXmBGDiexvwUTF4rLFDa6HWS4HJbw9S",
+    "passed": true,
+    "requiredNetRaw": "1998473",
+    "takeCode": null,
+    "takeOk": true
+  },
+  "notAMainnetTransaction": true,
+  "openai": {
+    "balances": {
+      "borrowerTokenAfterTake": "1000001998473",
+      "borrowerTokenBefore": "1000000000000",
+      "borrowerUsdcAfterReturn": "999999950000",
+      "borrowerUsdcBefore": "1000000000000",
+      "deliveredRaw": "1998473",
+      "lenderTokenAfterReturn": "1000000000000",
+      "lenderTokenAfterTake": "999997981340",
+      "lenderTokenBefore": "1000000000000",
+      "loanClosed": true,
+      "requiredNetRaw": "1998473",
+      "secondReturnCode": 3012,
+      "secondReturnRefused": true,
+      "vaultAfterTake": "1000000"
+    },
+    "epoch": 1041,
+    "flags": {
+      "decimals": 9,
+      "feeBps": 100,
+      "feePending": false,
+      "hookSet": false,
+      "maxFee": "18446744073709551615",
+      "paused": false
+    },
+    "label": "Cloned Mainnet State — Local Execution",
+    "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+    "passed": true
+  }
+}

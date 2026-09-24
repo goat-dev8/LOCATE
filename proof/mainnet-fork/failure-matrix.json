@@ -37,7 +37,7 @@
       "result": "PASS"
     },
     {
-      "detail": "InstructionError(0, Custom(3012)) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: ReturnLoan | Program log: AnchorError caused by account: loan. Error Code: AccountNotInitialized. Error Number: 3012. Error Message: The program expected this account to be already initialized. | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 6291 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: custom program error: 0xbc4",
+      "detail": "InstructionError(0, Custom(3012)) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: ReturnLoan | Program log: AnchorError caused by account: loan. Error Code: AccountNotInitialized. Error Number: 3012. Error Message: The program expected this account to be already initialized. | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 6810 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: custom program error: 0xbc4",
       "errorCode": 3012,
       "evidence": {
         "loanClosed": true
@@ -60,7 +60,7 @@
       "result": "PASS"
     },
     {
-      "detail": "InstructionError(0, Custom(6015)) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: ClaimCollateral | Program log: AnchorError thrown in programs/locate/src/instructions/claim_collateral.rs:16. Error Code: ClaimRefusedNotMatured. Error Number: 6015. Error Message: Not claimable yet. | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 15574 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: custom program error: 0x177f",
+      "detail": "InstructionError(0, Custom(6015)) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: ClaimCollateral | Program log: AnchorError thrown in programs/locate/src/instructions/claim_collateral.rs:16. Error Code: ClaimRefusedNotMatured. Error Number: 6015. Error Message: Not claimable yet. | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 17440 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: custom program error: 0x177f",
       "errorCode": 6015,
       "evidence": {},
       "expected": "code 6015",
@@ -69,7 +69,7 @@
       "result": "PASS"
     },
     {
-      "detail": "InstructionError(0, Custom(3012)) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: ReturnLoan | Program log: AnchorError caused by account: loan. Error Code: AccountNotInitialized. Error Number: 3012. Error Message: The program expected this account to be already initialized. | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 6291 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: custom program error: 0xbc4",
+      "detail": "InstructionError(0, Custom(3012)) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: ReturnLoan | Program log: AnchorError caused by account: loan. Error Code: AccountNotInitialized. Error Number: 3012. Error Message: The program expected this account to be already initialized. | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 6810 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: custom program error: 0xbc4",
       "errorCode": 3012,
       "evidence": {
         "secondClaimCode": 3012
@@ -80,7 +80,7 @@
       "result": "PASS"
     },
     {
-      "detail": "InstructionError(0, Custom(6007)) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: TakeOffer | Program 11111111111111111111111111111111 invoke [2] | Program 11111111111111111111111111111111 success | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL invoke [2] | Program log: Create | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 183 of 162894 compute units | Program return: TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA pQAAAAAAAAA= | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program 11111111111111111111111111111111 invoke [3] | Program 11111111111111111111111111111111 success | Program log: Initialize the associated token account | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 38 of 157801 compute units | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 235 of 155337 compute units | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL consumed 19517 of 174315 compute units | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL success | Program log: AnchorError thrown in programs/locate/src/instructions/take_offer.rs:45. Error Code: TakeRefusedPaused. Error Number: 6007. Error Message: Token transfers are paused by the issuer. | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 61609 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: custom program error: 0x1777",
+      "detail": "InstructionError(0, Custom(6007)) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: TakeOffer | Program 11111111111111111111111111111111 invoke [2] | Program 11111111111111111111111111111111 success | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL invoke [2] | Program log: Create | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 183 of 166341 compute units | Program return: TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA pQAAAAAAAAA= | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program 11111111111111111111111111111111 invoke [3] | Program 11111111111111111111111111111111 success | Program log: Initialize the associated token account | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 38 of 161248 compute units | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 235 of 158784 compute units | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL consumed 13517 of 171762 compute units | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL success | Program log: AnchorError thrown in programs/locate/src/instructions/take_offer.rs:45. Error Code: TakeRefusedPaused. Error Number: 6007. Error Message: Token transfers are paused by the issuer. | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 59525 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: custom program error: 0x1777",
       "errorCode": 6007,
       "evidence": {
         "note": "pause bit flipped on a copy of the mainnet mint bytes; issuer key was not used"
@@ -91,7 +91,7 @@
       "result": "PASS"
     },
     {
-      "detail": "InstructionError(0, Custom(6009)) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: TakeOffer | Program 11111111111111111111111111111111 invoke [2] | Program 11111111111111111111111111111111 success | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL invoke [2] | Program log: Create | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 183 of 171894 compute units | Program return: TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA pQAAAAAAAAA= | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program 11111111111111111111111111111111 invoke [3] | Program 11111111111111111111111111111111 success | Program log: Initialize the associated token account | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 38 of 166801 compute units | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 235 of 164337 compute units | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL consumed 15017 of 178815 compute units | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL success | Program log: AnchorError thrown in programs/locate/src/instructions/take_offer.rs:47. Error Code: TakeRefusedFeePending. Error Number: 6009. Error Message: Issuer scheduled a fee change — wait. | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 52616 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: custom program error: 0x1779",
+      "detail": "InstructionError(0, Custom(6009)) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: TakeOffer | Program 11111111111111111111111111111111 invoke [2] | Program 11111111111111111111111111111111 success | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL invoke [2] | Program log: Create | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 183 of 172341 compute units | Program return: TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA pQAAAAAAAAA= | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program 11111111111111111111111111111111 invoke [3] | Program 11111111111111111111111111111111 success | Program log: Initialize the associated token account | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 38 of 167248 compute units | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 235 of 164784 compute units | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL consumed 13517 of 177762 compute units | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL success | Program log: AnchorError thrown in programs/locate/src/instructions/take_offer.rs:47. Error Code: TakeRefusedFeePending. Error Number: 6009. Error Message: Issuer scheduled a fee change — wait. | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 55032 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: custom program error: 0x1779",
       "errorCode": 6009,
       "evidence": {
         "decimals": 9,
@@ -107,7 +107,7 @@
       "result": "PASS"
     },
     {
-      "detail": "InstructionError(0, Custom(3012)) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: TakeOffer | Program log: AnchorError caused by account: mint. Error Code: AccountNotInitialized. Error Number: 3012. Error Message: The program expected this account to be already initialized. | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 7201 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: custom program error: 0xbc4",
+      "detail": "InstructionError(0, Custom(3012)) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: TakeOffer | Program log: AnchorError caused by account: mint. Error Code: AccountNotInitialized. Error Number: 3012. Error Message: The program expected this account to be already initialized. | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 7809 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: custom program error: 0xbc4",
       "errorCode": 3012,
       "evidence": {
         "code": 3012,
@@ -119,7 +119,7 @@
       "result": "PASS"
     },
     {
-      "detail": "InstructionError(0, Custom(3012)) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: TakeOffer | Program log: AnchorError caused by account: usdc_mint. Error Code: AccountNotInitialized. Error Number: 3012. Error Message: The program expected this account to be already initialized. | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 8057 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: custom program error: 0xbc4",
+      "detail": "InstructionError(0, Custom(3012)) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: TakeOffer | Program log: AnchorError caused by account: usdc_mint. Error Code: AccountNotInitialized. Error Number: 3012. Error Message: The program expected this account to be already initialized. | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 8692 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: custom program error: 0xbc4",
       "errorCode": 3012,
       "evidence": {
         "code": 3012,
@@ -131,7 +131,7 @@
       "result": "PASS"
     },
     {
-      "detail": "InstructionError(0, MissingAccount) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: TakeOffer | Program 11111111111111111111111111111111 invoke [2] | Program 11111111111111111111111111111111 success | Instruction references an unknown account FmrwyNXBotP2ioWnzThoNzE8vBB1UoJ1F94riPeEAqRz | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 18191 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: An account required by the instruction is missing",
+      "detail": "InstructionError(0, MissingAccount) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: TakeOffer | Program 11111111111111111111111111111111 invoke [2] | Program 11111111111111111111111111111111 success | Instruction references an unknown account 9wBFFTxfE7ZwcgrAnfB3ghBFZm6H9KDW4Hb4k9BAeAsp | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 20745 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: An account required by the instruction is missing",
       "errorCode": null,
       "evidence": {
         "code": null,
@@ -143,7 +143,7 @@
       "result": "PASS"
     },
     {
-      "detail": "InstructionError(0, Custom(2012)) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: TakeOffer | Program 11111111111111111111111111111111 invoke [2] | Program 11111111111111111111111111111111 success | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL invoke [2] | Program log: Create | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 183 of 153894 compute units | Program return: TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA pQAAAAAAAAA= | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program 11111111111111111111111111111111 invoke [3] | Program 11111111111111111111111111111111 success | Program log: Initialize the associated token account | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 38 of 148801 compute units | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 235 of 146337 compute units | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL consumed 15017 of 160815 compute units | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL success | Program log: AnchorError caused by account: lender. Error Code: ConstraintAddress. Error Number: 2012. Error Message: An address constraint was violated. | Program log: Left: | Program log: 6pLXxnj5uGDJAWY5ykUMrD4k148yZAQWMtRaodr5UUz7 | Program log: Right: | Program log: AffDaaNu6JAENyFmMtF3heKMxzacTh16Wc4k5SxW27Zz | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 61724 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: custom program error: 0x7dc",
+      "detail": "InstructionError(0, Custom(2012)) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: TakeOffer | Program 11111111111111111111111111111111 invoke [2] | Program 11111111111111111111111111111111 success | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL invoke [2] | Program log: Create | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 183 of 166341 compute units | Program return: TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA pQAAAAAAAAA= | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program 11111111111111111111111111111111 invoke [3] | Program 11111111111111111111111111111111 success | Program log: Initialize the associated token account | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 38 of 161248 compute units | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 235 of 158784 compute units | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL consumed 15017 of 173262 compute units | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL success | Program log: AnchorError caused by account: lender. Error Code: ConstraintAddress. Error Number: 2012. Error Message: An address constraint was violated. | Program log: Left: | Program log: De2uXPa9y5m6wQN3Defz89sEMsCENri9gb8QfpTUNLdN | Program log: Right: | Program log: 9V79rp3wSJha3gjQ2oPaCmF2xESZAho33Pf2iHtTk9Nk | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 49087 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: custom program error: 0x7dc",
       "errorCode": 2012,
       "evidence": {},
       "expected": "take refused",
@@ -164,11 +164,101 @@
       "result": "PASS"
     },
     {
-      "detail": "InstructionError(0, Custom(6010)) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: TakeOffer | Program 11111111111111111111111111111111 invoke [2] | Program 11111111111111111111111111111111 success | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL invoke [2] | Program log: Create | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 183 of 168901 compute units | Program return: TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA pQAAAAAAAAA= | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program 11111111111111111111111111111111 invoke [3] | Program 11111111111111111111111111111111 success | Program log: Initialize the associated token account | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 38 of 163808 compute units | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 235 of 161344 compute units | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL consumed 13517 of 174322 compute units | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL success | Program log: AnchorError thrown in programs/locate/src/instructions/take_offer.rs:51. Error Code: TakeRefusedUnfunded. Error Number: 6010. Error Message: Lender no longer has the tokens or approval. | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 55617 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: custom program error: 0x177a",
+      "detail": "InstructionError(0, Custom(6010)) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: TakeOffer | Program 11111111111111111111111111111111 invoke [2] | Program 11111111111111111111111111111111 success | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL invoke [2] | Program log: Create | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 183 of 163348 compute units | Program return: TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA pQAAAAAAAAA= | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program 11111111111111111111111111111111 invoke [3] | Program 11111111111111111111111111111111 success | Program log: Initialize the associated token account | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 38 of 158255 compute units | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 235 of 155791 compute units | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL consumed 16517 of 171769 compute units | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL success | Program log: AnchorError thrown in programs/locate/src/instructions/take_offer.rs:51. Error Code: TakeRefusedUnfunded. Error Number: 6010. Error Message: Lender no longer has the tokens or approval. | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 61033 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: custom program error: 0x177a",
       "errorCode": 6010,
       "evidence": {},
       "expected": "code 6010",
       "id": "13-delegation-mismatch",
+      "mint": "OPENAI",
+      "result": "PASS"
+    },
+    {
+      "detail": "InstructionError(0, Custom(3012)) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: TakeOffer | Program log: AnchorError caused by account: offer. Error Code: AccountNotInitialized. Error Number: 3012. Error Message: The program expected this account to be already initialized. | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 7474 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: custom program error: 0xbc4",
+      "errorCode": 3012,
+      "evidence": {
+        "code": 3012
+      },
+      "expected": "take refused when the offer account is not the offer PDA",
+      "id": "17-malformed-pda",
+      "mint": "OPENAI",
+      "result": "PASS"
+    },
+    {
+      "detail": "InstructionError(0, Custom(2023)) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: TakeOffer | Program log: AnchorError caused by account: borrower_ata. Error Code: ConstraintAssociatedTokenTokenProgram. Error Number: 2023. Error Message: An associated token account token program constraint was violated. | Program log: Left: | Program log: TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb | Program log: Right: | Program log: TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 10873 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: custom program error: 0x7e7",
+      "errorCode": 2023,
+      "evidence": {
+        "code": 2023
+      },
+      "expected": "take refused when Token-2022 is replaced by the classic token program",
+      "id": "18-wrong-token-program",
+      "mint": "OPENAI",
+      "result": "PASS"
+    },
+    {
+      "detail": "InstructionError(0, Custom(3007)) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: TakeOffer | Program log: AnchorError caused by account: lender_ata. Error Code: AccountOwnedByWrongProgram. Error Number: 3007. Error Message: The given account is owned by a different program than expected. | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 9735 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: custom program error: 0xbbf",
+      "errorCode": 3007,
+      "evidence": {
+        "code": 3007
+      },
+      "expected": "take refused when the lender token account is a system account",
+      "id": "19-invalid-account-owner",
+      "mint": "OPENAI",
+      "result": "PASS"
+    },
+    {
+      "detail": "InstructionError(0, Custom(6005)) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: TakeOffer | Program 11111111111111111111111111111111 invoke [2] | Program 11111111111111111111111111111111 success | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL invoke [2] | Program log: Create | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 183 of 161841 compute units | Program return: TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA pQAAAAAAAAA= | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program 11111111111111111111111111111111 invoke [3] | Program 11111111111111111111111111111111 success | Program log: Initialize the associated token account | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 38 of 156748 compute units | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3] | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 235 of 154284 compute units | Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL consumed 16517 of 170262 compute units | Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL success | Program log: AnchorError thrown in programs/locate/src/instructions/take_offer.rs:24. Error Code: TermsMismatch. Error Number: 6005. Error Message: Offer changed — refresh. | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 61427 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: custom program error: 0x1775",
+      "errorCode": 6005,
+      "evidence": {
+        "code": 6005
+      },
+      "expected": "code 6005 TermsMismatch",
+      "id": "20-bad-amount",
+      "mint": "OPENAI",
+      "result": "PASS"
+    },
+    {
+      "detail": "",
+      "errorCode": 6015,
+      "evidence": {
+        "boundaryOk": true,
+        "earlyCode": 6015
+      },
+      "expected": "claim fails 1 second early (6015) and succeeds at claimAfterTs",
+      "id": "21-timing-boundary",
+      "mint": "OPENAI",
+      "result": "PASS"
+    },
+    {
+      "detail": "InstructionError(0, Custom(2040)) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: ReturnLoan | Program log: AnchorError caused by account: borrower_usdc. Error Code: ConstraintDuplicateMutableAccount. Error Number: 2040. Error Message: A duplicate mutable account constraint was violated. | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 19643 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: custom program error: 0x7f8",
+      "errorCode": 2040,
+      "evidence": {
+        "code": 2040
+      },
+      "expected": "return refused when the vault account is substituted",
+      "id": "22-vault-mismatch",
+      "mint": "OPENAI",
+      "result": "PASS"
+    },
+    {
+      "detail": "InstructionError(0, Custom(6002)) Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke [1] | Program log: Instruction: CreateOffer | Program 11111111111111111111111111111111 invoke [2] | Program 11111111111111111111111111111111 success | Program log: AnchorError thrown in programs/locate/src/instructions/create_offer.rs:22. Error Code: InvalidTerms. Error Number: 6002. Error Message: Terms out of range. | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 consumed 17890 of 200000 compute units | Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 failed: custom program error: 0x1772",
+      "errorCode": 6002,
+      "evidence": {
+        "code": 6002
+      },
+      "expected": "code 6002 InvalidTerms",
+      "id": "23-zero-amount",
+      "mint": "OPENAI",
+      "result": "PASS"
+    },
+    {
+      "detail": "",
+      "errorCode": null,
+      "evidence": {
+        "permanentDelegatePresent": true,
+        "takeOk": true
+      },
+      "expected": "cloned OpenAI mint carries PermanentDelegate and take still executes",
+      "id": "24-permanent-delegate",
       "mint": "OPENAI",
       "result": "PASS"
     },
@@ -208,6 +298,6 @@
   "failed": 0,
   "label": "Cloned Mainnet State — Local Execution",
   "notAMainnetTransaction": true,
-  "passed": 16,
-  "total": 16
+  "passed": 24,
+  "total": 24
 }

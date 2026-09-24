@@ -1,0 +1,25 @@
+{
+  "label": "DEVNET REPLICA / TEST ASSET — NOT A MAINNET PRESTOCK",
+  "network": "devnet",
+  "cluster": "devnet",
+  "programId": "F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6",
+  "source": "evidence/integration/devnet-sdk-cycle.json",
+  "mainnetTransaction": false,
+  "confirmedOnDevnet": true,
+  "returnCycle": {
+    "create": "3oW3dET9hBUwm1EMwvyWBN21hMBVX2LwUt8K5binJi4iE2JkzdRimFQxja886pLQG7wbrzmMAWtpV7fvV7AfWRxi",
+    "createSlot": 503264904,
+    "take": "3BpyAK9emZMTyBC4KnNZxYhdR2Z18HwkDgftwAENTLXrX9cHCPcr4vh9NL8rgTGjXnqBy1vU68CYH97L2i2X2Vaq",
+    "takeSlot": 503264909,
+    "return": "5YJGkxd9wtZ8PA114v8m53QgbMsbdBuS7LH2BDBWTMk4reP5mgcJyPsidbD5MwcvtLhP986m8L1Xs6MyuZb85f2h",
+    "returnSlot": 503264913,
+    "grossRaw": "2039051"
+  },
+  "claimCycle": {
+    "create": "3ipFume6pxkJGP2vAv3Wf87uwNoBeNa6KhrvvY7eWX9xqu7ywxvZWHrjfViSo2955H3nkFEq9TKkrZpweSG4LeaS",
+    "take": "Et6n6CopgJQ3EG4NCcKVFNsHcsrzqrHBm7yKQRX2bnzy1gkvvcB81XCEv36J5vC1Ay3nT71CH5VhPa2tAXaJDAH",
+    "claim": "2paQbq9PaVd5gM9nSbJaupauPMVSAzBJxkEQE9tsZpLkqS7P3nCXAfSHeYWrASrBKqwJThe6P6RUGz7KApmDGJHn",
+    "claimSlot": 503265496,
+    "earlyClaimSimulationCode": 6015
+  }
+}

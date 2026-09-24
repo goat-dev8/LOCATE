@@ -7,3 +7,4 @@ export * from "./jupiter.js";
 export * from "./simulate.js";
 export * from "./api.js";
 export * from "./verifyReceipt.js";
+export * from "./dex.js";

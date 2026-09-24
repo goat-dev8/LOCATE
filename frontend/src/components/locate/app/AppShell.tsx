@@ -13,6 +13,7 @@ import {
   ArrowLeftRight,
   ShieldCheck,
   ArrowLeft,
+  Radio,
 } from "lucide-react";
 import { DecryptionText } from "@/components/bits";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
@@ -28,6 +29,7 @@ import { LoanDetailView } from "./views/LoanDetail";
 import { MyOffersView } from "./views/MyOffers";
 import { MyLoansView } from "./views/MyLoans";
 import { VerifyView } from "./views/Verify";
+import { ExecutionLabView } from "./views/ExecutionLab";
 import { cn } from "@/lib/utils";
 
 const NAV: { view: View; label: string; short: string; icon: typeof LayoutGrid }[] = [
@@ -36,6 +38,7 @@ const NAV: { view: View; label: string; short: string; icon: typeof LayoutGrid }
   { view: "offers", label: "My Offers", short: "OFFERS", icon: Tag },
   { view: "loans", label: "My Loans", short: "LOANS", icon: ArrowLeftRight },
   { view: "verify", label: "Verify", short: "VERIFY", icon: ShieldCheck },
+  { view: "execute", label: "Mainnet DEX", short: "DEX", icon: Radio },
 ];
 
 const VIEW_TITLES: Record<View, string> = {
@@ -46,6 +49,7 @@ const VIEW_TITLES: Record<View, string> = {
   offers: "MY OFFERS",
   loans: "MY LOANS",
   verify: "PROOF ROOM",
+  execute: "MAINNET EXECUTION",
 };
 
 function Wallet() {
@@ -257,6 +261,7 @@ export function AppShell() {
                 {view === "offers" && <MyOffersView />}
                 {view === "loans" && <MyLoansView />}
                 {view === "verify" && <VerifyView />}
+                {view === "execute" && <ExecutionLabView />}
               </motion.div>
             </AnimatePresence>
           </div>
@@ -269,7 +274,7 @@ export function AppShell() {
         className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-[#0A0A0AF2] backdrop-blur-xl lg:hidden"
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
-        <div className="grid grid-cols-5">
+        <div className="grid grid-cols-6">
           {NAV.map((item) => {
             const active =
               view === item.view ||

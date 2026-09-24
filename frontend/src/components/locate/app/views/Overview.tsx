@@ -33,6 +33,10 @@ export function OverviewView() {
         serif="OpenAI first."
         actions={
           <>
+            <button onClick={() => navigate("execute")} className="lc-btn lc-btn-ink lc-btn-sm group">
+              MAINNET DEX
+              <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden />
+            </button>
             <button onClick={() => navigate("book")} className="lc-btn lc-btn-ink lc-btn-sm group">
               BROWSE BOOK
               <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden />

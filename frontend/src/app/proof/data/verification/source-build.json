@@ -1,33 +1,61 @@
 {
-  "claim": "Devnet programdata payload matches the local devnet-feature .so. Full verified-build correspondence is not established.",
+  "claim": "source/build correspondence is not established",
   "verified": false,
   "solanaVerify": "not run",
-  "reason": "HEAD is 1587ca2e23317f4f34c7a69f6b67f9c4b5e14370 and the worktree is dirty. solana-verify was not run. The mainnet-feature binary is a different hash. No program account exists at this id on mainnet. The Devnet programdata account is larger than the ELF; correspondence is the first 359712 bytes, which equal target/deploy/devnet-feature/locate.so.",
-  "head": "1587ca2e23317f4f34c7a69f6b67f9c4b5e14370",
+  "reason": "git worktree is dirty. solana-verify is not installed or was not run.",
+  "head": "10eef72f8888e43e73c96ae12879acab0dad5576",
   "worktreeDirty": true,
+  "porcelain": [
+    "M evidence/backend/render-create.json",
+    " M evidence/qa/e01-cold-load.png",
+    " M evidence/qa/vercel-deploy.json",
+    " M scripts/render-up.mjs",
+    "?? evidence/qa/e03-list-waiting-phantom.png",
+    "?? frontend/AGENTS.md",
+    "?? frontend/CLAUDE.md",
+    "?? frontend/e2e/",
+    "?? frontend/playwright.config.ts",
+    "?? scripts/check-list-sig.mjs",
+    "?? scripts/holder-from-tx.mjs",
+    "?? scripts/holder-once.mjs",
+    "?? scripts/mint-phantom.sh",
+    "?? scripts/render-env-keys.mjs",
+    "?? scripts/render-fail.mjs",
+    "?? scripts/render-logs.mjs",
+    "?? scripts/render-service.mjs",
+    "?? scripts/render-status.mjs",
+    "?? scripts/render-wait.mjs",
+    "?? scripts/render-why.mjs",
+    "?? scripts/rpc-host.mjs"
+  ],
   "programId": "F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6",
   "anchorToml": "1.2.0",
   "toolchain": {
-    "rustc": "1.96.0 (ac68faa20 2026-05-25)",
-    "anchorCli": "1.2.0",
-    "solanaCli": "4.1.2 (src:182084b8; feat:c763ae0a, client:Agave)"
+    "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)",
+    "anchorCli": "anchor-cli 1.2.0",
+    "solanaCli": "solana-cli 4.1.2 (src:182084b8; feat:c763ae0a, client:Agave)"
   },
+  "buildCommandMainnet": "cargo build-sbf --manifest-path programs/locate/Cargo.toml",
+  "buildCommandDevnet": "cargo build-sbf --manifest-path programs/locate/Cargo.toml --features devnet --sbf-out-dir target/deploy/devnet-feature",
   "localBinaries": [
     {
       "path": "target/deploy/locate.so",
       "features": "mainnet default",
+      "present": true,
       "bytes": 342712,
       "sha256": "acb6b4a814edf90696beac9090018d5416cd7a89c2bfe406891d2ffad21fe3dd"
     },
     {
       "path": "target/deploy/locate-mainnet.so",
       "features": "mainnet default copy",
+      "present": true,
       "bytes": 342712,
       "sha256": "acb6b4a814edf90696beac9090018d5416cd7a89c2bfe406891d2ffad21fe3dd"
     },
     {
       "path": "target/deploy/devnet-feature/locate.so",
       "features": "devnet",
+      "present": true,
       "bytes": 359712,
       "sha256": "698862354901ab1a262c378fcac6c424ee349bf8fa229e496e4ff933db56abc2"
     }
@@ -59,5 +87,6 @@
   "mainnet": {
     "cluster": "mainnet-beta",
     "programAccountExists": false
-  }
+  },
+  "timestamp": "2026-09-24T22:13:38.908Z"
 }

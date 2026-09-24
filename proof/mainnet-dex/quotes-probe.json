@@ -1,0 +1,85 @@
+{
+  "network": "mainnet",
+  "locateProtocol": false,
+  "wallet": "Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC",
+  "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+  "decimals": 9,
+  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+  "epoch": 1042,
+  "slot": 450170489,
+  "quotes": [
+    {
+      "amount": "1",
+      "status": 400,
+      "ms": 648,
+      "inAmount": null,
+      "outAmount": null,
+      "otherAmountThreshold": null,
+      "error": "No routes found",
+      "route": [],
+      "priceImpactPct": null,
+      "swapMode": null
+    },
+    {
+      "amount": "1000",
+      "status": 200,
+      "ms": 92,
+      "inAmount": "1000",
+      "outAmount": "1981",
+      "otherAmountThreshold": "1962",
+      "error": null,
+      "route": [
+        "Meteora DLMM",
+        "Meteora DLMM"
+      ],
+      "priceImpactPct": "0",
+      "swapMode": "ExactIn"
+    },
+    {
+      "amount": "10000",
+      "status": 200,
+      "ms": 95,
+      "inAmount": "10000",
+      "outAmount": "19835",
+      "otherAmountThreshold": "19637",
+      "error": null,
+      "route": [
+        "Meteora DLMM",
+        "Meteora DLMM"
+      ],
+      "priceImpactPct": "0",
+      "swapMode": "ExactIn"
+    },
+    {
+      "amount": "100000",
+      "status": 200,
+      "ms": 98,
+      "inAmount": "100000",
+      "outAmount": "198355",
+      "otherAmountThreshold": "196372",
+      "error": null,
+      "route": [
+        "Meteora DLMM",
+        "Meteora DLMM"
+      ],
+      "priceImpactPct": "0",
+      "swapMode": "ExactIn"
+    },
+    {
+      "amount": "943162",
+      "status": 200,
+      "ms": 135,
+      "inAmount": "943162",
+      "outAmount": "1870817",
+      "otherAmountThreshold": "1852109",
+      "error": null,
+      "route": [
+        "Meteora DLMM",
+        "Meteora DLMM"
+      ],
+      "priceImpactPct": "0",
+      "swapMode": "ExactIn"
+    }
+  ],
+  "timestamp": "2026-09-24T22:58:00.363Z"
+}

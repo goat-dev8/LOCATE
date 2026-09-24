@@ -1,0 +1,28 @@
+{
+  "network": "mainnet",
+  "locateProtocol": false,
+  "label": "External Mainnet DEX sell. Not a LOCATE protocol transaction.",
+  "result": "PASS",
+  "mainnetTransaction": true,
+  "signature": "2C4CND6FqBiTgPzgNQojHKa6KzL221gd2Zm4BiyP7WCRnmichUF3m9ptF9xs7pDgTVaa9GMm6eYtqmUnQMbqmuzr",
+  "slot": 450171723,
+  "blockTime": 1790291004,
+  "err": null,
+  "wallet": "Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC",
+  "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+  "amountRaw": "1000",
+  "quoteOutRaw": "1982",
+  "minOutRaw": "1963",
+  "actualOutRaw": "1982",
+  "route": [
+    "Meteora DLMM",
+    "Meteora DLMM"
+  ],
+  "containsLocate": false,
+  "containsJupiter": true,
+  "txFeeLamports": 367155,
+  "solDelta": "-3344035",
+  "openaiDelta": "-1000",
+  "usdcDelta": "1982",
+  "timestamp": "2026-09-24T23:04:50.267Z"
+}

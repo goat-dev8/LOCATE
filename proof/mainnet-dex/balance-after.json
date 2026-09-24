@@ -1,0 +1,14 @@
+{
+  "network": "mainnet",
+  "locateProtocol": false,
+  "label": "External Mainnet DEX balances after sell. Not a LOCATE protocol transaction.",
+  "wallet": "Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC",
+  "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+  "usdcMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "solLamports": "6949444",
+  "openaiRaw": "942162",
+  "usdcRaw": "1982",
+  "slot": 450171723,
+  "fetchedAt": "2026-09-24T23:04:50.266Z",
+  "source": "finalized RPC after signature 2C4CND6FqBiTgPzgNQojHKa6KzL221gd2Zm4BiyP7WCRnmichUF3m9ptF9xs7pDgTVaa9GMm6eYtqmUnQMbqmuzr"
+}

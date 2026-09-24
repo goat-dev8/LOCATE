@@ -23,6 +23,23 @@ npm-debug.log*
 frontend/.zscripts/
 frontend/test-results/
 frontend/db/
+frontend/e2e/
+frontend/playwright.config.ts
+frontend/AGENTS.md
+frontend/CLAUDE.md
+scripts/render-env-keys.mjs
+scripts/render-fail.mjs
+scripts/render-logs.mjs
+scripts/render-service.mjs
+scripts/render-status.mjs
+scripts/render-wait.mjs
+scripts/render-why.mjs
+scripts/check-list-sig.mjs
+scripts/holder-from-tx.mjs
+scripts/holder-once.mjs
+scripts/mint-phantom.sh
+scripts/rpc-host.mjs
+
 
 
 # scratch dumps (committed fixtures live in tests/fixtures/mainnet with a provenance manifest)

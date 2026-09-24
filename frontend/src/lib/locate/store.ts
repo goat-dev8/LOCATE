@@ -22,7 +22,8 @@ export type View =
   | "loan"
   | "offers"
   | "loans"
-  | "verify";
+  | "verify"
+  | "execute";
 
 export type Mode = "landing" | "app";
 

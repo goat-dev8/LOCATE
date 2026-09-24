@@ -11,6 +11,9 @@ const files = [
   "local-validator/suite.json",
   "devnet/short-loop.json",
   "devnet/lifecycle.json",
+  "devnet/protocol.json",
+  "devnet/dex.json",
+  "mainnet-dex/buyback.json",
   "jupiter-roundtrip/sell.json",
   "jupiter-roundtrip/buyback.json",
   "replay/manifest.json",
@@ -18,6 +21,11 @@ const files = [
   "verification/source-build.json",
   "token2022/matrix.json",
   "qa/lighthouse-proof.json",
+  "EXECUTION_STATUS.json",
+  "mainnet-dex/sell.json",
+  "mainnet-dex/sell-2.json",
+  "mainnet-dex/buyback.json",
+  "mainnet-fork/lifecycle.json",
 ];
 
 for (const rel of files) {

@@ -71,6 +71,14 @@ export function VerifyView() {
 
   return (
     <div>
+      <div className="lc-card mb-6 p-5">
+        <p className="lc-label">SEPARATE EXECUTION LAYERS</p>
+        <ul className="mt-3 space-y-2 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-2">
+          <li>Devnet — real LOCATE transactions</li>
+          <li>Mainnet fork — real Mainnet state + local LOCATE execution</li>
+          <li>Mainnet DEX — real external DEX transactions. Not LOCATE protocol.</li>
+        </ul>
+      </div>
       <ViewHead
         label="EVERY LOAN ENDS IN A RECEIPT"
         title="The proof room."

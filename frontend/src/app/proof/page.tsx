@@ -89,13 +89,55 @@ export default function ProofPage() {
     ["Mainnet execution", gate.signed || gate.sent ? "signed" : "not signed", gate.blocker],
   ];
 
+  const status = load<{
+    mainnetLocateDeployment: boolean;
+    mainnetLocateTransactions: boolean;
+    mainnetExternalDexSell: boolean;
+    mainnetForkLifecycle: boolean;
+    devnetLocateLifecycle: boolean;
+    frontendExecutionWiring: boolean;
+  }>("EXECUTION_STATUS.json");
+  const dexSell = load<{ result: string; mainnetTransaction: boolean; reason: string; network: string }>("mainnet-dex/sell.json");
+  const proto = load<{ network: string; returnCycle: { create: string; take: string; return: string } }>("devnet/protocol.json");
+
   return (
     <main className="mx-auto max-w-3xl px-6 py-16 text-white">
       <p className="font-mono text-xs tracking-widest text-[#4D7CFF]">PROOF</p>
       <h1 className="mt-3 font-display text-4xl">Recorded artifacts</h1>
       <p className="mt-4 text-sm text-zinc-400">
-        Every row is read from a file under proof/. Fork and simulation results are not mainnet transactions.
+        Three separate layers. Fork and simulation are not Mainnet transactions. LOCATE is not deployed to Mainnet.
       </p>
+      <p className="mt-2 font-mono text-xs text-zinc-500">
+        mainnetLocateDeployment {String(status.mainnetLocateDeployment)} · mainnetLocateTransactions {String(status.mainnetLocateTransactions)}
+      </p>
+
+      <section className="mt-10">
+        <h2 className="font-display text-2xl">Layer 1 — Mainnet DEX (external)</h2>
+        <p className="mt-2 text-sm text-zinc-500">Real external DEX only. Not LOCATE protocol.</p>
+        <p className="mt-3 font-mono text-sm">{dexSell.result} · network {dexSell.network} · mainnetTransaction {String(dexSell.mainnetTransaction)}</p>
+        <p className="mt-2 text-sm text-zinc-500">{dexSell.reason}</p>
+        <p className="mt-2 font-mono text-xs text-zinc-500">Jupiter sell simulation {sell.result}. Jupiter buyback simulation {buy.result}. Both marked mainnetTransaction false.</p>
+      </section>
+
+      <section className="mt-10">
+        <h2 className="font-display text-2xl">Layer 2 — Mainnet fork (local LOCATE)</h2>
+        <p className="mt-2 text-sm text-zinc-500">{fork.label}. Not a Mainnet transaction.</p>
+        <p className="mt-3 font-mono text-sm">{fork.matrix.passed}/{fork.matrix.total} passed, {fork.matrix.failed} failed</p>
+        <p className="mt-2 font-mono text-xs text-zinc-500">Program {fork.programId} sha256 {fork.programSha256}</p>
+      </section>
+
+      <section className="mt-10">
+        <h2 className="font-display text-2xl">Layer 3 — Devnet LOCATE</h2>
+        <p className="mt-2 text-sm text-zinc-500">{cycle.label}. Network {proto.network}.</p>
+        <ul className="mt-4 space-y-2 font-mono text-xs text-zinc-400">
+          <li>create {proto.returnCycle.create}</li>
+          <li>take {proto.returnCycle.take}</li>
+          <li>return {proto.returnCycle.return}</li>
+          <li>claim {cycle.claimCycle.claim}</li>
+          <li>Devnet DEX {devnet.result} — Jupiter {devnet.jupiter.errorCode}, DLMM {devnet.dlmm.error} {devnet.dlmm.errorNumber}</li>
+        </ul>
+      </section>
+
       <dl className="mt-10 divide-y divide-[#242427] border-y border-[#242427]">
         {rows.map(([name, value, note]) => (
           <div key={name} className="py-4">

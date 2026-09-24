@@ -1,0 +1,74 @@
+{
+  "network": "mainnet",
+  "locateProtocol": false,
+  "label": "External Mainnet DEX buyback route probe. Not a LOCATE protocol transaction.",
+  "timestamp": "2026-09-24T23:14:00.950Z",
+  "rows": [
+    {
+      "label": "exactOut-1000-meteora",
+      "status": 400,
+      "inAmount": null,
+      "outAmount": null,
+      "otherAmountThreshold": null,
+      "error": "No routes found",
+      "route": [],
+      "swapMode": "ExactOut"
+    },
+    {
+      "label": "exactOut-1000-any",
+      "status": 400,
+      "inAmount": null,
+      "outAmount": null,
+      "otherAmountThreshold": null,
+      "error": "No routes found",
+      "route": [],
+      "swapMode": "ExactOut"
+    },
+    {
+      "label": "exactIn-1982-meteora",
+      "status": 200,
+      "inAmount": "1982",
+      "outAmount": "978",
+      "otherAmountThreshold": "969",
+      "error": null,
+      "route": [
+        "Meteora DLMM"
+      ],
+      "swapMode": "ExactIn"
+    },
+    {
+      "label": "exactIn-1982-any",
+      "status": 200,
+      "inAmount": "1982",
+      "outAmount": "983",
+      "otherAmountThreshold": "974",
+      "error": null,
+      "route": [
+        "Manifest"
+      ],
+      "swapMode": "ExactIn"
+    },
+    {
+      "label": "exactIn-2500-any",
+      "status": 200,
+      "inAmount": "2500",
+      "outAmount": "1240",
+      "otherAmountThreshold": "1228",
+      "error": null,
+      "route": [
+        "Manifest"
+      ],
+      "swapMode": "ExactIn"
+    },
+    {
+      "label": "exactOut-978-any",
+      "status": 429,
+      "inAmount": null,
+      "outAmount": null,
+      "otherAmountThreshold": null,
+      "error": null,
+      "route": [],
+      "swapMode": "ExactOut"
+    }
+  ]
+}

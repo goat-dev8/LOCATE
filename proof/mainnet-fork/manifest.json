@@ -36,11 +36,11 @@
   "label": "Cloned Mainnet State — Local Execution",
   "matrix": {
     "failed": 0,
-    "passed": 16,
-    "total": 16
+    "passed": 24,
+    "total": 24
   },
   "notAMainnetTransaction": true,
   "programId": "F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6",
-  "programSha256": "acb6b4a814edf90696beac9090018d5416cd7a89c2bfe406891d2ffad21fe3dd",
+  "programSha256": "ade3240160bfb905cfad0fcb98df5b98c688bc44044bf059ee1f776ec8f570f5",
   "token2022Program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
 }

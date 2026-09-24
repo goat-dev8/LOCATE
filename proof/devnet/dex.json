@@ -1,0 +1,54 @@
+{
+  "network": "devnet",
+  "label": "DEVNET REPLICA / TEST ASSET — NOT A MAINNET PRESTOCK",
+  "mint": "9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P",
+  "usdcMint": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
+  "mainnetTransaction": false,
+  "result": "FAIL",
+  "signedTransactions": [],
+  "programs": {
+    "phoenix": {
+      "program": "PhoeNiXZ8ByJGLofaRfZLjFa2AGEC5tWj5Mn1o5Zeq8",
+      "present": false,
+      "executable": false,
+      "owner": null,
+      "lamports": 0
+    },
+    "whirlpool": {
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "present": true,
+      "executable": true,
+      "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "lamports": 2141440
+    },
+    "pumpAmm": {
+      "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+      "present": true,
+      "executable": true,
+      "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "lamports": 6001159268
+    },
+    "dlmm": {
+      "program": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+      "present": true,
+      "executable": true,
+      "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "lamports": 1141440
+    }
+  },
+  "jupiter": {
+    "status": 400,
+    "error": "The token 9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P is not tradable",
+    "errorCode": "TOKEN_NOT_TRADABLE",
+    "reused": true
+  },
+  "dlmm": {
+    "program": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+    "executableOnDevnet": true,
+    "error": "UnsupportedTokenMint",
+    "errorNumber": 6073,
+    "reused": true
+  },
+  "note": "Time-boxed extra venue check. Jupiter and DLMM failures are preserved, not retried. Phoenix/Whirlpool/Pump AMM were inspected for executable program accounts only. No pool was found or created and no swap was sent.",
+  "timestamp": "2026-09-24T23:07:51.943Z"
+}

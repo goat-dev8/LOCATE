@@ -1,0 +1,19 @@
+{
+  "network": "mainnet",
+  "locateProtocol": false,
+  "label": "External Mainnet DEX balances. Not a LOCATE protocol transaction.",
+  "wallet": "Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC",
+  "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+  "usdcMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "openaiAta": "B7yU7DsBU6MpAbfsdbFqvkY2fiX5Nsmfq8BzCU86euGS",
+  "usdcAta": "6sjyAXVNfEgFDMB4q5LgUBkPsqcUKFkYpZeDSQzxLKSc",
+  "slot": 450170159,
+  "epoch": 1042,
+  "solLamports": "10293479",
+  "openaiRaw": "943162",
+  "usdcRaw": "0",
+  "openaiAccount": "present",
+  "usdcAccount": "missing",
+  "fetchedAt": "2026-09-24T22:56:28.037Z",
+  "source": "https://api.mainnet-beta.solana.com"
+}

@@ -12,6 +12,7 @@ export const envSchema = z.object({
   CORS_ALLOWED_ORIGINS: z.string().min(1),
   PORT: z.coerce.number().int().positive().default(10000),
   GIT_SHA: z.string().min(1).default("dev"),
+  MAINNET_RPC_URL: z.string().url().optional(),
 });
 
 export type AppConfig = z.infer<typeof envSchema>;

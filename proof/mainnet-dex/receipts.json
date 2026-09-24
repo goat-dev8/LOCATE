@@ -1,0 +1,28 @@
+{
+  "network": "mainnet",
+  "locateProtocol": false,
+  "label": "External Mainnet DEX receipts. Not LOCATE protocol receipts.",
+  "receipts": [
+    {
+      "kind": "external_dex_sell",
+      "signature": "2C4CND6FqBiTgPzgNQojHKa6KzL221gd2Zm4BiyP7WCRnmichUF3m9ptF9xs7pDgTVaa9GMm6eYtqmUnQMbqmuzr",
+      "slot": 450171723,
+      "err": null,
+      "commitment": "finalized"
+    },
+    {
+      "kind": "external_dex_sell",
+      "signature": "4FmrxJKrUUaauhd7tksKFZK1xhJTFB7C6AjYq8dcVv7tnArQZY5woCEBzTeKCuKH1AbzRs3mQcwaGTKD6pVPcKSw",
+      "slot": 450174357,
+      "err": null,
+      "commitment": "finalized"
+    },
+    {
+      "kind": "external_dex_buyback",
+      "signature": "5cHQQxCByufmPazGRqKPgfdPDVJHMvCVFkz3NdutoPjrjc1p6RhboJXcjzMmQRgcQ8KoqkQNH8NJSGnpPRQZgR6F",
+      "slot": 450174446,
+      "err": null,
+      "commitment": "finalized"
+    }
+  ]
+}

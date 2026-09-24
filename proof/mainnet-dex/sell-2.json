@@ -1,0 +1,22 @@
+{
+  "network": "mainnet",
+  "locateProtocol": false,
+  "label": "External Mainnet DEX second sell to obtain USDC for buyback. Not a LOCATE protocol transaction.",
+  "result": "PASS",
+  "mainnetTransaction": true,
+  "signature": "4FmrxJKrUUaauhd7tksKFZK1xhJTFB7C6AjYq8dcVv7tnArQZY5woCEBzTeKCuKH1AbzRs3mQcwaGTKD6pVPcKSw",
+  "slot": 450174357,
+  "blockTime": 1790291706,
+  "err": null,
+  "fee": 277620,
+  "containsLocate": false,
+  "containsJupiter": true,
+  "programIds": [
+    "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+  ],
+  "wallet": "Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC",
+  "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+  "amountRaw": "1000",
+  "quoteOutRaw": "1982",
+  "timestamp": "2026-09-24T23:16:16.966Z"
+}

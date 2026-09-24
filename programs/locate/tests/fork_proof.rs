@@ -14,7 +14,8 @@ use solana_instruction::AccountMeta;
 use solana_keypair::Keypair;
 use solana_signer::Signer;
 use spl_token_2022_interface::extension::pausable::PausableConfig;
-use spl_token_2022_interface::extension::{BaseStateWithExtensionsMut, StateWithExtensionsMut};
+use spl_token_2022_interface::extension::permanent_delegate::PermanentDelegate;
+use spl_token_2022_interface::extension::{BaseStateWithExtensions, BaseStateWithExtensionsMut, StateWithExtensions, StateWithExtensionsMut};
 use spl_token_2022_interface::instruction::{close_account, transfer_checked};
 use spl_token_2022_interface::state::Mint as Mint2022;
 
@@ -361,6 +362,128 @@ fn failure_rows() -> Vec<Row> {
         !revoked_take.ok && revoked_take.code == Some(6010),
     ));
 
+    let mut pda = World::fork(1041);
+    pda.create(1);
+    let mut malformed = pda.take_ix(1, N, K, FEE, TERM);
+    malformed.accounts[2] = AccountMeta::new(Keypair::new().pubkey(), false);
+    let malformed_result = pda.submit("borrower", vec![malformed]);
+    rows.push(row(
+        "17-malformed-pda",
+        "OPENAI",
+        "take refused when the offer account is not the offer PDA",
+        &malformed_result,
+        json!({"code": malformed_result.code}),
+        !malformed_result.ok,
+    ));
+
+    let mut tp = World::fork(1041);
+    tp.create(1);
+    let mut token_ix = tp.take_ix(1, N, K, FEE, TERM);
+    token_ix.accounts[12] = AccountMeta::new_readonly(TOKEN_CLASSIC, false);
+    let token_result = tp.submit("borrower", vec![token_ix]);
+    rows.push(row(
+        "18-wrong-token-program",
+        "OPENAI",
+        "take refused when Token-2022 is replaced by the classic token program",
+        &token_result,
+        json!({"code": token_result.code}),
+        !token_result.ok,
+    ));
+
+    let mut owner = World::fork(1041);
+    owner.create(1);
+    let mut owner_ix = owner.take_ix(1, N, K, FEE, TERM);
+    owner_ix.accounts[4] = AccountMeta::new(owner.lender.pubkey(), false);
+    let owner_result = owner.submit("borrower", vec![owner_ix]);
+    rows.push(row(
+        "19-invalid-account-owner",
+        "OPENAI",
+        "take refused when the lender token account is a system account",
+        &owner_result,
+        json!({"code": owner_result.code}),
+        !owner_result.ok,
+    ));
+
+    let mut amt = World::fork(1041);
+    amt.create(1);
+    let amt_result = amt.submit("borrower", vec![amt.take_ix(1, N - 1, K, FEE, TERM)]);
+    rows.push(row(
+        "20-bad-amount",
+        "OPENAI",
+        "code 6005 TermsMismatch",
+        &amt_result,
+        json!({"code": amt_result.code}),
+        !amt_result.ok && amt_result.code == Some(6005),
+    ));
+
+    let mut timing = World::fork(1041);
+    timing.create(1);
+    timing.take(1);
+    timing.warp(TERM + GRACE - 1);
+    let one_second_early = timing.submit("lender", vec![timing.claim_ix(1, &timing.lender.pubkey())]);
+    timing.warp(1);
+    let on_boundary = timing.submit("lender", vec![timing.claim_ix(1, &timing.lender.pubkey())]);
+    rows.push(Row {
+        id: "21-timing-boundary".into(),
+        mint: "OPENAI".into(),
+        expected: "claim fails 1 second early (6015) and succeeds at claimAfterTs".into(),
+        ok: !one_second_early.ok && one_second_early.code == Some(6015) && on_boundary.ok,
+        code: one_second_early.code,
+        detail: on_boundary.detail.clone(),
+        evidence: json!({
+            "earlyCode": one_second_early.code,
+            "boundaryOk": on_boundary.ok,
+        }),
+    });
+
+    let mut vault = World::fork(1041);
+    vault.create(1);
+    vault.take(1);
+    let (bps, max_fee) = vault.live_fee();
+    let gross = locate::token2022::gross_for_net(bps, max_fee, N).expect("gross");
+    let (offer, _) = vault.offer_pda(1);
+    let (loan, _) = vault.loan_pda(&offer);
+    vault.approve_return(&loan, gross);
+    let mut vault_ix = vault.return_ix(1, gross);
+    vault_ix.accounts[6] = AccountMeta::new(vault.borrower_usdc(), false);
+    let vault_result = vault.submit("borrower", vec![vault_ix]);
+    rows.push(row(
+        "22-vault-mismatch",
+        "OPENAI",
+        "return refused when the vault account is substituted",
+        &vault_result,
+        json!({"code": vault_result.code}),
+        !vault_result.ok,
+    ));
+
+    let mut zero = World::fork(1041);
+    zero.approve_offer(1, N);
+    let zero_result = zero.submit("lender", vec![zero.create_ix(1, 0, zero.now + 86_400)]);
+    rows.push(row(
+        "23-zero-amount",
+        "OPENAI",
+        "code 6002 InvalidTerms",
+        &zero_result,
+        json!({"code": zero_result.code}),
+        !zero_result.ok && zero_result.code == Some(6002),
+    ));
+
+    let mut pd = World::fork(1041);
+    let mint_acct = pd.svm.get_account(&pd.mint_id).expect("mint");
+    let mint_state = StateWithExtensions::<Mint2022>::unpack(&mint_acct.data).expect("unpack");
+    let pd_present = mint_state.get_extension::<PermanentDelegate>().is_ok();
+    pd.create(1);
+    let pd_take = pd.take(1);
+    rows.push(Row {
+        id: "24-permanent-delegate".into(),
+        mint: "OPENAI".into(),
+        expected: "cloned OpenAI mint carries PermanentDelegate and take still executes".into(),
+        ok: pd_present && pd_take.ok,
+        code: pd_take.code,
+        detail: pd_take.detail.clone(),
+        evidence: json!({"permanentDelegatePresent": pd_present, "takeOk": pd_take.ok}),
+    });
+
     rows
 }
 
@@ -445,6 +568,18 @@ fn write_proof(rows: &[Row], lifecycle: &Value, claim: &Value, neural: &Value) {
     fs::write(dir.join("openai-full-lifecycle.json"), serde_json::to_string_pretty(lifecycle).unwrap()).unwrap();
     fs::write(dir.join("openai-default-claim.json"), serde_json::to_string_pretty(claim).unwrap()).unwrap();
     fs::write(dir.join("neuralink.json"), serde_json::to_string_pretty(neural).unwrap()).unwrap();
+    let life = json!({
+        "label": "Cloned Mainnet State — Local Execution",
+        "network": "mainnet-fork",
+        "notAMainnetTransaction": true,
+        "openai": lifecycle,
+        "claim": claim,
+        "neuralink": neural,
+        "dexSellExecution": false,
+        "dexBuybackExecution": false,
+        "dexNote": "The cloned environment did not execute a DEX CPI. Quote retrieval is not DEX execution. External Mainnet DEX remains a separate layer.",
+    });
+    fs::write(dir.join("lifecycle.json"), serde_json::to_string_pretty(&life).unwrap()).unwrap();
     let manifest = json!({
         "label": "Cloned Mainnet State — Local Execution",
         "notAMainnetTransaction": true,

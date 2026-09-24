@@ -878,4 +878,123 @@ Mainnet signatures: none
 Outstanding blockers: Docker/WSL for solana-verify, clean commit, then rebuild and re-hash
 Git SHA: pending this commit
 
+## 2026-09-24T22:14:00Z — Clean commit for P0
+
+- Commit `10eef72f8888e43e73c96ae12879acab0dad5576` on main: Record fork, replay, and gated mainnet-execution proofs without claiming verified builds. 70 files. `.env` not committed.
+- `node scripts/verify-source-build.mjs` exit 2. `verified` false. HEAD is the new commit. Worktree still dirty from unstaged evidence PNGs, render scripts, and frontend e2e leftovers. `solana-verify` still not run. Docker is unavailable in WSL.
+- Mainnet-feature `cargo build-sbf` started from this commit. Mainnet execution flag remains false. No mainnet deploy.
+
+PHASE P0 COMMIT
+
+Implementation: commit exists; verified still false
+Tests: verify-source-build exit 2
+Mainnet signatures: none
+Outstanding blockers: leftover dirty files, solana-verify/Docker, rebuild hash, then only a mainnet-feature deploy
+Git SHA: 10eef72f8888e43e73c96ae12879acab0dad5576
+
+## 2026-09-24T22:15:35Z — Mainnet-feature rebuild from 10eef72
+
+- `cargo build-sbf --manifest-path programs/locate/Cargo.toml` exited 0 in 121s. Default features are `mainnet`, not `devnet`.
+- Output `target/deploy/locate.so` is 359712 bytes, sha256 `ade3240160bfb905cfad0fcb98df5b98c688bc44044bf059ee1f776ec8f570f5`. That is not the previously recorded 342712-byte file `acb6b4a8…` and not the Devnet-feature hash `69886235…`.
+- `solana-verify` was not run. `verified` remains false. This binary was not deployed to Mainnet. Artifact: `proof/verification/rebuild-10eef72.json`.
+
+PHASE P0 REBUILD
+
+Implementation: rebuild recorded; correspondence not verified
+Tests: build-sbf exit 0
+Mainnet signatures: none
+Outstanding blockers: solana-verify/Docker, explain size/hash drift vs prior 342712 file, then verified=true only after that
+Git SHA: 10eef72f8888e43e73c96ae12879acab0dad5576
+
+## 2026-09-24T22:18:50Z — Repeat mainnet-feature build
+
+- Second `cargo build-sbf --manifest-path programs/locate/Cargo.toml` exited 0 in 28s. Both copies are 359712 bytes, sha256 `ade3240160bfb905cfad0fcb98df5b98c688bc44044bf059ee1f776ec8f570f5`. They match each other.
+- Toolchain for SBF: cargo-build-sbf 4.1.0, platform-tools v1.54, rustc 1.89.0. Host rustc remains 1.96.0. Anchor 1.2.0. solana-cli 4.1.2.
+- `solana-verify` still not run. Docker still unavailable in WSL. `verified` remains false. No Mainnet deploy. Artifact: `proof/verification/determinism-mainnet-10eef72.json`.
+
+PHASE P0 DETERMINISM
+
+Implementation: two local mainnet-feature builds match; verified-build still false
+Tests: build-sbf twice, hashes equal
+Mainnet signatures: none
+Outstanding blockers: solana-verify/Docker, isolated Devnet-feature rebuild, then only a mainnet-feature deploy after verified=true
+Git SHA: 10eef72f8888e43e73c96ae12879acab0dad5576
+
+## 2026-09-24T22:19:45Z — Isolated Devnet-feature rebuild
+
+- `cargo build-sbf --features devnet --sbf-out-dir target/deploy/devnet-feature-10eef72` exited 0 in 15s. Output 359712 bytes, sha256 `698862354901ab1a262c378fcac6c424ee349bf8fa229e496e4ff933db56abc2`.
+- That matches the previous Devnet-feature file and the recorded on-chain Devnet payload. It does not match the Mainnet-feature hash `ade3240160bfb905cfad0fcb98df5b98c688bc44044bf059ee1f776ec8f570f5`.
+- `solana-verify` still not run. `verified` remains false. The Devnet-feature binary must not be deployed to Mainnet. Artifact: `proof/verification/devnet-feature-10eef72.json`.
+
+PHASE P0 FEATURE SPLIT
+
+Implementation: two feature hashes recorded and different
+Tests: build-sbf --features devnet exit 0
+Mainnet signatures: none
+Outstanding blockers: solana-verify/Docker, then verified=true only after that procedure succeeds
+Git SHA: 10eef72f8888e43e73c96ae12879acab0dad5576
+
+## 2026-09-24T23:02:00Z — Live Mainnet OpenAI funded; DEX sell waiting for Phantom
+
+- Connected Phantom `Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC`. Live Mainnet RPC slot 450170159 epoch 1042: SOL lamports `10293479`, OpenAI raw `943162`, USDC raw `0`. Mint `PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF` Token-2022 9 decimals.
+- Smallest Jupiter ExactIn sell with a route is 1000 raw OpenAI (amount 1 returned no routes). Quote: out `1982`, min `1963`, route Meteora DLMM x2, price impact 0. Node simulation PASS, 116224 CU, Jupiter program match, no LOCATE program id. Not a Mainnet transaction.
+- Frontend Mainnet DEX lab reads those live balances. State is WAITING FOR WALLET after server-side compile+simulate. Owner must approve the Phantom popup. No signature sent.
+- Fork proof `p0_cloned_mainnet_fork_proof` 24/24 local execution. `mainnetLocateDeployment` false. `mainnetLocateTransactions` false.
+- SDK tests 31. Backend tests 21. Frontend checker 0.
+
+PHASE P1 MAINNET DEX
+
+Implementation: live balances + smallest quote + simulation + frontend waiting for wallet
+Tests: sdk 31, backend 21, fork_proof 24/24, checker 0, node sell simulation PASS
+Mainnet signatures: none
+Outstanding blockers: owner Phantom approval for the 1000-raw OpenAI sell; buyback blocked until USDC exists after sell
+Git SHA: 10eef72f8888e43e73c96ae12879acab0dad5576
+
+## 2026-09-24T23:05:30Z — Mainnet DEX sell verified on chain
+
+- Phantom approved. Finalized signature `2C4CND6FqBiTgPzgNQojHKa6KzL221gd2Zm4BiyP7WCRnmichUF3m9ptF9xs7pDgTVaa9GMm6eYtqmUnQMbqmuzr` slot 450171723, `err` null. Transaction includes Jupiter, does not include the LOCATE program. Not a LOCATE protocol transaction.
+- Balances from finalized RPC: SOL `10293479` → `6949444` (delta `-3344035`, tx fee `367155` plus new USDC ATA rent/priority). OpenAI `943162` → `942162` (delta `-1000`). USDC `0` → `1982` (delta `+1982`, equals quoted out).
+- Buyback blocked: ExactOut 1000 OpenAI no route. ExactIn of all 1982 USDC quotes 978 OpenAI, below the 1000 sold. Wallet was not funded. Artifacts: `proof/mainnet-dex/sell.json` PASS, `buyback.json` BLOCKED.
+- `mainnetLocateDeployment` false. `mainnetLocateTransactions` false. `mainnetExternalDexSell` true.
+
+PHASE P1 MAINNET DEX SELL
+
+Implementation: real frontend + Phantom + Mainnet DEX sell verified from chain
+Tests: finalized RPC getTransaction err null, raw deltas match quote
+Mainnet signatures: 2C4CND6FqBiTgPzgNQojHKa6KzL221gd2Zm4BiyP7WCRnmichUF3m9ptF9xs7pDgTVaa9GMm6eYtqmUnQMbqmuzr (external DEX only)
+Outstanding blockers: buyback needs more USDC than 1982 raw to reacquire 1000 OpenAI
+Git SHA: 10eef72f8888e43e73c96ae12879acab0dad5576
+
+## 2026-09-24T23:11:20Z — Buyback ExactOut/ExactIn refuse; Devnet extra venues FAIL
+
+PHASE P1 BUYBACK REFUSE + DEVNET VENUE PROBE
+
+What ran: Chrome BUY BACK on localhost:3010 against live Mainnet quotes. ExactOut 1000 OpenAI returned no route. ExactIn 1982 USDC quoted 978 OpenAI. Lab stayed READY, no Phantom prompt, no send. Live RPC wallet still SOL 6949444, OpenAI 942162, USDC 1982. Devnet extra-venue probe wrote proof/devnet/dex.json: Phoenix program account absent, Whirlpool and Pump AMM executable with no replica pool created, Jupiter TOKEN_NOT_TRADABLE and DLMM 6073 reused not retried. No swap sent. LOCATE Mainnet deploy remains refused.
+
+Implementation: ExecutionLab buyback ExactOut then ExactIn with minOut 1000; quote APIs accept swapMode; backend quote forwards swapMode
+
+Tests: sdk 31, backend 21, checker 0, fork_proof unchanged 24/24
+
+Mainnet signatures: none new (sell remains 2C4CND6FqBiTgPzgNQojHKa6KzL221gd2Zm4BiyP7WCRnmichUF3m9ptF9xs7pDgTVaa9GMm6eYtqmUnQMbqmuzr)
+
+Outstanding blockers: Mainnet buyback needs more than 1982 raw USDC to reacquire 1000 OpenAI; Devnet replica mint has no working DEX venue
+
+Git SHA: 10eef72f8888e43e73c96ae12879acab0dad5576
+
+## 2026-09-24T23:16:16Z — External Mainnet DEX sell-2 and buyback verified
+
+PHASE P1 MAINNET DEX BUYBACK
+
+What ran: Chrome SELL then BUY BACK on localhost:3010 with Phantom. Second sell 1000 OpenAI → 1982 USDC (wallet USDC 3964). Buyback ExactIn 3964 USDC quoted 1957 OpenAI, min 1938, chain delta +1956 OpenAI, USDC to 0. Both txs finalized, Jupiter present, LOCATE absent. Fork DEX CPI still not executed. Devnet DEX remains FAIL. LOCATE was not deployed to Mainnet.
+
+Implementation: live frontend + Phantom + /api/dex quote-swap-send; ExactOut then ExactIn buyback with minOut 1000
+
+Tests: sdk 31, backend 21, checker 0
+
+Mainnet signatures: 4FmrxJKrUUaauhd7tksKFZK1xhJTFB7C6AjYq8dcVv7tnArQZY5woCEBzTeKCuKH1AbzRs3mQcwaGTKD6pVPcKSw (sell-2), 5cHQQxCByufmPazGRqKPgfdPDVJHMvCVFkz3NdutoPjrjc1p6RhboJXcjzMmQRgcQ8KoqkQNH8NJSGnpPRQZgR6F (buyback). Prior sell 2C4CND6FqBiTgPzgNQojHKa6KzL221gd2Zm4BiyP7WCRnmichUF3m9ptF9xs7pDgTVaa9GMm6eYtqmUnQMbqmuzr
+
+Outstanding blockers: Devnet replica mint has no working DEX venue; cloned-fork DEX CPI not executable in LiteSVM without Jupiter/DLMM program dumps
+
+Git SHA: 10eef72f8888e43e73c96ae12879acab0dad5576
+
 

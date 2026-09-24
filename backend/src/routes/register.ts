@@ -15,6 +15,7 @@ import { loadCatalog } from "../market/prestocks.js";
 import { buildOpportunities } from "../market/opportunities.js";
 import { protocolEconomics, presentMarket } from "../market/economics.js";
 import { DEMO_SIGNATURES } from "../demo.js";
+import { registerDexRoutes } from "./dex.js";
 
 const pubkey = z.string().regex(/^[1-9A-HJ-NP-Za-km-z]{32,44}$/);
 const signature = z.string().regex(/^[1-9A-HJ-NP-Za-km-z]{87,88}$/);
@@ -275,4 +276,6 @@ export async function registerRoutes(app: FastifyInstance, config: AppConfig, sq
     const rows = await sql`select id, mint, offer, kind, note, current_premium_bps, target_premium_bps, created_at from locate.theses where wallet = ${query.data.wallet} and cluster = ${config.SOLANA_CLUSTER} order by created_at desc`;
     return { theses: rows, fetchedAt: new Date().toISOString() };
   });
+
+  registerDexRoutes(app, config);
 }

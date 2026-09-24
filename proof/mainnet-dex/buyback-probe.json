@@ -1,0 +1,33 @@
+{
+  "network": "mainnet",
+  "locateProtocol": false,
+  "label": "External Mainnet DEX buyback. Not a LOCATE protocol transaction.",
+  "result": "BLOCKED",
+  "mainnetTransaction": false,
+  "signature": null,
+  "wallet": "Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC",
+  "walletSolLamports": "6949444",
+  "walletOpenAiRaw": "942162",
+  "walletUsdcRaw": "1982",
+  "requiredOpenAiRaw": "1000",
+  "exactOut": {
+    "swapMode": "ExactOut",
+    "status": 400,
+    "inAmount": null,
+    "outAmount": null,
+    "error": "No routes found",
+    "route": []
+  },
+  "exactIn": {
+    "swapMode": "ExactIn",
+    "status": 200,
+    "inAmount": "1982",
+    "outAmount": "978",
+    "error": null,
+    "route": [
+      "Meteora DLMM"
+    ]
+  },
+  "reason": "MAINNET DEX EXECUTION BLOCKED reason: ExactOut for 1000 raw OpenAI has no sufficient route. Spending the entire 1982 raw USDC ExactIn quotes 978 raw OpenAI, below 1000. Wallet was not funded automatically.",
+  "timestamp": "2026-09-24T23:13:09.463Z"
+}

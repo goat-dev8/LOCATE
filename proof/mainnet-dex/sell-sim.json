@@ -1,0 +1,37 @@
+{
+  "network": "mainnet",
+  "locateProtocol": false,
+  "label": "External Mainnet DEX simulation. Not a LOCATE protocol transaction. No transaction was sent.",
+  "mainnetTransaction": false,
+  "wallet": "Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC",
+  "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+  "amountRaw": "1000",
+  "quote": {
+    "inAmount": "1000",
+    "outAmount": "1981",
+    "otherAmountThreshold": "1962",
+    "route": [
+      "Meteora DLMM",
+      "Meteora DLMM"
+    ],
+    "priceImpactPct": "0.0119355137310989636079482082"
+  },
+  "swapProgram": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+  "jupiterMatch": true,
+  "locateForbidden": false,
+  "messageBytes": 678,
+  "simulation": "PASS",
+  "error": null,
+  "unitsConsumed": 116224,
+  "logTail": [
+    "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo consumed 33255 of 64532 compute units",
+    "Program LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo success",
+    "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 invoke [2]",
+    "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 consumed 106 of 29263 compute units",
+    "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 success",
+    "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 consumed 87594 of 115765 compute units",
+    "Program return: JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 vQcAAAAAAAA=",
+    "Program JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 success"
+  ],
+  "timestamp": "2026-09-24T22:58:33.629Z"
+}
