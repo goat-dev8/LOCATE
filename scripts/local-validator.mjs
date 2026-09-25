@@ -721,7 +721,7 @@ async function main() {
   };
   const out = join(root, "proof", "local-validator");
   mkdirSync(out, { recursive: true });
-  writeFileSync(join(out, "suite.json"), JSON.stringify(body, null, 2));
+  writeFileSync(join(out, "suite.json"), JSON.stringify(body, null, 2) + "\n");
   console.log(JSON.stringify({ passed, failed: rows.length - passed, total: rows.length }));
   child?.kill();
   spawn("wsl", ["-u", "devmo", "bash", "-lc", "pkill -f 'solana-test-validator --reset --quiet --rpc-port 18999' || true"], { stdio: "ignore" });

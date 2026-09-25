@@ -1517,5 +1517,11 @@ SDK 31/31. Backend 21/21, then receipt checks 5/5. Pipeline 11/11. Refusals 9/9.
 
 Pushed as 75a6866.
 
+## 2026-09-25T03:56:00Z — Local validator rerun
+
+PHASE VALIDATION
+
+`node scripts/local-validator.mjs` exited 0. The suite printed `{"passed":42,"failed":0,"total":42}`. Saved logs now drop the compute-unit counts that still differed between runs. Devnet DEX remains FAIL. Mainnet deployment remains false.
+
 
 

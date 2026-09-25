@@ -132,7 +132,7 @@
       "result": "PASS",
       "ok": false,
       "code": 6007,
-      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x1777. \nLogs: \n[\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 37 of 159752 compute units\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3]\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBv",
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x1777. \nLogs: \n[\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed compute units\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3]\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBv",
       "evidence": {}
     },
     {
@@ -150,7 +150,7 @@
       "result": "PASS",
       "ok": false,
       "code": 6010,
-      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x177a. \nLogs: \n[\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 37 of 164252 compute units\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3]\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBv",
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x177a. \nLogs: \n[\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed compute units\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3]\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBv",
       "evidence": {}
     },
     {
@@ -159,7 +159,7 @@
       "result": "PASS",
       "ok": false,
       "code": 6008,
-      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 1: custom program error: 0x1778. \nLogs: \n[\n  \"Program log: Instruction: ApproveChecked\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed 1581 of 400000 compute units\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb success\",\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke",
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 1: custom program error: 0x1778. \nLogs: \n[\n  \"Program log: Instruction: ApproveChecked\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed compute units\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb success\",\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke",
       "evidence": {}
     },
     {
@@ -179,7 +179,7 @@
       "result": "PASS",
       "ok": false,
       "code": 2040,
-      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x7f8. \nLogs: \n[\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 37 of 158828 compute units\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3]\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf",
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x7f8. \nLogs: \n[\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed compute units\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3]\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf",
       "evidence": {}
     },
     {
@@ -188,7 +188,7 @@
       "result": "PASS",
       "ok": false,
       "code": 6002,
-      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 1: custom program error: 0x1772. \nLogs: \n[\n  \"Program log: Instruction: ApproveChecked\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed 1581 of 400000 compute units\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb success\",\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke",
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 1: custom program error: 0x1772. \nLogs: \n[\n  \"Program log: Instruction: ApproveChecked\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed compute units\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb success\",\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke",
       "evidence": {}
     },
     {
@@ -197,7 +197,7 @@
       "result": "PASS",
       "ok": false,
       "code": 6002,
-      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 1: custom program error: 0x1772. \nLogs: \n[\n  \"Program log: Instruction: ApproveChecked\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed 1581 of 400000 compute units\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb success\",\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke",
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 1: custom program error: 0x1772. \nLogs: \n[\n  \"Program log: Instruction: ApproveChecked\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed compute units\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb success\",\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke",
       "evidence": {}
     },
     {
@@ -206,7 +206,7 @@
       "result": "PASS",
       "ok": false,
       "code": 6002,
-      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 1: custom program error: 0x1772. \nLogs: \n[\n  \"Program log: Instruction: ApproveChecked\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed 1581 of 400000 compute units\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb success\",\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke",
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 1: custom program error: 0x1772. \nLogs: \n[\n  \"Program log: Instruction: ApproveChecked\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed compute units\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb success\",\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke",
       "evidence": {}
     },
     {
@@ -215,7 +215,7 @@
       "result": "PASS",
       "ok": false,
       "code": 6005,
-      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x1775. \nLogs: \n[\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 37 of 158252 compute units\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3]\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBv",
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x1775. \nLogs: \n[\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed compute units\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3]\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBv",
       "evidence": {}
     },
     {
@@ -242,7 +242,7 @@
       "result": "PASS",
       "ok": false,
       "code": 2012,
-      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x7dc. \nLogs: \n[\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success\",\n  \"Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL consumed 13510 of 176262 compute units\",\n  \"Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL success\",\n  \"Program log: AnchorError caused by acc",
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x7dc. \nLogs: \n[\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success\",\n  \"Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL consumed compute units\",\n  \"Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL success\",\n  \"Program log: AnchorError caused by acc",
       "evidence": {}
     },
     {
@@ -296,7 +296,7 @@
       "result": "PASS",
       "ok": false,
       "code": 6010,
-      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 1: custom program error: 0x177a. \nLogs: \n[\n  \"Program log: Instruction: ApproveChecked\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed 1581 of 400000 compute units\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb success\",\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke",
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 1: custom program error: 0x177a. \nLogs: \n[\n  \"Program log: Instruction: ApproveChecked\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed compute units\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb success\",\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke",
       "evidence": {}
     },
     {
@@ -305,7 +305,7 @@
       "result": "PASS",
       "ok": false,
       "code": 6010,
-      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x177a. \nLogs: \n[\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 37 of 167259 compute units\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3]\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBv",
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x177a. \nLogs: \n[\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed compute units\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3]\",\n  \"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBv",
       "evidence": {}
     },
     {
@@ -371,7 +371,7 @@
       "result": "PASS",
       "ok": false,
       "code": 6010,
-      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 1: custom program error: 0x177a. \nLogs: \n[\n  \"Program log: Instruction: ApproveChecked\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed 1581 of 400000 compute units\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb success\",\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke",
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 1: custom program error: 0x177a. \nLogs: \n[\n  \"Program log: Instruction: ApproveChecked\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed compute units\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb success\",\n  \"Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6 invoke",
       "evidence": {}
     },
     {
@@ -398,7 +398,7 @@
       "result": "PASS",
       "ok": false,
       "code": 6013,
-      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 1: custom program error: 0x177d. \nLogs: \n[\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb invoke [1]\",\n  \"Program log: Instruction: ApproveChecked\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed 1635 of 400000 compute units\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb succ",
+      "detail": "Simulation failed. \nMessage: Transaction simulation failed: Error processing Instruction 1: custom program error: 0x177d. \nLogs: \n[\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb invoke [1]\",\n  \"Program log: Instruction: ApproveChecked\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed compute units\",\n  \"Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb succ",
       "evidence": {}
     }
   ]
