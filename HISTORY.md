@@ -1533,5 +1533,7 @@ The external-market quote gate was stamping the quote as fresh at the moment of 
 
 Files: frontend/src/components/locate/app/views/ExecutionLab.tsx, frontend/src/components/locate/app/views/MyLoans.tsx, frontend/src/lib/locate/loanPhase.ts.
 
+Pushed as c690a88.
+
 
 
