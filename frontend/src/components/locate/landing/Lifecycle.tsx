@@ -222,7 +222,7 @@ function DiagramSettle() {
       <DFlow d="M 128 34 C 96 40, 76 56, 62 74" color={LIME} dur={3} dot={false} />
       <DFlow d="M 152 34 C 184 40, 204 56, 218 74" color={EMBER} dur={3} dot={false} />
       <DNode x={12} y={74} w={104} label="VERIFIED" sub="COLLATERAL BACK" accent={LIME} />
-      <DNode x={164} y={74} w={104} label="CLAIM" sub="AFTER 48H GRACE" accent={EMBER} />
+      <DNode x={164} y={74} w={104} label="CLAIM" sub="AFTER GRACE" accent={EMBER} />
       <DNote x={64} y={112} text="DELIVERY SATISFIED" anchor="middle" color={LIME} />
       <DNote x={216} y={112} text="NOTHING DELIVERED" anchor="middle" color={EMBER} />
     </svg>

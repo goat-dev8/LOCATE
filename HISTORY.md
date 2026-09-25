@@ -1778,3 +1778,12 @@ Files: frontend/src/lib/locate/executionFacts.ts, frontend/src/app/proof/page.ts
 Command: npx tsc --noEmit in frontend. Result: exit 0.
 Network: none. Signature: none.
 
+## 2026-09-25T15:40:18Z — Grace follows the loan, and production proof headlines match
+
+PHASE PRODUCT
+
+Chrome on https://locate-blue.vercel.app deployment dpl_6oQWLS3sA9pLXnEwbpZVVUjR96Ef, gitSha d41df6e41521ebb5af0b8b39d958f19ae0cb942a, alias true. API health gitSha is the same. Proof cards read: Real Devnet protocol, 4 signatures; Cloned Mainnet state, local execution, not a Mainnet transaction, 24/24; Real Mainnet external market execution, SELL PASS · BUYBACK PASS; Local validator and cross-runtime replay, 42/42 · 45000. The landing still said MATURITY + 48H GRACE. This commit names the loan's own grace. No new signature. Devnet DEX remains an external venue blocker. Mainnet LOCATE deployment remains false.
+
+Files: frontend/src/components/locate/landing/Hero.tsx, frontend/src/components/locate/landing/Lifecycle.tsx.
+Network: none. Signature: none.
+

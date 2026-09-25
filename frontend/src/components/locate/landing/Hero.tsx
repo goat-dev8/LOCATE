@@ -313,7 +313,7 @@ export function Hero() {
       >
         <div className="flex items-center gap-2.5">
           <span className="h-px w-6 bg-line-2" />
-          <TechNote>MATURITY + 48H GRACE</TechNote>
+          <TechNote>MATURITY + THE LOAN'S GRACE</TechNote>
         </div>
       </Geo>
 
