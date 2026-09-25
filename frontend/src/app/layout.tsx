@@ -1,25 +1,17 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { WalletProviders } from "@/components/locate/WalletProviders";
 
-const sans = Inter({
-  variable: "--font-inter",
+const sans = Geist({
+  variable: "--font-geist",
   subsets: ["latin"],
   display: "swap",
 });
 
-const display = Instrument_Serif({
-  variable: "--font-instrument",
-  weight: "400",
-  style: ["normal", "italic"],
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const mono = JetBrains_Mono({
-  variable: "--font-jbmono",
+const mono = Geist_Mono({
+  variable: "--font-geist-mono",
   subsets: ["latin"],
   display: "swap",
 });
@@ -47,7 +39,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${sans.variable} ${display.variable} ${mono.variable} font-sans antialiased bg-background text-foreground`}
+        className={`${sans.variable} ${mono.variable} font-sans antialiased bg-background text-foreground`}
       >
         <WalletProviders>{children}</WalletProviders>
         <Toaster />

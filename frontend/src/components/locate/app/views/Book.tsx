@@ -43,9 +43,9 @@ export function BookView() {
   return (
     <div>
       <ViewHead
-        label="WHAT CAN I BORROW"
-        title="What PreStocks can I borrow"
-        serif="right now?"
+        label="DEVNET BOOK"
+        title="Lend, borrow, short, buy back, return."
+        serif="Or the lender claims."
         actions={
           live.length > 0 ? (
             <span className="lc-chip-lime">

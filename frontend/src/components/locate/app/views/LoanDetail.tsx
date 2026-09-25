@@ -4,8 +4,11 @@
  * LOCATE — LoanDetail view. Return and claim are real Devnet transactions.
  */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
+import { locateApi } from "@/lib/locate/env";
+import { dexEvidence } from "@/lib/locate/executionFacts";
+import { SettlementRail, type RailStep } from "../SettlementRail";
 import { useLocate } from "@/lib/locate/store";
 import {
   ASSETS,
@@ -32,7 +35,51 @@ export function LoanDetailView() {
   const loan = activeLoanId ? loanById(activeLoanId) : undefined;
   const [buyOpen, setBuyOpen] = useState(false);
   const [claimOpen, setClaimOpen] = useState(false);
+  const [advanced, setAdvanced] = useState(false);
+  const [steps, setSteps] = useState<RailStep[]>([]);
   const cd = useCountdown(loan?.maturityAt ?? 0);
+
+  useEffect(() => {
+    if (!loan) return;
+    let alive = true;
+    const wallet = loan.borrowerPubkey || loan.lenderPubkey || "";
+    locateApi.receipts({ wallet, limit: 50 }).then((stored) => {
+      if (!alive) return;
+      const rows = (stored.receipts ?? []).filter((row) => String(row.loan ?? row.offer ?? "") === loan.id || String(row.offer ?? "") === loan.offerId);
+      const sig = (kind: string) => {
+        const row = rows.find((item) => String(item.kind) === kind);
+        return row ? String(row.signature) : "";
+      };
+      const link = (signature: string) => signature ? `https://explorer.solana.com/tx/${signature}?cluster=devnet` : null;
+      const taken = sig("loan_taken");
+      const returned = sig("loan_returned");
+      const claimed = sig("loan_claimed");
+      const listed = sig("offer_created");
+      const returnedPath = loan.status === "RETURNED" || returned.length > 0;
+      const claimedPath = loan.status === "CLAIMED" || claimed.length > 0;
+      const devnetDex = dexEvidence.devnetDexResult;
+      const next: RailStep[] = claimedPath
+        ? [
+            { id: "maturity", label: "Maturity", state: "done", detail: "The term ended.", href: link(taken) },
+            { id: "grace", label: "Grace", state: "done", detail: "Grace elapsed without a return.", href: null },
+            { id: "claimed", label: "Claimed", state: claimed ? "done" : "current", detail: claimed ? claimed : "Claim receipt is not loaded yet.", href: link(claimed) },
+          ]
+        : [
+            { id: "listed", label: "Listed", state: listed ? "done" : "waiting", detail: listed || "Create receipt is not in this wallet’s latest receipts.", href: link(listed) },
+            { id: "taken", label: "Taken", state: taken || loan.status !== "ACTIVE" ? "done" : "current", detail: taken || loan.id, href: link(taken) },
+            { id: "short", label: "Short", state: "blocked", detail: `Devnet venue ${devnetDex}. This step is not this loan.`, href: null },
+            { id: "buyback", label: "Buy back", state: "blocked", detail: "External buyback is Mainnet evidence, not this Devnet loan.", href: null },
+            { id: "returned", label: "Returned", state: returned ? "done" : returnedPath ? "current" : "waiting", detail: returned || "Return delivers the required gross.", href: link(returned) },
+          ];
+      setSteps(next);
+    }).catch(() => {
+      if (!alive) return;
+      setSteps([]);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [loan]);
 
   if (!loan) {
     return (
@@ -75,6 +122,8 @@ export function LoanDetailView() {
           </>
         }
       />
+
+      {steps.length > 0 && <div className="mb-5"><SettlementRail steps={steps} /></div>}
 
       <div className="grid gap-5 lg:grid-cols-[340px_1fr]">
         <div className="lc-card flex flex-col items-center gap-4 p-6">
@@ -119,6 +168,9 @@ export function LoanDetailView() {
                 {asset.name}
               </p>
             </div>
+            <button onClick={() => setAdvanced((value) => !value)} className="mb-3 font-mono text-[12px] text-ink-3">
+              {advanced ? "Hide details" : "Details"}
+            </button>
             <DataRow label="AMOUNT" value={`${fmtToken(loan.amount, 6)} ${asset.symbol}`} />
             <DataRow
               label="NET REQUIRED"
@@ -136,6 +188,13 @@ export function LoanDetailView() {
               label="TRANSFER FEE"
               value={`${asset.transferFeeBps / 100}% · TOKEN-2022`}
             />
+            {advanced && (
+              <>
+                <DataRow label="RAW AMOUNT" value={loan.amountRaw ?? "unavailable"} />
+                <DataRow label="LOAN" value={loan.id} />
+                <DataRow label="OFFER" value={loan.offerId} />
+              </>
+            )}
           </div>
         </div>
       </div>

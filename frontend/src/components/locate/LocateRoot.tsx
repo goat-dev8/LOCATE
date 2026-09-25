@@ -122,8 +122,12 @@ export default function LocateRoot() {
             /* closed offers stay hidden when the receipt API is down */
           }
         }
-        const rows = [
-          ...live.map((row) => ({ ...row, status: "ACTIVE" })),
+        const rows: Array<Record<string, string>> = [
+          ...live.map((row) => {
+            const record: Record<string, string> = { status: "ACTIVE" };
+            for (const [key, value] of Object.entries(row)) record[key] = String(value);
+            return record;
+          }),
           ...closed,
         ];
         setOffers(

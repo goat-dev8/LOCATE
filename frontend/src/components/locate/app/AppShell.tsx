@@ -7,13 +7,10 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  LayoutGrid,
   BookOpen,
-  Tag,
   ArrowLeftRight,
   ShieldCheck,
   ArrowLeft,
-  Radio,
 } from "lucide-react";
 import { DecryptionText } from "@/components/bits";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
@@ -22,35 +19,49 @@ import { DEVNET_USDC, TOKEN, TOKEN_2022, ata } from "@locate/sdk";
 import { useLocate, type View } from "@/lib/locate/store";
 import { useLiveMarket } from "@/lib/locate/useLiveMarket";
 import { Wordmark } from "../landing/parts";
-import { OverviewView } from "./views/Overview";
 import { BookView } from "./views/Book";
 import { CreateOfferView } from "./views/CreateOffer";
 import { LoanDetailView } from "./views/LoanDetail";
-import { MyOffersView } from "./views/MyOffers";
-import { MyLoansView } from "./views/MyLoans";
+import { PositionsView } from "./views/Positions";
 import { VerifyView } from "./views/Verify";
 import { ExecutionLabView } from "./views/ExecutionLab";
 import { cn } from "@/lib/utils";
 
-const NAV: { view: View; label: string; short: string; icon: typeof LayoutGrid }[] = [
-  { view: "overview", label: "Overview", short: "HOME", icon: LayoutGrid },
-  { view: "book", label: "Book", short: "BOOK", icon: BookOpen },
-  { view: "offers", label: "My Offers", short: "OFFERS", icon: Tag },
-  { view: "loans", label: "My Loans", short: "LOANS", icon: ArrowLeftRight },
-  { view: "verify", label: "Verify", short: "VERIFY", icon: ShieldCheck },
-  { view: "execute", label: "Execution", short: "EXEC", icon: Radio },
+const NAV: { view: View; label: string; short: string; icon: typeof BookOpen }[] = [
+  { view: "book", label: "Market", short: "MARKET", icon: BookOpen },
+  { view: "loans", label: "Positions", short: "POSITIONS", icon: ArrowLeftRight },
+  { view: "verify", label: "Proof", short: "PROOF", icon: ShieldCheck },
 ];
 
 const VIEW_TITLES: Record<View, string> = {
-  overview: "OVERVIEW",
-  book: "THE BOOK",
-  create: "CREATE OFFER",
-  loan: "LOAN DETAIL",
-  offers: "MY OFFERS",
-  loans: "MY LOANS",
-  verify: "PROOF ROOM",
-  execute: "MARKET EXECUTION",
+  overview: "MARKET",
+  book: "MARKET",
+  create: "LIST",
+  loan: "LOAN",
+  offers: "POSITIONS",
+  loans: "POSITIONS",
+  verify: "PROOF",
+  execute: "EXTERNAL MARKET",
 };
+
+function EnvPill() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="relative mt-4">
+      <button
+        onClick={() => setOpen((value) => !value)}
+        className="rounded-full border border-shell-line px-3 py-1.5 font-mono text-[12px] text-shell-ink"
+      >
+        Devnet · dOPENAI
+      </button>
+      {open && (
+        <p className="mt-2 text-[13px] leading-relaxed text-shell-ink-2">
+          dOPENAI is a Devnet replica with the same Token-2022 extensions as the OpenAI mint. It is not a Mainnet PreStock. LOCATE runs here. Live prices and the external short are Mainnet, and they stay labeled separately.
+        </p>
+      )}
+    </div>
+  );
+}
 
 function Wallet() {
   const { connection } = useConnection();
@@ -145,7 +156,9 @@ function SidebarNav({
         const active =
           view === item.view ||
           (view === "loan" && item.view === "loans") ||
-          (view === "create" && item.view === "offers");
+          (view === "offers" && item.view === "loans") ||
+          (view === "create" && item.view === "book") ||
+          (view === "overview" && item.view === "book");
         return (
           <button
             key={item.view}
@@ -189,8 +202,8 @@ export function AppShell() {
       ? "Resolving live data…"
       : live.status === "waking"
         ? "API waking up — retrying."
-        : live.status === "stale"
-          ? "Market data unavailable."
+        : live.status === "stale" && openai?.tokenPrice
+          ? `OPENAI $${Math.round(openai.tokenPrice).toLocaleString("en-US")} · last price`
           : openai?.tokenPrice && openai.markPrice && openai.premiumPct !== null
             ? `OPENAI $${Math.round(openai.tokenPrice).toLocaleString("en-US")} · ${openai.premiumPct >= 0 ? "+" : ""}${openai.premiumPct.toFixed(1)}%`
             : "Market data unavailable.";
@@ -214,17 +227,14 @@ export function AppShell() {
         <button
           onClick={() => {
             openApp();
-            navigate("overview");
+            navigate("book");
           }}
           className="text-left"
           aria-label="LOCATE workspace home"
         >
           <Wordmark dark />
         </button>
-        <p className="lc-label-dark mt-3">DEVNET</p>
-        <p className="mt-2 font-mono text-[8.5px] uppercase leading-relaxed tracking-[0.1em] text-shell-ink-2">
-          devnet test mint mirroring OPENAI&apos;s extensions; not a Mainnet PreStock
-        </p>
+        <EnvPill />
 
         <SidebarNav view={view} navigate={navigate} counts={counts} />
 
@@ -274,12 +284,10 @@ export function AppShell() {
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
               >
-                {view === "overview" && <OverviewView />}
-                {view === "book" && <BookView />}
+                {(view === "overview" || view === "book") && <BookView />}
                 {view === "create" && <CreateOfferView />}
                 {view === "loan" && <LoanDetailView />}
-                {view === "offers" && <MyOffersView />}
-                {view === "loans" && <MyLoansView />}
+                {(view === "offers" || view === "loans") && <PositionsView />}
                 {view === "verify" && <VerifyView />}
                 {view === "execute" && <ExecutionLabView />}
               </motion.div>
@@ -294,12 +302,14 @@ export function AppShell() {
         className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-[#0A0A0AF2] backdrop-blur-xl lg:hidden"
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
-        <div className="grid grid-cols-6">
+        <div className="grid grid-cols-3">
           {NAV.map((item) => {
             const active =
               view === item.view ||
               (view === "loan" && item.view === "loans") ||
-              (view === "create" && item.view === "offers");
+              (view === "offers" && item.view === "loans") ||
+              (view === "create" && item.view === "book") ||
+              (view === "overview" && item.view === "book");
             return (
               <button
                 key={item.view}

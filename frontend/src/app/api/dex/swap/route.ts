@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { Connection, PublicKey, TransactionInstruction, TransactionMessage, VersionedTransaction } from "@solana/web3.js";
+import { AddressLookupTableAccount, Connection, PublicKey, TransactionInstruction, TransactionMessage, VersionedTransaction } from "@solana/web3.js";
 
 const JUPITER = process.env.JUPITER_API_BASE?.replace(/\/$/, "") ?? "https://api.jup.ag";
 const JUPITER_PROGRAM = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4";
@@ -66,7 +66,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: { code: "SWAP_BUILD_FAILED", message: "missing swap instruction" }, network: "mainnet", locateProtocol: false }, { status: 400 });
   }
   const connection = new Connection(RPC, "confirmed");
-  const alts = [];
+  const alts: AddressLookupTableAccount[] = [];
   for (const address of raw.addressLookupTableAddresses ?? []) {
     const table = await connection.getAddressLookupTable(new PublicKey(address));
     if (table.value) alts.push(table.value);

@@ -76,7 +76,7 @@ function createLocateStore() {
 
     toast: null,
 
-    openApp: () => set({ mode: "app", view: "overview", activeLoanId: null }),
+    openApp: () => set({ mode: "app", view: "book", activeLoanId: null }),
     goLanding: () => set({ mode: "landing" }),
     navigate: (view, loanId) => set({ view, activeLoanId: loanId ?? null }),
 

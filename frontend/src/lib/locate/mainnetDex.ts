@@ -1,4 +1,4 @@
-import { Connection, PublicKey, TransactionInstruction, TransactionMessage, VersionedTransaction } from "@solana/web3.js";
+import { AddressLookupTableAccount, Connection, PublicKey, TransactionInstruction, TransactionMessage, VersionedTransaction } from "@solana/web3.js";
 import { MAINNET_USDC, TOKEN, TOKEN_2022, ata } from "@locate/sdk";
 import { evaluateDexQuote, OPENAI_MAINNET_MINT, type DexSide } from "@locate/sdk";
 
@@ -64,7 +64,7 @@ export async function compileSwapTx(input: {
   if (programIds.includes(LOCATE_PROGRAM)) {
     throw new Error("LOCATE program id is forbidden on the Mainnet DEX path");
   }
-  const alts = [];
+  const alts: AddressLookupTableAccount[] = [];
   for (const address of input.payload.addressLookupTableAddresses ?? []) {
     const table = await input.connection.getAddressLookupTable(new PublicKey(address));
     if (table.value) alts.push(table.value);

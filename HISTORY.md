@@ -1325,5 +1325,15 @@ Not pushed in this step.
 
 Git SHA: 57e44d9
 
+## 2026-09-25T04:45:00Z — App reads as one lifecycle
+
+PHASE PRODUCT
+
+Navigation is Market, Positions, and Proof. Market is the Devnet book. Positions combines lending and borrowing. The loan page leads with a settlement rail whose steps come from receipt signatures. A missing receipt stays waiting. The Devnet short and buyback steps stay blocked, because the Devnet venue result is FAIL and those Mainnet signatures belong to a different surface. One environment control explains that dOPENAI is a Devnet replica. Display type is Geist. The serif accent is gone. The blue accent stays. Lookup-table accounts on the external swap path are typed, so that compile error is gone. Offer rows from the API and from receipts share one string record before they reach the screen.
+
+Not a new instruction. Devnet DEX remains FAIL. Mainnet deployment remains false. Fork short-leg, source verification, and pipeline tests are still open.
+
+Not pushed in this step.
+
 
 
