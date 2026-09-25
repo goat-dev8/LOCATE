@@ -75,6 +75,11 @@ export default function ProofPage() {
     passed: boolean;
     balances: Record<string, string | number | boolean>;
   }>("mainnet-fork/openai-full-lifecycle.json");
+  const forkDex = load<{
+    dexSellExecution: boolean;
+    dexBuybackExecution: boolean;
+    dexNote: string;
+  }>("mainnet-fork/lifecycle.json");
 
   const status = load<{
     mainnetLocateDeployment: boolean;
@@ -143,6 +148,7 @@ export default function ProofPage() {
         <p className="mt-3 font-mono text-sm">{fork.matrix.passed}/{fork.matrix.total} passed, {fork.matrix.failed} failed</p>
         <p className="mt-2 font-mono text-xs text-zinc-500">Program {fork.programId} sha256 {fork.programSha256}. Fee epoch {fork.epochUsedForActiveFee}.</p>
         <p className="mt-2 font-mono text-xs text-zinc-400">OpenAI {fork.accounts.openai.pubkey} slot {fork.accounts.openai.slot}. Neuralink {fork.accounts.neuralink.pubkey} slot {fork.accounts.neuralink.slot}. USDC {fork.accounts.usdc.pubkey} slot {fork.accounts.usdc.slot}.</p>
+        <p className="mt-2 text-sm text-zinc-500">Local sell {String(forkDex.dexSellExecution)}. Local buyback {String(forkDex.dexBuybackExecution)}. {forkDex.dexNote}</p>
         <p className="mt-2 text-sm text-zinc-500">{life.label}. Mint {life.mint}. Passed {String(life.passed)}. {fork.balances}</p>
         <ul className="mt-3 space-y-1 font-mono text-xs text-zinc-400">
           {Object.entries(life.balances).map(([key, value]) => (

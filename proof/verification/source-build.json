@@ -3,30 +3,10 @@
   "verified": false,
   "solanaVerify": "not run",
   "reason": "git worktree is dirty. solana-verify is not installed or was not run.",
-  "head": "10eef72f8888e43e73c96ae12879acab0dad5576",
+  "head": "b995d995f0494d071adf76c9195b185f7e14b522",
   "worktreeDirty": true,
   "porcelain": [
-    "M evidence/backend/render-create.json",
-    " M evidence/qa/e01-cold-load.png",
-    " M evidence/qa/vercel-deploy.json",
-    " M scripts/render-up.mjs",
-    "?? evidence/qa/e03-list-waiting-phantom.png",
-    "?? frontend/AGENTS.md",
-    "?? frontend/CLAUDE.md",
-    "?? frontend/e2e/",
-    "?? frontend/playwright.config.ts",
-    "?? scripts/check-list-sig.mjs",
-    "?? scripts/holder-from-tx.mjs",
-    "?? scripts/holder-once.mjs",
-    "?? scripts/mint-phantom.sh",
-    "?? scripts/render-env-keys.mjs",
-    "?? scripts/render-fail.mjs",
-    "?? scripts/render-logs.mjs",
-    "?? scripts/render-service.mjs",
-    "?? scripts/render-status.mjs",
-    "?? scripts/render-wait.mjs",
-    "?? scripts/render-why.mjs",
-    "?? scripts/rpc-host.mjs"
+    "?? evidence/qa/e03-list-waiting-phantom.png"
   ],
   "programId": "F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6",
   "anchorToml": "1.2.0",
@@ -42,8 +22,8 @@
       "path": "target/deploy/locate.so",
       "features": "mainnet default",
       "present": true,
-      "bytes": 342712,
-      "sha256": "acb6b4a814edf90696beac9090018d5416cd7a89c2bfe406891d2ffad21fe3dd"
+      "bytes": 359712,
+      "sha256": "ade3240160bfb905cfad0fcb98df5b98c688bc44044bf059ee1f776ec8f570f5"
     },
     {
       "path": "target/deploy/locate-mainnet.so",
@@ -88,5 +68,5 @@
     "cluster": "mainnet-beta",
     "programAccountExists": false
   },
-  "timestamp": "2026-09-24T22:13:38.908Z"
+  "timestamp": "2026-09-25T02:35:18.183Z"
 }

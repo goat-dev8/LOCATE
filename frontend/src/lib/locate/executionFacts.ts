@@ -1,5 +1,6 @@
 import protocol from "@/app/proof/data/devnet/protocol.json";
 import fork from "@/app/proof/data/mainnet-fork/manifest.json";
+import forkLife from "@/app/proof/data/mainnet-fork/lifecycle.json";
 import localSuite from "@/app/proof/data/local-validator/suite.json";
 import replay from "@/app/proof/data/replay/manifest.json";
 import security from "@/app/proof/data/security/suite.json";
@@ -116,6 +117,8 @@ export const proofSections = [
       fork.matrix.passed + "/" + fork.matrix.total + " passed",
       "OpenAI " + fork.accounts.openai.pubkey,
       "Neuralink " + fork.accounts.neuralink.pubkey,
+      "Local sell " + String(forkLife.dexSellExecution) + ". Local buyback " + String(forkLife.dexBuybackExecution) + ".",
+      forkLife.dexNote,
     ],
   },
   {

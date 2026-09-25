@@ -1463,7 +1463,17 @@ The gross to return and the transfer-fee line now use the fee in basis points st
 
 Devnet DEX remains FAIL. Mainnet deployment remains false. solana-verify was not run.
 
-Pushed as 9ab911d.
+Pushed as 9ab911d. The history line itself was recorded in b995d99.
+
+## 2026-09-25T08:10:00Z — Fork swap shown on the proof page
+
+PHASE PROOF
+
+The cloned-state layer now reads `dexSellExecution` and `dexBuybackExecution` from the fork lifecycle. Those lines stay on the local-execution layer. The Mainnet DEX layer is unchanged. `node scripts/verify-source-build.mjs` exited 2. `verified` is false. `solana-verify` is not installed, and Docker in WSL did not start. Frontend `tsc --noEmit` passed.
+
+Devnet DEX remains FAIL. Mainnet deployment remains false.
+
+Not pushed in this step.
 
 
 
