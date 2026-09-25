@@ -221,7 +221,7 @@ function TakeOfferInner({
               <TxSteps phase={tx.phase} />
               <p className="mb-5 font-mono text-[10.5px] uppercase tracking-[0.14em] text-ink-3">
                 {phaseCopy(tx.phase)}
-                {tx.phase === "confirming" && tx.signature ? ` ${tx.signature}` : ""}
+                {tx.phase === "confirming" && tx.signature ? <span className="mt-2 block break-all font-mono text-[12px] normal-case tracking-normal text-white">{tx.signature}</span> : null}
               </p>
               <StagedProgress steps={STAGES} activeIndex={tx.phase === "simulating" ? 0 : tx.phase === "signing" ? 1 : 2} />
             </div>

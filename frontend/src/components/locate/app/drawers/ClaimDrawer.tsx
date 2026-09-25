@@ -143,7 +143,7 @@ function Body({ loanId, onClose }: { loanId: string; onClose: () => void }) {
       {(tx.phase === "simulating" || tx.phase === "signing" || tx.phase === "confirming") && (
         <div className="pt-4">
           <TxSteps phase={tx.phase} />
-          <p className="lc-label mb-5">{phaseCopy(tx.phase).toUpperCase()}{tx.phase === "confirming" && tx.signature ? ` ${tx.signature}` : ""}</p>
+          <p className="lc-label mb-5">{phaseCopy(tx.phase)}{tx.phase === "confirming" && tx.signature ? <span className="mt-2 block break-all font-mono text-[12px] normal-case tracking-normal text-white">{tx.signature}</span> : null}</p>
           <StagedProgress steps={STEPS} activeIndex={tx.phase === "simulating" ? 0 : 1} />
         </div>
       )}

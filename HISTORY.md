@@ -1567,5 +1567,15 @@ Files: frontend/src/components/locate/app/AppShell.tsx, frontend/src/components/
 
 Commit 00c7c60 contains that change. Its subject line was left over from the previous message file. Pushed through afd4e63.
 
+## 2026-09-25T04:58:00Z — Devnet offer listed from the connected wallet
+
+PHASE EXECUTION
+
+Chrome on localhost:3010, lender Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC. Simulated, then Phantom approved. Signature 2LmWm8igo7LfDKWeKpQmR6o9ZZfjGHCZ5bBzuMSh18fqVB76tvLko9DWm938Ryz6wTjeKa1V8a9vBM5ZRguCBSv3, slot 503824247, finalized, err null. Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6, instruction CreateOffer. Offer Fp68AVmuxwC8xmtSXmq55bEZLXFpJoHTZGQBaSJTJbZ9. Mint 9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P. Chain amount before 998899494, after 998899494, delta 0. Delegate set for 1000000 raw. Collateral 1000000, fee 100000, term 60, grace 30. Receipt POST returned verified, kind offer_created. Market shows 0.001 borrowable as this wallet’s listing. The visible status line was CSS-uppercased, so a copied signature would not match the chain. Signatures in the confirm line now keep their original case.
+
+Take, return, and claim still need the borrower wallet CpTxsgPjvaaPSaBKkijvB1h3hzgJmPiTsWNhuS7tRkgX. Reconnecting Phantom returned the lender. Devnet DEX remains FAIL. Mainnet deployment remains false.
+
+Files: frontend/src/components/locate/app/views/CreateOffer.tsx, frontend/src/components/locate/app/drawers/TakeOfferDrawer.tsx, frontend/src/components/locate/app/drawers/BuyReturnDrawer.tsx, frontend/src/components/locate/app/drawers/CancelOfferDrawer.tsx, frontend/src/components/locate/app/drawers/ClaimDrawer.tsx.
+
 
 

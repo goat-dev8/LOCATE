@@ -384,9 +384,7 @@ function ConfirmOfferInner({
               />
 
               <p className="mt-4 text-[12.5px] leading-[1.6] text-ink-2">
-                If the borrower defaults after maturity and grace, you claim{" "}
-                {fmtUsd(input.collateralUsdc)} and the tokens are forfeit. Until
-                taken, this listing moves nothing.
+                Approving lets this offer move {fmtToken(input.amount)} chain units later. The tokens stay in your wallet until someone takes it. If the borrower defaults after maturity and grace, you claim {fmtUsd(input.collateralUsdc)} and the tokens are forfeit.
               </p>
 
               {tx.phase === "ready" && (
@@ -429,7 +427,7 @@ function ConfirmOfferInner({
               <TxSteps phase={tx.phase} />
               <p className="mb-5 font-mono text-[10.5px] uppercase tracking-[0.14em] text-ink-3">
                 {phaseCopy(tx.phase)}
-                {tx.phase === "confirming" && tx.signature ? ` ${tx.signature}` : ""}
+                {tx.phase === "confirming" && tx.signature ? <span className="mt-2 block break-all font-mono text-[12px] normal-case tracking-normal text-white">{tx.signature}</span> : null}
               </p>
               <StagedProgress steps={LIST_STAGES} activeIndex={tx.phase === "simulating" ? 0 : tx.phase === "signing" ? 1 : 2} />
             </div>
