@@ -1787,3 +1787,12 @@ Chrome on https://locate-blue.vercel.app deployment dpl_6oQWLS3sA9pLXnEwbpZVVUjR
 Files: frontend/src/components/locate/landing/Hero.tsx, frontend/src/components/locate/landing/Lifecycle.tsx.
 Network: none. Signature: none.
 
+## 2026-09-25T15:45:13Z — Production smoke of the grace and proof labels
+
+PHASE PRODUCT
+
+Chrome on https://locate-blue.vercel.app deployment dpl_AcG9A7mfmo7y9JrVuzJeKktvLJfA, gitSha 9a8245a8b3dfcd2f3bc38b9c7e2e992336fe40d0, alias true. API health gitSha matched. The hero says MATURITY + THE LOAN'S GRACE. 48H GRACE is gone. Proof cards read Real Devnet protocol, 4 signatures; Cloned Mainnet state, local execution, not a Mainnet transaction, 24/24; Real Mainnet external market execution, SELL PASS · BUYBACK PASS; Local validator and cross-runtime replay, 42/42 · 45000. Wallet Hbkp…TvaC stayed connected. No new signature. This commit records that smoke. The UI is unchanged. Devnet DEX remains an external venue blocker. Mainnet LOCATE deployment remains false.
+
+Files: proof/FINAL_STATUS.json, evidence/qa/vercel-deploy.json, evidence/backend/render-create.json.
+Network: Devnet wallet already connected. Signature: none.
+
