@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { formatUnits } from "@/lib/locate/amounts";
 import { feeBpsAtTake } from "@/lib/locate/pipeline";
-import { locateApi } from "@/lib/locate/env";
+import { DEVNET_MINT, locateApi } from "@/lib/locate/env";
 import { SettlementRail, type RailStep } from "../SettlementRail";
 import { useLocate } from "@/lib/locate/store";
 import {
@@ -184,7 +184,7 @@ export function LoanDetailView() {
             <div className="mb-4 flex items-center gap-3.5">
               <AssetLogo asset={asset} size={40} className="rounded-xl" />
               <p className="font-sans text-[15px] font-semibold text-white">
-                {asset.name}
+                {loan.mint === DEVNET_MINT ? "dOPENAI · Devnet replica" : asset.name}
               </p>
             </div>
             <button onClick={() => setAdvanced((value) => !value)} className="mb-3 font-mono text-[12px] text-ink-3">

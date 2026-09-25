@@ -1752,3 +1752,11 @@ The proof page no longer prints the reproducible build as an open failure. It no
 
 Files: frontend/src/app/proof/page.tsx, frontend/src/lib/locate/executionFacts.ts, frontend/src/components/locate/app/views/LoanDetail.tsx.
 
+## 2026-09-25T15:22:57Z — Production smoke and the replica label
+
+PHASE PRODUCTION
+
+Chrome on https://locate-blue.vercel.app, commit 9cb36be. Phantom connected as Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC. Chain dOPENAI 0.995899494. USDC 13.75. Market showed OpenAI $1,323, mark $1,025, +29.2%, and 0 borrowable Devnet supply. Loan 4U3UUMfK9QdJt2tm2S2NtTvFrBxX15L9JVvVgb2JDqnF showed Listed 2PgsmjwxPmVTAPktsNhFp13xZr2kdFPDdDFzVs7WGahU6KwejfkGftCuqeKxN6J5BXBrgG7Xz2UPyknNKjRp7eGB and Taken 4vtXFRpvbLBeneBSHf5LzsKP9FvGim2DkGfkaZHLPAPDJ7RUnNRuq4c9Q8ub6vM6AUtRLt86FzZHsnzb1re6iV5W. Short said the Devnet venue is unavailable. Returned and collateral released stayed Not verified. About 6d 15h remained. Proof showed 24/24, external sell PASS 2C4CND6FqBiTgPzgNQojHKa6KzL221gd2Zm4BiyP7WCRnmichUF3m9ptF9xs7pDgTVaa9GMm6eYtqmUnQMbqmuzr, buyback PASS 5cHQQxCByufmPazGRqKPgfdPDVJHMvCVFkz3NdutoPjrjc1p6RhboJXcjzMmQRgcQ8KoqkQNH8NJSGnpPRQZgR6F, Devnet external venue unavailable, and Mainnet LOCATE deployment not deployed by design. API health gitSha 9cb36bec3770e38cf82a2378ec43292304e3a967. The loan card named the replica OpenAI PreStock. This commit labels that card dOPENAI · Devnet replica. No new signature. Devnet DEX remains an external venue blocker. Mainnet LOCATE deployment remains false.
+
+Files: frontend/src/components/locate/app/views/LoanDetail.tsx, proof/FINAL_STATUS.json, evidence/qa/vercel-deploy.json, evidence/backend/render-create.json.
+

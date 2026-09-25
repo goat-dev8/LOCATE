@@ -17,19 +17,20 @@
   "nonPrestocksPreIpoScanClean": true,
   "networkSeparationVerified": true,
   "finalProductStoryClear": true,
-  "updatedAt": "2026-09-25T14:56:45Z",
+  "updatedAt": "2026-09-25T15:22:57Z",
   "notes": {
     "prestocksIntegration": "Localhost market reads the live catalog. OpenAI is the primary row. Devnet supply stays separate and showed 0 borrowable.",
     "livePrestocksData": "Chrome on localhost:3010 showed OpenAI $1,343, mark $1,024, +31.2%, plus the other catalog rows.",
     "realMainnetPreStockDexExecution": "Existing finalized external sell and buyback. Not a LOCATE protocol transaction.",
     "chromeWalletVerification": "Lender Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC opened loan 4U3UUMfK9QdJt2tm2S2NtTvFrBxX15L9JVvVgb2JDqnF with 6d 23h 50m remaining. Chrome simulated claim_collateral. The program returned ClaimRefusedNotMatured. The screen showed NOT_CLAIMABLE_YET. The claim button stayed disabled. No signature was requested. The loan latest signature is still the take 4vtXFRpvbLBeneBSHf5LzsKP9FvGim2DkGfkaZHLPAPDJ7RUnNRuq4c9Q8ub6vM6AUtRLt86FzZHsnzb1re6iV5W slot 503863794.",
-    "productionBuild": "Vercel dpl_J8bnSAYmLBXTgHmf2g8YegX6Lwet is READY. Alias https://locate-blue.vercel.app. gitSha db8540ba30f0d2a8a5a17e1944ae3aae896026a2. /proof shows source build verified false, Devnet DEX FAIL, mainnetLocateDeployment false, mainnetLocateTransactions false.",
+    "productionBuild": "Vercel dpl_7R8UwaNDiZFnL3ypi6Fi2RByz8Ym is READY for 9cb36be and aliased to https://locate-blue.vercel.app. API health gitSha 9cb36bec3770e38cf82a2378ec43292304e3a967. This commit adds the Devnet replica label on the loan card and is the intended follow-up deploy.",
     "mainnetLocateDeployment": false,
     "mainnetLocateTransactions": false,
     "devnetDex": false,
     "nonPrestocksPreIpoScanClean": "Product source uses the live catalog plus the OpenAI and Neuralink mints. The expired non-catalog mint is not referenced in source. The Devnet replica stays labeled.",
     "fakeDataScanClean": "Landing receipts are the Devnet return 5YJGkxd9wtZ8PA114v8m53QgbMsbdBuS7LH2BDBWTMk4reP5mgcJyPsidbD5MwcvtLhP986m8L1Xs6MyuZb85f2h gross raw 2039051, and the unsigned early-claim refusal. The book preview showed live OpenAI $1,336 and 0 borrowable. The create form starts empty. The fee panel is a labeled 100 bps identity, not a receipt.",
     "finalProductStoryClear": "Chrome on localhost:3010 landing showed live catalog prices, 0 borrowable separate from the market, the settlement loop, and the Devnet return beside the early-claim refusal.",
-    "chainAudit": "22 signatures rechecked at 2026-09-25T07:09:22.898Z. failed 0. Cloned-state execution still has no cluster signature, so proofCenterIntegrity stays false."
+    "chainAudit": "22 signatures rechecked at 2026-09-25T07:09:22.898Z. failed 0. Cloned-state execution still has no cluster signature, so proofCenterIntegrity stays false.",
+    "chromeProductionSmoke": "Chrome on https://locate-blue.vercel.app at 9cb36be. Wallet Hbkp…TvaC connected. Chain dOPENAI 0.995899494. USDC 13.75. Market OpenAI $1,323, mark $1,025, +29.2%, 0 borrowable. Loan 4U3UU… listed 2Pgsmjwx… and taken 4vtXFRpv…. Short says Devnet venue unavailable. Return not verified. Proof shows 24/24, sell PASS 2C4CND6F…, buyback PASS 5cHQQxCB…, and Mainnet LOCATE deployment not deployed by design."
   }
 }
