@@ -1577,5 +1577,7 @@ Take, return, and claim still need the borrower wallet CpTxsgPjvaaPSaBKkijvB1h3h
 
 Files: frontend/src/components/locate/app/views/CreateOffer.tsx, frontend/src/components/locate/app/drawers/TakeOfferDrawer.tsx, frontend/src/components/locate/app/drawers/BuyReturnDrawer.tsx, frontend/src/components/locate/app/drawers/CancelOfferDrawer.tsx, frontend/src/components/locate/app/drawers/ClaimDrawer.tsx.
 
+Pushed as fe28430.
+
 
 
