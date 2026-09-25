@@ -52,7 +52,7 @@ export async function compileSwapTx(input: {
 }): Promise<{ tx: VersionedTransaction; blockhash: string; lastValidBlockHeight: number; messageBytes: number; programIds: string[] }> {
   const swapIx = toIx(input.payload.swapInstruction);
   if (!swapIx || swapIx.programId.toBase58() !== JUPITER_V6_TEXT) {
-    throw new Error("swap program is not Jupiter");
+    throw new Error("swap program is not the execution benchmark");
   }
   const instructions = [
     ...(input.payload.computeBudgetInstructions ?? []).map(toIx),

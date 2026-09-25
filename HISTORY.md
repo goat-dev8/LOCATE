@@ -1315,5 +1315,15 @@ Not pushed in this step.
 
 Git SHA: f36b557
 
+## 2026-09-25T02:05:00Z — User-facing venue names removed
+
+PHASE COPY
+
+Comments and error text that named the market catalog host or the swap program were changed to “live market” and “execution benchmark.” The catalog request still uses the existing host, because that is how live prices are fetched. The program-id mismatch code is unchanged so the existing guard test still matches. Devnet DEX remains FAIL. No new transaction.
+
+Not pushed in this step.
+
+Git SHA: 57e44d9
+
 
 

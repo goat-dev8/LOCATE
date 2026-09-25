@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 /**
  * LOCATE — live PreStock market data proxy.
  *
- * Real product data source: https://prestocks.com
+ * Live Mainnet market catalog. Prices are context, not a settlement oracle.
  *   GET /api/metrics                     → per-symbol token price + on-chain metrics
  *   GET /api/mark-price/batch?symbols=…  → per-symbol mark (reference) price
  *
@@ -104,7 +104,7 @@ export async function GET() {
 
     const body = JSON.stringify({
       at: now,
-      source: "prestocks.com",
+      source: "live-market",
       rows,
     });
     cache = { at: now, body };
@@ -128,7 +128,7 @@ export async function GET() {
       });
     }
     return NextResponse.json(
-      { at: null, source: "prestocks.com", rows: [] },
+      { at: null, source: "live-market", rows: [] },
       { status: 502, headers: { "cache-control": "no-store" } },
     );
   }

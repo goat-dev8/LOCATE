@@ -143,7 +143,7 @@ export function registerDexRoutes(app: FastifyInstance, config: AppConfig) {
       });
     }
     const swap = raw.swapInstruction as { programId?: string } | undefined;
-    if (swap?.programId !== JUPITER) return bad(reply, "JUPITER_PROGRAM_MISMATCH", "swap program is not Jupiter");
+    if (swap?.programId !== JUPITER) return bad(reply, "JUPITER_PROGRAM_MISMATCH", "swap program is not the execution benchmark");
     const serialized = JSON.stringify(raw);
     if (serialized.includes(LOCATE)) return bad(reply, "LOCATE_PROGRAM_FORBIDDEN_ON_MAINNET", "LOCATE program id appeared in a DEX swap");
     return {

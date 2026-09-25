@@ -13,7 +13,7 @@ import type { Asset } from "@/lib/locate/types";
 export const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 /* ---------- brand logo badge ----------
-   Real PreStock issuer marks (prestocks.com/ui/product-logos) are
+   Issuer marks for the live market catalog are
    full-bleed 512×512 brand badges — rendered as rounded app-icon tiles. */
 
 export function AssetLogo({

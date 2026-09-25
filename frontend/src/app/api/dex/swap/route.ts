@@ -56,7 +56,7 @@ export async function POST(request: Request) {
     }, { status: response.status });
   }
   if (raw.swapInstruction?.programId !== JUPITER_PROGRAM) {
-    return NextResponse.json({ error: { code: "JUPITER_PROGRAM_MISMATCH", message: "swap program is not Jupiter" }, network: "mainnet", locateProtocol: false }, { status: 400 });
+    return NextResponse.json({ error: { code: "JUPITER_PROGRAM_MISMATCH", message: "swap program is not the execution benchmark" }, network: "mainnet", locateProtocol: false }, { status: 400 });
   }
   if (JSON.stringify(raw).includes(LOCATE)) {
     return NextResponse.json({ error: { code: "LOCATE_PROGRAM_FORBIDDEN_ON_MAINNET", message: "LOCATE program id appeared in a DEX swap" }, network: "mainnet", locateProtocol: false }, { status: 400 });

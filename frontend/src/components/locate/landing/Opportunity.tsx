@@ -5,7 +5,7 @@
  *
  * What makes LOCATE different from a plain order book: it discovers
  * eligible PreStocks, reads their live premium/reference context from the
- * real product data (prestocks.com via /api/prestocks), and then resolves
+ * live market data via /api/prestocks, and then resolves
  * supply, economics, and cover cost per live offer — leading into
  * BORROW → SHORT → RETURN → VERIFY.
  */
