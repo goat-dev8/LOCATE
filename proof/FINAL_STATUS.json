@@ -14,10 +14,10 @@
   "reproducibleBuild": true,
   "productionBuild": true,
   "fakeDataScanClean": false,
-  "nonPrestocksPreIpoScanClean": false,
+  "nonPrestocksPreIpoScanClean": true,
   "networkSeparationVerified": true,
   "finalProductStoryClear": false,
-  "updatedAt": "2026-09-25T06:42:00Z",
+  "updatedAt": "2026-09-25T06:55:00Z",
   "notes": {
     "prestocksIntegration": "Localhost market reads the live catalog. OpenAI is the primary row. Devnet supply stays separate and showed 0 borrowable.",
     "livePrestocksData": "Chrome on localhost:3010 showed OpenAI $1,343, mark $1,024, +31.2%, plus the other catalog rows.",
@@ -26,6 +26,7 @@
     "productionBuild": "Vercel dpl_4wc97ckG4fUcUhcQSHgh3TW9SfaX is READY. API health gitSha ca94d688095cb38e061b7b0036261ced0ae521c0. /proof 200. Live catalog has eight PreStocks and no xAI.",
     "mainnetLocateDeployment": false,
     "mainnetLocateTransactions": false,
-    "devnetDex": false
+    "devnetDex": false,
+    "nonPrestocksPreIpoScanClean": "Product source uses the live catalog plus the OpenAI and Neuralink mints. The expired non-catalog mint is not referenced in source. The Devnet replica stays labeled."
   }
 }

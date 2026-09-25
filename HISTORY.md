@@ -1697,3 +1697,9 @@ PHASE PROOF
 The chain audit checked 20 signatures, including the seven-day list and take. failed 0. Each one was finalized with err null, and the recorded slot matched. Cloned-state execution has no cluster signature, so proofCenterIntegrity stays false. The take drawer and the loan title no longer force the account id through uppercase text. Frontend tsc passed. No new signature. Early claim was not sent. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
 
 Files: scripts/audit-proof-chain.mjs, proof/verification/chain-audit.json, frontend/src/components/locate/app/drawers/TakeOfferDrawer.tsx, frontend/src/components/locate/app/views/LoanDetail.tsx, frontend/src/components/locate/app/parts.tsx.
+
+## 2026-09-25T06:55:00Z — Product source has no non-catalog pre-IPO mint
+
+PHASE SCAN
+
+Source search of the program, SDK, frontend, backend, and scripts found the live OpenAI and Neuralink mints and the Devnet replica. The expired mint that is not in the current catalog is not referenced in that source. A test asserts an extra symbol is not invented. The landing still labels sample offer terms as illustrative, so the fake-data flag stays false. Chrome still has the borrower connected on loan 4U3UUMfK9QdJt2tm2S2NtTvFrBxX15L9JVvVgb2JDqnF with about 6d 23h remaining. Early claim was not sent. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
