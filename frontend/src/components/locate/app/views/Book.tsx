@@ -23,6 +23,7 @@ import { TakeOfferDrawer } from "../drawers/TakeOfferDrawer";
 
 export function BookView() {
   const offers = useLocate((s) => s.offers);
+  const navigate = useLocate((s) => s.navigate);
   const [assetFilter, setAssetFilter] = useState("ALL");
   const [termFilter, setTermFilter] = useState("ALL");
   const [taking, setTaking] = useState<Offer | null>(null);
@@ -51,8 +52,13 @@ export function BookView() {
         title="Lend the PreStock."
         serif="Let someone short it."
         actions={
-          <span className="font-mono text-[12px] text-ink-2">
-            {live.length === 0 ? "0 borrowable" : `${fmtToken(totalSupply)} borrowable`}
+          <span className="flex items-center gap-3">
+            <span className="font-mono text-[12px] text-ink-2">
+              {live.length === 0 ? "0 borrowable" : `${fmtToken(totalSupply)} borrowable`}
+            </span>
+            <button type="button" onClick={() => navigate("create")} className="lc-btn lc-btn-lime lc-btn-sm">
+              LEND
+            </button>
           </span>
         }
       />

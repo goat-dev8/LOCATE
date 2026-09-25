@@ -68,7 +68,7 @@ function Wallet() {
   const { connection } = useConnection();
   const { publicKey, connected, connecting, wallets, select, connect, disconnect } = useWallet();
   const [usdc, setUsdc] = useState<string | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<{ wallet: string; chain: string | null } | null>(null);
   useEffect(() => {
     if (!publicKey) {
       setUsdc(null);
@@ -76,18 +76,17 @@ function Wallet() {
       return;
     }
     const mint = new PublicKey("9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P");
-    const shown = (amount: string, decimals: number, ui?: string | null) => {
-      const raw = formatUnits(amount, decimals);
-      if (ui && ui !== raw) return `${ui} scaled`;
-      return raw;
-    };
     const read = () => {
       connection.getTokenAccountBalance(ata(publicKey, DEVNET_USDC, TOKEN), "confirmed")
-        .then((result) => setUsdc(shown(result.value.amount, result.value.decimals, result.value.uiAmountString)))
+        .then((result) => setUsdc(formatUnits(result.value.amount, result.value.decimals, 6)))
         .catch(() => setUsdc("unavailable"));
       connection.getTokenAccountBalance(ata(publicKey, mint, TOKEN_2022), "confirmed")
-        .then((result) => setToken(shown(result.value.amount, result.value.decimals, result.value.uiAmountString)))
-        .catch(() => setToken("unavailable"));
+        .then((result) => {
+          const chain = formatUnits(result.value.amount, result.value.decimals, 9);
+          const wallet = result.value.uiAmountString ?? chain;
+          setToken({ wallet, chain: wallet !== chain ? chain : null });
+        })
+        .catch(() => setToken({ wallet: "unavailable", chain: null }));
     };
     read();
     const timer = setInterval(read, 15_000);
@@ -125,7 +124,10 @@ function Wallet() {
           <>
             <div className="flex items-baseline justify-between py-0.5">
               <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-shell-ink-2">dOPENAI</span>
-              <span className="font-mono text-[11.5px] tabular-nums text-shell-ink">{token ?? "…"}</span>
+              <span className="text-right font-mono text-[11.5px] tabular-nums text-shell-ink">
+                {token ? token.wallet : "…"}
+                {token?.chain ? <span className="mt-0.5 block text-[10px] text-shell-ink-2">chain {token.chain}</span> : null}
+              </span>
             </div>
             <div className="flex items-baseline justify-between py-0.5">
               <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-shell-ink-2">USDC</span>

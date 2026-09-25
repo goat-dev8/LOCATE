@@ -1555,5 +1555,15 @@ Files: frontend/package.json.
 
 Pushed as ab38f30.
 
+## 2026-09-25T04:50:00Z — Market action and amount labels
+
+PHASE PRODUCT
+
+The market empty state now has a LEND action. The wallet strip shows the Token-2022 wallet amount and, when it differs, the chain amount. The lend form uses the chain amount and says so. Proof opens on the four result lines. Receipt signatures stay inside Receipts. Chrome on localhost:3010 showed wallet 1.484499199 and chain 0.998899494 for Hbkp…TvaC, and Proof showed 28 receipts without listing signatures first. `node sdk/tools/check-frontend.mjs frontend` printed frontend check passed.
+
+UTC 2026-09-25T04:50:00Z. Network: Devnet read. Wallet role: lender, connected, no new signature. Mint: dOPENAI 9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P. Amount: none. Signature: none. Slot: none. Before balance: chain 0.998899494, wallet 1.484499199. After balance: unchanged. Delta: 0. Program: F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6. Route: none. Result: labels match one account. Failure: none. Root cause: the scaled wallet amount and the chain amount were shown as if they were different balances, and proof listed signatures in the first view. Fix: label both amounts and collapse receipts. Remaining blocker: fresh Devnet create, take, return, and claim with owner approval; proofCenterIntegrity; productionDeployment. Next action: open the real wallet flow for a short Devnet offer. Devnet DEX remains FAIL. Mainnet deployment remains false.
+
+Files: frontend/src/components/locate/app/AppShell.tsx, frontend/src/components/locate/app/views/Book.tsx, frontend/src/components/locate/app/views/CreateOffer.tsx, frontend/src/components/locate/app/views/Verify.tsx.
+
 
 

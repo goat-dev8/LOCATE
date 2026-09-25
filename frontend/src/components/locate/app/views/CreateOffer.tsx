@@ -13,6 +13,7 @@ import { listInstructions } from "@/lib/locate/tx";
 import { phaseCopy, usePreparedTx } from "@/lib/locate/usePreparedTx";
 import { TxSteps } from "../TxSteps";
 import { useLocate } from "@/lib/locate/store";
+import { formatUnits } from "@/lib/locate/amounts";
 import { ASSETS, fmtUsd, fmtToken, formatDuration, uiFromRaw } from "@/lib/locate/seed";
 import type { CreateOfferInput } from "@/lib/locate/types";
 import { AssetLogo } from "../../landing/parts";
@@ -85,20 +86,30 @@ export function CreateOfferView() {
   const { connection } = useConnection();
   const { publicKey } = useWallet();
   const [balance, setBalance] = useState(0);
+  const [walletAmount, setWalletAmount] = useState<string | null>(null);
 
   const [assetId, setAssetId] = useState("OPENAI");
   const asset = ASSETS.find((a) => a.id === assetId)!;
   useEffect(() => {
     if (!publicKey) {
       setBalance(0);
+      setWalletAmount(null);
       return;
     }
     const mint = new PublicKey("9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P");
     const account = ata(publicKey, mint, TOKEN_2022);
     connection
       .getTokenAccountBalance(account, "confirmed")
-      .then((result) => setBalance(uiFromRaw(result.value.amount, result.value.decimals)))
-      .catch(() => setBalance(0));
+      .then((result) => {
+        const chain = formatUnits(result.value.amount, result.value.decimals, 9);
+        const wallet = result.value.uiAmountString ?? chain;
+        setBalance(uiFromRaw(result.value.amount, result.value.decimals));
+        setWalletAmount(wallet !== chain ? wallet : null);
+      })
+      .catch(() => {
+        setBalance(0);
+        setWalletAmount(null);
+      });
   }, [connection, publicKey]);
 
   const [amount, setAmount] = useState("0.005");
@@ -147,7 +158,7 @@ export function CreateOfferView() {
         serif="On your terms."
         actions={
           <span className="lc-chip-lime">
-            BALANCE {fmtToken(balance, 6)} {asset.symbol}
+            {fmtToken(balance, 6)} CHAIN{walletAmount ? ` · ${walletAmount} WALLET` : ""}
           </span>
         }
       />
@@ -186,7 +197,7 @@ export function CreateOfferView() {
                         {a.symbol}
                       </span>
                       <span className="block font-mono text-[9px] uppercase tracking-[0.1em] text-ink-3">
-                        {fmtToken(balance)}
+                        {fmtToken(balance)} chain
                       </span>
                     </span>
                   </button>
@@ -196,7 +207,7 @@ export function CreateOfferView() {
           </div>
 
           <NumberField
-            label="AMOUNT TO LEND"
+            label="AMOUNT TO LEND · CHAIN UNITS"
             value={amount}
             onChange={setAmount}
             suffix={asset.symbol}
@@ -210,6 +221,11 @@ export function CreateOfferView() {
               </button>
             }
           />
+          {walletAmount ? (
+            <p className="font-mono text-[12px] text-ink-2">
+              Wallet shows {walletAmount}. The offer moves the chain amount.
+            </p>
+          ) : null}
 
           <div className="grid gap-5 sm:grid-cols-2">
             <NumberField

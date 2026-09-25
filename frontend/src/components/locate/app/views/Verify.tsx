@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle2, XCircle, ChevronDown, Coins } from "lucide-react";
 import { verifyReceiptInBrowser } from "@locate/sdk";
-import { DecryptionText, FadeContent } from "@/components/bits";
+import { FadeContent } from "@/components/bits";
 import type { Receipt } from "@/lib/locate/types";
 import { locateApi, SOLANA_RPC_URL, LOCATE_PROGRAM_ID_TEXT } from "@/lib/locate/env";
 import { proofSections } from "@/lib/locate/executionFacts";
@@ -87,19 +87,13 @@ export function VerifyView() {
           </details>
         ))}
       </div>
-      <ViewHead
-        label="EVERY LOAN ENDS IN A RECEIPT"
-        title="The proof room."
-        serif="Verified or refused."
-        actions={
-          <span className="lc-chip-lime">
-            <DecryptionText text="PROOF ROOM" speed={55} revealDelay={250} />
-          </span>
-        }
-      />
-
+      <details className="lc-card p-5">
+        <summary className="cursor-pointer list-none">
+          <p className="font-sans text-lg font-semibold tracking-tight text-white">Receipts</p>
+          <p className="mt-1 font-mono text-[13px] tabular-nums text-[#7D9BFF]">{list.length} loaded</p>
+        </summary>
       <FadeContent distance={16}>
-        <div className="mb-6">
+        <div className="mb-6 mt-4">
           <Segmented
             options={["ALL", "VERIFIED", "PENDING", "CLAIMED"]}
             value={filter}
@@ -135,6 +129,7 @@ export function VerifyView() {
           ))}
         </div>
       )}
+      </details>
     </div>
   );
 }
@@ -183,8 +178,8 @@ function ReceiptCard({
             >
               {title}
             </span>
-            <span className="mt-0.5 block font-mono text-[9.5px] uppercase tracking-[0.12em] text-ink-3">
-              {receipt.sig} · {receipt.code}
+            <span className="mt-0.5 block font-mono text-[12px] uppercase tracking-[0.08em] text-ink-2">
+              {receipt.code}
             </span>
           </span>
         </span>
