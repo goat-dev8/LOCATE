@@ -1,9 +1,17 @@
 {
   "claim": "source/build correspondence is not established",
   "verified": false,
-  "solanaVerify": "not run",
-  "reason": "git worktree is dirty. solana-verify is not installed or was not run.",
-  "head": "b995d995f0494d071adf76c9195b185f7e14b522",
+  "solanaVerify": "/home/devmo/.cargo/bin/solana-verify\nsolana-verify 0.5.2",
+  "reason": "git worktree is dirty. solana-verify build failed: the Solana 3.0.1 image cargo is 1.84.0 and cannot parse edition2024 in block-buffer 0.12.1.",
+  "buildAttempt": {
+    "command": "solana-verify build --library-name locate",
+    "image": "solanafoundation/solana-verifiable-build@sha256:b970a392e4ad5170680f7d1b37b1f25c75675f095e8309b5cb0a7d18bc314eec",
+    "solanaVersion": "3.0.1",
+    "containerCargo": "1.84.0",
+    "result": "failed",
+    "error": "feature edition2024 is required by block-buffer 0.12.1"
+  },
+  "head": "14c7ba7d7959e65f961e4c3b5109177f6a35c82a",
   "worktreeDirty": true,
   "porcelain": [
     "?? evidence/qa/e03-list-waiting-phantom.png"
@@ -68,5 +76,5 @@
     "cluster": "mainnet-beta",
     "programAccountExists": false
   },
-  "timestamp": "2026-09-25T02:35:18.183Z"
+  "timestamp": "2026-09-25T03:00:59.622Z"
 }

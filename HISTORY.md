@@ -1473,7 +1473,17 @@ The cloned-state layer now reads `dexSellExecution` and `dexBuybackExecution` fr
 
 Devnet DEX remains FAIL. Mainnet deployment remains false.
 
-Pushed as 0211721.
+Pushed as 0211721. The history line itself was recorded in 14c7ba7.
+
+## 2026-09-25T08:20:00Z — solana-verify build failed on the image toolchain
+
+PHASE PROOF
+
+`solana-verify` 0.5.2 ran `build --library-name locate` in the Solana 3.0.1 image `solanafoundation/solana-verifiable-build@sha256:b970a392e4ad5170680f7d1b37b1f25c75675f095e8309b5cb0a7d18bc314eec`. Cargo inside that image is 1.84.0. It stopped on `block-buffer` 0.12.1 because that crate needs Cargo edition 2024. `verified` stays false.
+
+Devnet DEX remains FAIL. Mainnet deployment remains false.
+
+Not pushed in this step.
 
 
 
