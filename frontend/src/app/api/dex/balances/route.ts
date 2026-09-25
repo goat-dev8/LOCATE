@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { MAINNET_USDC, TOKEN, TOKEN_2022, ata } from "@locate/sdk";
+import { readTransferFee } from "@/lib/locate/mintFee";
 
 const OPENAI = "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF";
 const RPC = process.env.VITE_SOLANA_RPC_URL_MAINNET ?? "https://api.mainnet-beta.solana.com";
@@ -29,6 +30,7 @@ export async function GET(request: Request) {
     connection.getEpochInfo("confirmed"),
   ]);
   const decimals = mint ? mint.data[44] : 0;
+  const fee = mint ? readTransferFee(mint.data, epoch.epoch) : null;
   return NextResponse.json({
     network: "mainnet",
     locateProtocol: false,
@@ -41,6 +43,10 @@ export async function GET(request: Request) {
     openaiRaw: openai,
     usdcRaw: usdc,
     decimals,
+    feeBps: fee?.bps ?? null,
+    newerFeeBps: fee?.newerBps ?? null,
+    newerFeeEpoch: fee?.newerEpoch ?? null,
+    feePending: fee?.pending ?? null,
     epoch: epoch.epoch.toString(),
     slot: epoch.absoluteSlot,
     fetchedAt: new Date().toISOString(),

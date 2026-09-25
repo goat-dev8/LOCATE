@@ -18,7 +18,10 @@ type Balances = {
   decimals: number;
   epoch: string;
   slot: number;
-  feeBps?: number;
+  feeBps?: number | null;
+  newerFeeBps?: number | null;
+  newerFeeEpoch?: number | null;
+  feePending?: boolean | null;
   blocker?: string;
 };
 
@@ -148,6 +151,11 @@ export function ExecutionLabView() {
         setError("Quote missing.");
         return;
       }
+      if (bal.feeBps == null) {
+        setPhase("READY");
+        setError("TRANSFER_FEE_UNAVAILABLE");
+        return;
+      }
       const routeLabels = (quoteBody.quote.routePlan ?? []).map((hop) => hop.swapInfo?.label ?? "");
       const gate = evaluateDexQuote({
         now: Date.now(),
@@ -168,8 +176,8 @@ export function ExecutionLabView() {
         mint: OPENAI_MAINNET_MINT,
         tokenProgram: TOKEN_2022.toBase58(),
         decimals: 9,
-        feeBps: 100,
-        expectedFeeBps: 100,
+        feeBps: bal.feeBps ?? -1,
+        expectedFeeBps: bal.feeBps ?? -1,
         balances: {
           solLamports: BigInt(bal.solLamports),
           openaiRaw,
@@ -185,7 +193,7 @@ export function ExecutionLabView() {
           "out " + quoteBody.quote.outAmount,
           "min " + (quoteBody.quote.otherAmountThreshold ?? quoteBody.quote.outAmount),
           "route " + routeLabels.join(" > "),
-          "transfer fee 100 bps",
+          "transfer fee " + (bal.feeBps == null ? "unavailable" : bal.feeBps + " bps") + (bal.feePending && bal.newerFeeBps != null ? ", " + bal.newerFeeBps + " bps at epoch " + bal.newerFeeEpoch : ""),
         ].join(" · "),
       );
       if (!gate.ok) {
@@ -211,6 +219,13 @@ export function ExecutionLabView() {
         setError("Phantom did not expose a signer.");
         return;
       }
+      const again = await fetch("/api/dex/balances?wallet=" + publicKey.toBase58(), { cache: "no-store" });
+      const fresh = await again.json() as Balances;
+      if (!again.ok || fresh.feeBps == null || fresh.feeBps !== bal.feeBps) {
+        setPhase("READY");
+        setError("TRANSFER_FEE_MISMATCH");
+        return;
+      }
       const beforeSign = evaluateDexQuote({
         now: Date.now(),
         wallet: publicKey.toBase58(),
@@ -230,12 +245,12 @@ export function ExecutionLabView() {
         mint: OPENAI_MAINNET_MINT,
         tokenProgram: TOKEN_2022.toBase58(),
         decimals: 9,
-        feeBps: 100,
-        expectedFeeBps: 100,
+        feeBps: fresh.feeBps,
+        expectedFeeBps: bal.feeBps,
         balances: {
-          solLamports: BigInt(bal.solLamports),
-          openaiRaw,
-          usdcRaw,
+          solLamports: BigInt(fresh.solLamports),
+          openaiRaw: BigInt(fresh.openaiRaw),
+          usdcRaw: BigInt(fresh.usdcRaw),
         },
         minOut: side === "buyback" ? 1000n : 1n,
       });

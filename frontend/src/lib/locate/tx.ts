@@ -348,7 +348,8 @@ export async function returnInstructions(payer: PublicKey, loan: Loan): Promise<
   if (!loan.offerPubkey || !loan.amountRaw) return "This loan has no on-chain terms.";
   const terms = (await offerTerms(loan.offerPubkey)) ?? termsFromLoan(loan);
   if (!terms) return "Offer terms are unavailable.";
-  const maxGross = grossForNet(loan.feeBps ?? 100, (1n << 64n) - 1n, BigInt(loan.amountRaw));
+  if (loan.feeBps == null) return "Transfer fee was not recorded on this loan.";
+  const maxGross = grossForNet(loan.feeBps, (1n << 64n) - 1n, BigInt(loan.amountRaw));
   return buildReturnTx(payer, terms, maxGross, LOCATE_PROGRAM_ID);
 }
 

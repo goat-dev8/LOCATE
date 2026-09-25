@@ -1649,3 +1649,11 @@ Files: frontend/src/app/api/prestocks/route.ts, frontend/src/lib/locate/useLiveM
 PHASE STATUS
 
 Chrome on localhost:3010 opened Market. OpenAI showed ,343, mark ,024, +31.2%. The other live catalog rows were listed under it. Borrowable supply showed 0. The connected wallet was Hbkp…TvaC, chain dOPENAI 0.997899494, USDC 12.55. proof/FINAL_STATUS.json records that. chromeWalletVerification stays false because early claim was not sent. productionBuild stays false because this commit is not deployed. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
+
+## 2026-09-25T06:28:00Z — Mint fee is read, not assumed
+
+PHASE EXECUTION
+
+The live OpenAI mint at epoch 1042 has an active transfer fee of 100 bps. The same account schedules 300 bps at epoch 1043. The external-market balance read now parses that config. A missing fee is not treated as 100 bps, and a fee that changes before signing is refused. A return with no fee stored on the loan is refused. The SpaceX catalog row notes the issuer conversion date 12 Mar 2027. Mint fee tests 2/2. Frontend tsc passed. No new signature. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
+
+Files: frontend/src/lib/locate/mintFee.ts, frontend/src/lib/locate/mintFee.test.ts, frontend/src/app/api/dex/balances/route.ts, frontend/src/components/locate/app/views/ExecutionLab.tsx, frontend/src/lib/locate/tx.ts, frontend/src/components/locate/app/views/Book.tsx, frontend/src/components/locate/app/views/Overview.tsx.

@@ -100,7 +100,6 @@ export function OverviewView() {
             ["Reference", openai?.markPrice ? `$${Math.round(openai.markPrice).toLocaleString("en-US")}` : "unavailable"],
             ["Market", openai?.tokenPrice ? `$${Math.round(openai.tokenPrice).toLocaleString("en-US")}` : "unavailable"],
             ["Premium", openai?.premiumPct != null ? `${openai.premiumPct >= 0 ? "+" : ""}${openai.premiumPct.toFixed(1)}%` : "unavailable"],
-            ["Transfer fee", "100 bps"],
             ["Token status", "Token-2022"],
           ].map(([k, v]) => (
             <div key={k}>

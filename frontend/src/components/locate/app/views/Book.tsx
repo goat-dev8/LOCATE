@@ -89,7 +89,10 @@ export function BookView() {
           <ul className="mt-6 divide-y divide-line/70 border-y border-line/70">
             {catalog.map((row) => (
               <li key={row.symbol} className="flex items-baseline justify-between gap-4 py-2.5">
-                <span className="font-sans text-[14px] text-white">{row.symbol}</span>
+                <span className="font-sans text-[14px] text-white">
+                  {row.symbol}
+                  {row.symbol === "SPACEX" ? <span className="ml-3 font-mono text-[12px] text-ink-3">converts by 12 Mar 2027</span> : null}
+                </span>
                 <span className="font-mono text-[13px] tabular-nums text-ink-2">
                   {row.tokenPrice != null ? `$${Math.round(row.tokenPrice).toLocaleString("en-US")}` : "unavailable"}
                   <span className="ml-3">
