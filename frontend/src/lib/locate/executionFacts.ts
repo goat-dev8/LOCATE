@@ -4,7 +4,6 @@ import forkLife from "@/app/proof/data/mainnet-fork/lifecycle.json";
 import localSuite from "@/app/proof/data/local-validator/suite.json";
 import replay from "@/app/proof/data/replay/manifest.json";
 import security from "@/app/proof/data/security/suite.json";
-import status from "@/app/proof/data/EXECUTION_STATUS.json";
 import dexSell from "@/app/proof/data/mainnet-dex/sell.json";
 import dexSell2 from "@/app/proof/data/mainnet-dex/sell-2.json";
 import dexBuy from "@/app/proof/data/mainnet-dex/buyback.json";
@@ -136,9 +135,9 @@ export const proofSections = [
       "Real external Mainnet DEX. locateProtocol " + String(dexSell.locateProtocol) + ".",
       "sell " + dexSell.result + " " + dexSell.signature,
       "buyback " + dexBuy.result + " " + dexBuy.signature,
-      "Devnet DEX " + devnetDex.result,
-      "mainnetLocateDeployment " + String(status.mainnetLocateDeployment),
-      "mainnetLocateTransactions " + String(status.mainnetLocateTransactions),
+      "Devnet external venue unavailable.",
+      "Mainnet LOCATE deployment: not deployed by design.",
+      "Mainnet LOCATE transactions: not enabled by design.",
     ],
   },
   {

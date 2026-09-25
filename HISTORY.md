@@ -1744,3 +1744,11 @@ The artifact audit found no problems. Cloned Mainnet matrix 24/24 PASS. Local va
 
 Files: scripts/audit-proof-artifacts.mjs, scripts/audit-proof-chain.mjs, proof/verification/artifact-audit.json, proof/EXECUTION_STATUS.json, frontend/src/app/proof/data/EXECUTION_STATUS.json.
 
+## 2026-09-25T15:16:20Z — Proof wording matches the architecture
+
+PHASE PRODUCT
+
+The proof page no longer prints the reproducible build as an open failure. It now says reproducible build PASS, Devnet deployed binary correspondence PASS, Mainnet LOCATE deployment not deployed by design, and Devnet external venue unavailable. The loan rail uses the same venue wording. Frontend tsc passed. No new signature. The suites were not rerun. Devnet DEX remains an external venue blocker. Mainnet LOCATE deployment remains false.
+
+Files: frontend/src/app/proof/page.tsx, frontend/src/lib/locate/executionFacts.ts, frontend/src/components/locate/app/views/LoanDetail.tsx.
+

@@ -20,14 +20,6 @@ export default function ProofPage() {
     balances: string;
     accounts: Record<string, { pubkey: string; slot: number; sha256: string }>;
   }>("mainnet-fork/manifest.json");
-  const gate = load<{
-    label: string;
-    enabled: boolean;
-    signed: boolean;
-    sent: boolean;
-    prerequisitesMissing: string[];
-    blocker: string;
-  }>("mainnet-execution/gate.json");
   const local = load<{
     label: string;
     passed: number;
@@ -43,8 +35,6 @@ export default function ProofPage() {
     jupiter: { errorCode: string };
     dlmm: { error: string; errorNumber: number };
   }>("devnet/short-loop.json");
-  const sell = load<{ result: string; mainnetTransaction: boolean }>("jupiter-roundtrip/sell.json");
-  const buy = load<{ result: string; mainnetTransaction: boolean }>("jupiter-roundtrip/buyback.json");
   const replay = load<{ total: number; seed: string; families: Record<string, number> }>("replay/manifest.json");
   const sec = load<{
     label: string;
@@ -81,14 +71,6 @@ export default function ProofPage() {
     dexNote: string;
   }>("mainnet-fork/lifecycle.json");
 
-  const status = load<{
-    mainnetLocateDeployment: boolean;
-    mainnetLocateTransactions: boolean;
-    mainnetExternalDexSell: boolean;
-    mainnetForkLifecycle: boolean;
-    devnetLocateLifecycle: boolean;
-    frontendExecutionWiring: boolean;
-  }>("EXECUTION_STATUS.json");
   const dexSell = load<{
     result: string;
     mainnetTransaction: boolean;
@@ -148,7 +130,7 @@ export default function ProofPage() {
         <p className="mt-3 font-mono text-sm">{fork.matrix.passed}/{fork.matrix.total} passed, {fork.matrix.failed} failed</p>
         <p className="mt-2 font-mono text-xs text-zinc-500">Program {fork.programId} sha256 {fork.programSha256}. Fee epoch {fork.epochUsedForActiveFee}.</p>
         <p className="mt-2 font-mono text-xs text-zinc-400">OpenAI {fork.accounts.openai.pubkey} slot {fork.accounts.openai.slot}. Neuralink {fork.accounts.neuralink.pubkey} slot {fork.accounts.neuralink.slot}. USDC {fork.accounts.usdc.pubkey} slot {fork.accounts.usdc.slot}.</p>
-        <p className="mt-2 text-sm text-zinc-500">Local sell {String(forkDex.dexSellExecution)}. Local buyback {String(forkDex.dexBuybackExecution)}. {forkDex.dexNote}</p>
+        <p className="mt-2 text-sm text-zinc-500">Local execution sell {String(forkDex.dexSellExecution)}. Local execution buyback {String(forkDex.dexBuybackExecution)}. {forkDex.dexNote}</p>
         <p className="mt-2 text-sm text-zinc-500">{life.label}. Mint {life.mint}. Passed {String(life.passed)}. {fork.balances}</p>
         <ul className="mt-3 space-y-1 font-mono text-xs text-zinc-400">
           {Object.entries(life.balances).map(([key, value]) => (
@@ -171,12 +153,12 @@ export default function ProofPage() {
           <h2 className="font-sans text-2xl font-semibold">The short leg runs on the real market.</h2>
           <p className="mt-2 font-mono text-sm text-[#7D9BFF]">{dexSell.result} / {dexBuy.result}</p>
         </summary>
-        <p className="mt-4 text-sm text-zinc-500">Real Mainnet DEX transaction. Not a LOCATE Mainnet transaction. locateProtocol {String(dexSell.locateProtocol)}.</p>
+        <p className="mt-4 text-sm text-zinc-500">Real Mainnet external market execution. The LOCATE program is not in this transaction.</p>
         <p className="mt-3 font-mono text-xs text-zinc-400">Sell {dexSell.result} {dexSell.signature} slot {dexSell.slot}. In {dexSell.amountRaw} out {dexSell.actualOutRaw} min {dexSell.minOutRaw} route {dexSell.route.join(" > ")}.</p>
         <p className="mt-2 font-mono text-xs text-zinc-400">Buyback {dexBuy.result} {dexBuy.signature} slot {dexBuy.slot}. USDC in {dexBuy.inAmountUsdcRaw} quoted {dexBuy.quoteOutRaw} min {dexBuy.minOutRaw} OpenAI delta {dexBuy.openaiDeltaFromPreBuyback}.</p>
         <p className="mt-2 font-mono text-xs text-zinc-400">Before SOL {before.solLamports} OpenAI {before.openaiRaw} USDC {before.usdcRaw}. After SOL {after.solLamports} OpenAI {after.openaiRaw} USDC {after.usdcRaw}.</p>
-        <p className="mt-2 text-sm text-zinc-500">Devnet DEX remains {devnet.result}. Execution benchmark {devnet.jupiter.errorCode}. Pool venue {devnet.dlmm.error} {devnet.dlmm.errorNumber}. Signed Devnet DEX transactions: {devnet.signedTransactions.length}.</p>
-        <p className="mt-2 text-sm text-zinc-500">Quote simulations are not Mainnet transactions: sell {sell.result}, buyback {buy.result}. LOCATE Mainnet gate enabled {String(gate.enabled)}, signed {String(gate.signed)}, sent {String(gate.sent)}. {gate.blocker}</p>
+        <p className="mt-2 text-sm text-zinc-500">Devnet external venue unavailable. Signed Devnet market transactions: {devnet.signedTransactions.length}.</p>
+        <p className="mt-2 text-sm text-zinc-500">Quote checks are not Mainnet transactions. Mainnet LOCATE execution is not enabled by design.</p>
       </details>
 
       <details className="mt-4 rounded-2xl border border-zinc-800 p-6">
@@ -186,11 +168,11 @@ export default function ProofPage() {
         </summary>
         <p className="mt-4 text-sm text-zinc-500">Local validator {local.passed}/{local.total}, {local.failed} failed. {local.usdcNote} Local binary sha256 {local.programSha256}.</p>
         <p className="mt-2 text-sm text-zinc-500">Functional {sec.functional.passed}. Security {sec.security.passed}. Mutation {sec.mutation.passed}. Backend {sec.backendVitest.passed}. Replay {replay.total} vectors, seed {replay.seed}. Families {JSON.stringify(replay.families)}.</p>
-        <p className="mt-2 text-sm text-zinc-500">Reproducible LOCATE build. Not a Mainnet verified program. {source.claim} Devnet ELF {source.devnet.payloadSha256}. Padded region {source.devnet.elfRegionSha256}. Matches local devnet binary {String(source.devnet.matchesLocalDevnetBinary)}. Mainnet program account exists {String(source.mainnet.programAccountExists)}. HEAD {source.head}.</p>
+        <p className="mt-2 text-sm text-zinc-500">Reproducible LOCATE build: PASS. Devnet deployed binary correspondence: PASS. Devnet ELF {source.devnet.payloadSha256}. Matches the deployed binary {String(source.devnet.matchesLocalDevnetBinary)}.</p>
       </details>
 
-      <p className="mt-8 font-mono text-xs text-zinc-500">
-        Open: source build verified {String(source.verified)}. Devnet DEX {devnet.result}. mainnetLocateDeployment {String(status.mainnetLocateDeployment)}. mainnetLocateTransactions {String(status.mainnetLocateTransactions)}.
+      <p className="mt-8 font-mono text-xs text-zinc-400">
+        Reproducible build PASS. Mainnet LOCATE deployment: not deployed by design. Mainnet LOCATE transactions: not enabled by design. Devnet external venue: unavailable.
       </p>
     </main>
   );

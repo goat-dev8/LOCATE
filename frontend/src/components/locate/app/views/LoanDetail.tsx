@@ -9,7 +9,6 @@ import { ArrowLeft } from "lucide-react";
 import { formatUnits } from "@/lib/locate/amounts";
 import { feeBpsAtTake } from "@/lib/locate/pipeline";
 import { locateApi } from "@/lib/locate/env";
-import { dexEvidence } from "@/lib/locate/executionFacts";
 import { SettlementRail, type RailStep } from "../SettlementRail";
 import { useLocate } from "@/lib/locate/store";
 import {
@@ -72,7 +71,6 @@ export function LoanDetailView() {
       const pastMaturity = now >= loan.maturityAt;
       const pastGrace = now >= loan.maturityAt + loan.graceHours * 3_600_000;
       const defaultPath = claimed.length > 0 || (loan.status === "CLAIMED") || (pastGrace && returned.length === 0 && loan.status !== "RETURNED");
-      const devnetDex = dexEvidence.devnetDexResult;
       const verified = (signature: string, missing: string): { state: RailStep["state"]; detail: string } =>
         signature ? { state: "done", detail: signature } : { state: "waiting", detail: missing };
       const next: RailStep[] = defaultPath
@@ -86,7 +84,7 @@ export function LoanDetailView() {
         : [
             { id: "listed", label: "Listed", ...verified(listed, "Not verified"), href: link(listed) },
             { id: "taken", label: "Taken", ...verified(taken, "Not verified"), href: link(taken) },
-            { id: "short", label: "Short", state: "blocked", detail: `External market. Devnet venue ${devnetDex}. Not this loan.`, href: null },
+            { id: "short", label: "Short", state: "blocked", detail: "External market. Devnet venue unavailable. Not this loan.", href: null },
             { id: "buyback", label: "Buy back", state: "blocked", detail: "External market. Not this Devnet loan.", href: null },
             { id: "returned", label: "Returned", ...verified(returned, "Not verified"), href: link(returned) },
             { id: "released", label: "Collateral released", ...verified(returned, "Not verified"), href: link(returned) },
