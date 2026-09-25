@@ -112,20 +112,19 @@ export default function ProofPage() {
   const after = load<{ solLamports: string; openaiRaw: string; usdcRaw: string }>("mainnet-dex/balance-after-buyback.json");
   const proto = load<{ network: string; returnCycle: { create: string; take: string; return: string } }>("devnet/protocol.json");
 
+  const devnetCount = [proto.returnCycle.create, proto.returnCycle.take, proto.returnCycle.return, cycle.claimCycle.claim].filter((sig) => sig.length > 0).length;
+
   return (
     <main className="mx-auto max-w-3xl px-6 py-16 text-white">
-      <p className="font-mono text-xs tracking-widest text-[#4D7CFF]">PROOF</p>
-      <h1 className="mt-3 font-display text-4xl">Recorded artifacts</h1>
-      <p className="mt-4 text-sm text-zinc-400">
-        Three separate layers. Fork and simulation are not Mainnet transactions. LOCATE is not deployed to Mainnet.
-      </p>
-      <p className="mt-2 font-mono text-xs text-zinc-500">
-        mainnetLocateDeployment {String(status.mainnetLocateDeployment)} · mainnetLocateTransactions {String(status.mainnetLocateTransactions)}
-      </p>
+      <h1 className="font-sans text-4xl font-semibold tracking-tight">Proof</h1>
+      <p className="mt-3 text-[15px] text-zinc-400">Devnet protocol, cloned Mainnet state, and the external market stay separate.</p>
 
-      <section className="mt-10">
-        <h2 className="font-display text-2xl">A. Protocol execution — real Devnet</h2>
-        <p className="mt-2 text-sm text-zinc-500">{cycle.label}. dOPENAI is a Devnet replica, not a Mainnet PreStock.</p>
+      <details className="mt-10 rounded-2xl border border-zinc-800 p-6" open>
+        <summary className="cursor-pointer">
+          <h2 className="font-sans text-2xl font-semibold">The full lifecycle ran on Devnet.</h2>
+          <p className="mt-2 font-mono text-sm text-[#7D9BFF]">{devnetCount} signatures</p>
+        </summary>
+        <p className="mt-4 text-sm text-zinc-500">{cycle.label}. dOPENAI is a Devnet replica, not a Mainnet PreStock.</p>
         <ul className="mt-4 space-y-2 font-mono text-xs text-zinc-400">
           <li>create {proto.returnCycle.create}</li>
           <li>take {proto.returnCycle.take}</li>
@@ -133,10 +132,14 @@ export default function ProofPage() {
           <li>claim {cycle.claimCycle.claim}</li>
           <li>early claim refusal code {cycle.claimCycle.earlyClaimSimulationCode}</li>
         </ul>
-      </section>
-      <section className="mt-10">
-        <h2 className="font-display text-2xl">B. Cloned Mainnet state — local execution</h2>
-        <p className="mt-2 text-sm text-zinc-500">{fork.label}. Real Mainnet account state. Local LOCATE execution. Not a Mainnet transaction.</p>
+      </details>
+
+      <details className="mt-4 rounded-2xl border border-zinc-800 p-6">
+        <summary className="cursor-pointer">
+          <h2 className="font-sans text-2xl font-semibold">Same program, real OpenAI mint state.</h2>
+          <p className="mt-2 font-mono text-sm text-[#7D9BFF]">{fork.matrix.passed}/{fork.matrix.total}</p>
+        </summary>
+        <p className="mt-4 text-sm text-zinc-500">{fork.label}. Real Mainnet account state. Local LOCATE execution. Not a Mainnet transaction.</p>
         <p className="mt-3 font-mono text-sm">{fork.matrix.passed}/{fork.matrix.total} passed, {fork.matrix.failed} failed</p>
         <p className="mt-2 font-mono text-xs text-zinc-500">Program {fork.programId} sha256 {fork.programSha256}. Fee epoch {fork.epochUsedForActiveFee}.</p>
         <p className="mt-2 font-mono text-xs text-zinc-400">OpenAI {fork.accounts.openai.pubkey} slot {fork.accounts.openai.slot}. Neuralink {fork.accounts.neuralink.pubkey} slot {fork.accounts.neuralink.slot}. USDC {fork.accounts.usdc.pubkey} slot {fork.accounts.usdc.slot}.</p>
@@ -150,27 +153,39 @@ export default function ProofPage() {
           {token2022.exercised.map((row) => (
             <li key={row.extension}>
               <span className="font-mono text-[#4D7CFF]">{row.extension}</span>
-              <span className="text-zinc-400"> — {row.evidence}</span>
+              <span className="text-zinc-400"> {row.evidence}</span>
             </li>
           ))}
         </ul>
         <p className="mt-3 text-sm text-zinc-500">Not exercised: {token2022.notExercised.join(", ")}.</p>
-      </section>
-      <section className="mt-10">
-        <h2 className="font-display text-2xl">C. Mainnet market execution — real external DEX</h2>
-        <p className="mt-2 text-sm text-zinc-500">Real Mainnet DEX transaction. Not a LOCATE Mainnet transaction. locateProtocol {String(dexSell.locateProtocol)}.</p>
+      </details>
+
+      <details className="mt-4 rounded-2xl border border-zinc-800 p-6">
+        <summary className="cursor-pointer">
+          <h2 className="font-sans text-2xl font-semibold">The short leg runs on the real market.</h2>
+          <p className="mt-2 font-mono text-sm text-[#7D9BFF]">{dexSell.result} / {dexBuy.result}</p>
+        </summary>
+        <p className="mt-4 text-sm text-zinc-500">Real Mainnet DEX transaction. Not a LOCATE Mainnet transaction. locateProtocol {String(dexSell.locateProtocol)}.</p>
         <p className="mt-3 font-mono text-xs text-zinc-400">Sell {dexSell.result} {dexSell.signature} slot {dexSell.slot}. In {dexSell.amountRaw} out {dexSell.actualOutRaw} min {dexSell.minOutRaw} route {dexSell.route.join(" > ")}.</p>
         <p className="mt-2 font-mono text-xs text-zinc-400">Buyback {dexBuy.result} {dexBuy.signature} slot {dexBuy.slot}. USDC in {dexBuy.inAmountUsdcRaw} quoted {dexBuy.quoteOutRaw} min {dexBuy.minOutRaw} OpenAI delta {dexBuy.openaiDeltaFromPreBuyback}.</p>
         <p className="mt-2 font-mono text-xs text-zinc-400">Before SOL {before.solLamports} OpenAI {before.openaiRaw} USDC {before.usdcRaw}. After SOL {after.solLamports} OpenAI {after.openaiRaw} USDC {after.usdcRaw}.</p>
         <p className="mt-2 text-sm text-zinc-500">Devnet DEX remains {devnet.result}. Execution benchmark {devnet.jupiter.errorCode}. Pool venue {devnet.dlmm.error} {devnet.dlmm.errorNumber}. Signed Devnet DEX transactions: {devnet.signedTransactions.length}.</p>
         <p className="mt-2 text-sm text-zinc-500">Quote simulations are not Mainnet transactions: sell {sell.result}, buyback {buy.result}. LOCATE Mainnet gate enabled {String(gate.enabled)}, signed {String(gate.signed)}, sent {String(gate.sent)}. {gate.blocker}</p>
-      </section>
-      <section className="mt-10">
-        <h2 className="font-display text-2xl">D. Security and consistency</h2>
-        <p className="mt-2 text-sm text-zinc-500">Local validator {local.passed}/{local.total}, {local.failed} failed. {local.usdcNote} Local binary sha256 {local.programSha256}.</p>
+      </details>
+
+      <details className="mt-4 rounded-2xl border border-zinc-800 p-6">
+        <summary className="cursor-pointer">
+          <h2 className="font-sans text-2xl font-semibold">Math and adversarial coverage.</h2>
+          <p className="mt-2 font-mono text-sm text-[#7D9BFF]">{replay.total} replay vectors</p>
+        </summary>
+        <p className="mt-4 text-sm text-zinc-500">Local validator {local.passed}/{local.total}, {local.failed} failed. {local.usdcNote} Local binary sha256 {local.programSha256}.</p>
         <p className="mt-2 text-sm text-zinc-500">Functional {sec.functional.passed}. Security {sec.security.passed}. Mutation {sec.mutation.passed}. Backend {sec.backendVitest.passed}. Replay {replay.total} vectors, seed {replay.seed}. Families {JSON.stringify(replay.families)}.</p>
         <p className="mt-2 text-sm text-zinc-500">Source correspondence {source.verified ? "verified" : "not verified"}. {source.claim} Devnet ELF {source.devnet.elfSha256}. Matches local mainnet binary {String(source.devnet.matchesLocalMainnetBinary)}. Matches local devnet binary {String(source.devnet.matchesLocalDevnetBinary)}. Mainnet program account exists {String(source.mainnet.programAccountExists)} at slot {source.mainnet.slot}. HEAD {source.head}.</p>
-      </section>
+      </details>
+
+      <p className="mt-8 font-mono text-xs text-zinc-500">
+        Open: source build verified {String(source.verified)}. Devnet DEX {devnet.result}. mainnetLocateDeployment {String(status.mainnetLocateDeployment)}. mainnetLocateTransactions {String(status.mainnetLocateTransactions)}.
+      </p>
     </main>
   );
 }

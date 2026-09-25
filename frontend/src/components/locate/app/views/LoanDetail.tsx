@@ -6,6 +6,7 @@
 
 import { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
+import { formatUnits } from "@/lib/locate/amounts";
 import { locateApi } from "@/lib/locate/env";
 import { dexEvidence } from "@/lib/locate/executionFacts";
 import { SettlementRail, type RailStep } from "../SettlementRail";
@@ -191,6 +192,7 @@ export function LoanDetailView() {
             {advanced && (
               <>
                 <DataRow label="RAW AMOUNT" value={loan.amountRaw ?? "unavailable"} />
+                <DataRow label="FEE RAW" value={loan.feeKnown === false ? "not in this receipt" : formatUnits(loan.feeRaw ?? "0", 6)} />
                 <DataRow label="LOAN" value={loan.id} />
                 <DataRow label="OFFER" value={loan.offerId} />
               </>

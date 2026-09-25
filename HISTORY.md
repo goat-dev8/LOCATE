@@ -1343,6 +1343,14 @@ Before Phantom is asked to sign, the client re-reads the accounts in the instruc
 
 Devnet DEX remains FAIL. Mainnet deployment remains false. The five instructions were not changed.
 
+Pushed as 72d0b4a.
+
+## 2026-09-25T05:20:00Z — Public proof matches the four layers
+
+PHASE PROOF
+
+The public proof page now opens as the same four layers as the app: Devnet lifecycle, cloned Mainnet state, external market, and replay coverage. Each layer shows one metric from the artifact files, and the signatures, slots, and hashes stay behind the disclosure. The open items still say the source build is not verified, Devnet DEX is FAIL, and Mainnet deployment is false. Refusal mapping has a 6-case check. A loan’s advanced details show the upfront fee from the receipt in USDC units.
+
 Not pushed in this step.
 
 
