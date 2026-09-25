@@ -71,7 +71,7 @@ const envVars = [
   ["DATABASE_URL", envValue("DATABASE_URL")],
   ["JUPITER_API_BASE", envValue("JUPITER_API_BASE")],
   ["PRESTOCKS_API_BASE", envValue("PRESTOCKS_API_BASE")],
-  ["CORS_ALLOWED_ORIGINS", "http://localhost:5173,http://localhost:3000,http://127.0.0.1:3000,http://localhost:3010,http://127.0.0.1:3010"],
+  ["CORS_ALLOWED_ORIGINS", "https://locate-blue.vercel.app,http://localhost:5173,http://localhost:3000,http://127.0.0.1:3000,http://localhost:3010,http://127.0.0.1:3010"],
   ["GIT_SHA", sha],
 ].map(([keyName, value]) => ({ key: keyName, value }));
 await api("/services/" + service.id + "/env-vars", { method: "PUT", body: JSON.stringify(envVars) });
