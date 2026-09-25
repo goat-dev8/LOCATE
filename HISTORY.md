@@ -1681,3 +1681,11 @@ Lender Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC claimed loan 9zDhiTn7u6xh2eY
 PHASE PRODUCTION
 
 Vercel deployment dpl_4wc97ckG4fUcUhcQSHgh3TW9SfaX is READY. API health gitSha ca94d688095cb38e061b7b0036261ced0ae521c0. CORS allows https://locate-blue.vercel.app. /proof returned 200 and shows Devnet, cloned Mainnet state, external market, and 45000 replay, with source build verified false, Devnet DEX FAIL, and both Mainnet LOCATE flags false. The live catalog returned eight PreStocks and did not include xAI. Chrome on that proof URL showed the same lines. Early claim was not sent. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
+
+## 2026-09-25T06:50:00Z — Seven-day loan is active
+
+PHASE EXECUTION
+
+Lender Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC listed 0.001 chain units, collateral 1.00, fee 0.10, term 7 days, grace 2 days. Signature 2PgsmjwxPmVTAPktsNhFp13xZr2kdFPDdDFzVs7WGahU6KwejfkGftCuqeKxN6J5BXBrgG7Xz2UPyknNKjRp7eGB, slot 503863268, finalized, err null. CreateOffer. Lender dOPENAI stayed 996899494.
+
+Borrower CpTxsgPjvaaPSaBKkijvB1h3hzgJmPiTsWNhuS7tRkgX took it. Signature 4vtXFRpvbLBeneBSHf5LzsKP9FvGim2DkGfkaZHLPAPDJ7RUnNRuq4c9Q8ub6vM6AUtRLt86FzZHsnzb1re6iV5W, slot 503863794, finalized, err null. TakeOffer. Loan 4U3UUMfK9QdJt2tm2S2NtTvFrBxX15L9JVvVgb2JDqnF. Lender dOPENAI 996899494 to 995899494. Borrower dOPENAI 2849392 to 3839392, net 990000. Borrower USDC 16300000 to 15200000. Lender USDC 13650000 to 13750000. Vault USDC 1000000. The position shows 6d 23h remaining. The borrower stayed connected, so early claim was not sent. The lender can still attempt it before maturity. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
