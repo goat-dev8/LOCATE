@@ -12,7 +12,7 @@
  *     elapsed grace claims it for the lender (default path, ember).
  *
  * Glowing nodes, animated flow paths, traveling particles — no boxes,
- * no imagery. Mechanics are exact; amounts are illustrative.
+ * no imagery. The diagram shows movement of value, not offer terms.
  */
 
 import { useReducedMotion } from "framer-motion";
@@ -299,14 +299,14 @@ export function Mechanism() {
         <FadeContent delay={0.3} duration={0.9} distance={32}>
           <div className="mt-12 flex flex-wrap items-center justify-between gap-x-8 gap-y-3">
             <Legend />
-            <p className="lc-label">ILLUSTRATIVE · SAMPLE OFFER TERMS</p>
+            <p className="lc-label">HOW VALUE MOVES</p>
           </div>
           <div className="mt-6 overflow-x-auto no-scrollbar">
             <svg
               viewBox="0 0 1160 415"
               className="block h-auto w-full min-w-[900px] select-none"
               role="img"
-              aria-label="LOCATE mechanism: the lender lists an idle PreStock on the book; on take the borrower posts USDC collateral and the token is delivered; the borrower sells short into the premium, buys back, and returns net tokens to the lender; a verified return releases the collateral back to the borrower, while no return after the 48-hour grace lets the lender claim the collateral."
+              aria-label="LOCATE mechanism: the lender lists an idle PreStock on the book; on take the borrower posts USDC collateral and the token is delivered; the borrower sells short into the premium, buys back, and returns net tokens to the lender; a verified return releases the collateral back to the borrower, while no return after grace lets the lender claim the collateral."
             >
               <defs>
                 <radialGradient id="glow-token">

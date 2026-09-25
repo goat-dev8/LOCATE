@@ -16,12 +16,12 @@ const MUTED = "#71717A";
 const BASE = "#2A2A2D";
 
 const MATH = [
-  { label: "LENDER OFFERS", value: "0.005000 OPENAI", tone: "ink" },
-  { label: "TRANSFER FEE", value: "1% · TOKEN-2022", tone: "muted" },
-  { label: "BORROWER RECEIVES", value: "0.004950 NET", tone: "ink" },
-  { label: "RETURN REQUIRES", value: "0.005000 NET", tone: "ink" },
-  { label: "BORROWER SENDS", value: "0.005051 GROSS", tone: "ink" },
-  { label: "DELIVERED NET", value: "0.005000 ✓ VERIFIED", tone: "lime" },
+  { label: "LENDER OFFERS", value: "1000000 raw", tone: "ink" },
+  { label: "TRANSFER FEE", value: "10000 raw · 100 bps", tone: "muted" },
+  { label: "BORROWER RECEIVES", value: "990000 raw", tone: "ink" },
+  { label: "RETURN REQUIRES", value: "1000000 net", tone: "ink" },
+  { label: "BORROWER SENDS", value: "1010102 gross", tone: "ink" },
+  { label: "LENDER RECEIVES", value: "1000000 net", tone: "ink" },
 ];
 
 const STATES = ["PAUSED", "HOOK ACTIVE", "FEE CHANGE", "DELEGATION"];
@@ -45,8 +45,8 @@ function FeeLanes() {
 
       {/* lane 1 — delivery */}
       <rect x={14} y={40} width={96} height={34} rx={9} fill="#1A1A1E" stroke="#3A3A40" strokeWidth={1.2} />
-      <text x={62} y={61} textAnchor="middle" fill={CREAM} fontSize={10} fontWeight={700} letterSpacing={1.4} style={{ fontFamily: "var(--font-mono)" }}>
-        0.005000
+      <text x={62} y={61} textAnchor="middle" fill={CREAM} fontSize={9} fontWeight={700} letterSpacing={0.4} style={{ fontFamily: "var(--font-mono)" }}>
+        1000000
       </text>
       <path d="M 110 57 L 154 57" stroke={BASE} strokeWidth={1.3} />
       <path d="M 110 57 L 154 57" stroke={GOLD} strokeWidth={1.3} strokeDasharray="3 8" className="animate-dash-flow" opacity={0.6} />
@@ -55,7 +55,7 @@ function FeeLanes() {
         FEE 1%
       </text>
       <text x={190} y={66} textAnchor="middle" fill={MUTED} fontSize={7.5} letterSpacing={0.8} style={{ fontFamily: "var(--font-mono)" }}>
-        −0.000050
+        −10000
       </text>
       <path d="M 226 57 L 270 57" stroke={BASE} strokeWidth={1.3} />
       <path d="M 226 57 L 270 57" stroke={GOLD} strokeWidth={1.3} strokeDasharray="3 8" className="animate-dash-flow" opacity={0.6} />
@@ -64,7 +64,7 @@ function FeeLanes() {
         NET
       </text>
       <text x={298} y={86} textAnchor="middle" fill={MUTED} fontSize={8} letterSpacing={1} style={{ fontFamily: "var(--font-mono)" }}>
-        0.004950 RECEIVED
+        990000 RECEIVED
       </text>
 
       {/* divider */}
@@ -73,7 +73,7 @@ function FeeLanes() {
       {/* lane 2 — return */}
       <rect x={14} y={140} width={96} height={34} rx={9} fill="#1A1A1E" stroke="#3A3A40" strokeWidth={1.2} />
       <text x={62} y={161} textAnchor="middle" fill={CREAM} fontSize={10} fontWeight={700} letterSpacing={1.4} style={{ fontFamily: "var(--font-mono)" }}>
-        0.005051
+        1010102
       </text>
       <path d="M 110 157 L 154 157" stroke={BASE} strokeWidth={1.3} />
       <path d="M 110 157 L 154 157" stroke={LIME} strokeWidth={1.3} strokeDasharray="3 8" className="animate-dash-flow" opacity={0.6} />
@@ -82,16 +82,16 @@ function FeeLanes() {
         FEE 1%
       </text>
       <text x={190} y={166} textAnchor="middle" fill={MUTED} fontSize={7.5} letterSpacing={0.8} style={{ fontFamily: "var(--font-mono)" }}>
-        −0.000051
+        −10102
       </text>
       <path d="M 226 157 L 270 157" stroke={BASE} strokeWidth={1.3} />
       <path d="M 226 157 L 270 157" stroke={LIME} strokeWidth={1.3} strokeDasharray="3 8" className="animate-dash-flow" opacity={0.6} />
       <rect x={270} y={140} width={56} height={34} rx={9} fill={LIME} fillOpacity={0.14} stroke={LIME} strokeWidth={1.2} />
-      <text x={298} y={161} textAnchor="middle" fill={LIME} fontSize={10} fontWeight={700} letterSpacing={1.2} style={{ fontFamily: "var(--font-mono)" }}>
-        0.005000
+      <text x={298} y={161} textAnchor="middle" fill={LIME} fontSize={8} fontWeight={700} letterSpacing={0.2} style={{ fontFamily: "var(--font-mono)" }}>
+        1000000
       </text>
       <text x={298} y={186} textAnchor="middle" fill={LIME} fontSize={8} letterSpacing={1} style={{ fontFamily: "var(--font-mono)" }}>
-        NET ✓ VERIFIED
+        NET REQUIRED
       </text>
 
       {/* gross note */}
@@ -193,8 +193,7 @@ export function Token2022() {
                   <FeeLanes />
                 </div>
                 <p className="mt-6 border-t border-shell-line pt-4 font-mono text-[10px] uppercase leading-relaxed tracking-[0.12em] text-shell-ink-2">
-                  Offer terms adapt to live fee config — delivery requirements
-                  recompute before you sign.
+                  100 bps identity on 1000000 raw units. Not a receipt. The live mint fee is read before a Mainnet quote is signed.
                 </p>
               </div>
             </FadeContent>

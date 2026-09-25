@@ -112,9 +112,9 @@ export function CreateOfferView() {
       });
   }, [connection, publicKey]);
 
-  const [amount, setAmount] = useState("0.005");
-  const [collateral, setCollateral] = useState("12.50");
-  const [fee, setFee] = useState("0.35");
+  const [amount, setAmount] = useState("");
+  const [collateral, setCollateral] = useState("");
+  const [fee, setFee] = useState("");
   const [term, setTerm] = useState("7 DAYS");
   const [expiry, setExpiry] = useState("48H");
 

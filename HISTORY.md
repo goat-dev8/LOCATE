@@ -1712,3 +1712,11 @@ Lender Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC connected in Chrome on local
 
 Files: frontend/src/lib/locate/tx.ts, proof/FINAL_STATUS.json, proof/EXECUTION_STATUS.json, frontend/src/app/proof/data/EXECUTION_STATUS.json.
 
+## 2026-09-25T07:11:21Z — Landing uses recorded evidence
+
+PHASE PRODUCT
+
+Chrome on localhost:3010 showed the landing after the sample receipts were removed. OpenAI market $1,335.57, mark $1,023.71, premium +30.5%. The borrower card showed 0 borrowable. The return card showed Devnet signature 5YJGkxd9wtZ8PA114v8m53QgbMsbdBuS7LH2BDBWTMk4reP5mgcJyPsidbD5MwcvtLhP986m8L1Xs6MyuZb85f2h, slot 503264913, gross raw 2039051. The refusal card showed NOT_CLAIMABLE_YET and no signature. The chain audit checked 22 signatures, including the later wallet return and claim. failed 0. proofCenterIntegrity stays false because cloned-state execution has no cluster signature. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
+
+Files: frontend/src/components/locate/landing/Proof.tsx, frontend/src/components/locate/landing/UIPreviews.tsx, frontend/src/components/locate/landing/Token2022.tsx, frontend/src/components/locate/landing/Mechanism.tsx, frontend/src/components/locate/landing/Lifecycle.tsx, frontend/src/components/locate/app/views/CreateOffer.tsx, frontend/src/lib/locate/executionFacts.ts, scripts/audit-proof-chain.mjs, proof/verification/chain-audit.json, proof/FINAL_STATUS.json.
+

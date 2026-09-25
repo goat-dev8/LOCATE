@@ -70,9 +70,16 @@ export const executionTrace: TraceStep[] = [
   {
     layer: "DEVNET PROTOCOL",
     label: "CLAIM · LATER WALLET",
-    detail: "Separate 60-second loan claim 44tmkCp24ctT6dYc4xK4Q1UDQ4BtRCgjQ5QXVMh8VxA5pCn3sKkZjwyurGrH9ZHurdB4uBiW8CpHsWrD5dtuuE5C slot 503728891. Collateral 1000000 to the lender. Early claim on the 7-day loan was refused before maturity.",
+    detail: "Separate 60-second loan claim 44tmkCp24ctT6dYc4xK4Q1UDQ4BtRCgjQ5QXVMh8VxA5pCn3sKkZjwyurGrH9ZHurdB4uBiW8CpHsWrD5dtuuE5C slot 503728891. Collateral 1000000 to the lender.",
     href: devnetTx("44tmkCp24ctT6dYc4xK4Q1UDQ4BtRCgjQ5QXVMh8VxA5pCn3sKkZjwyurGrH9ZHurdB4uBiW8CpHsWrD5dtuuE5C"),
     confirmed: true,
+  },
+  {
+    layer: "DEVNET PROTOCOL",
+    label: "EARLY CLAIM",
+    detail: "Loan 4U3UUMfK9QdJt2tm2S2NtTvFrBxX15L9JVvVgb2JDqnF. Chrome simulation returned ClaimRefusedNotMatured. No signature.",
+    href: null,
+    confirmed: false,
   },
   {
     layer: "EXTERNAL MAINNET DEX",

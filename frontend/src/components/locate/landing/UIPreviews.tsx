@@ -3,14 +3,14 @@
 /**
  * LOCATE — 06 · the workspace: dark app-UI previews on 3D tilt cards.
  * (Dovetail pattern: real product surfaces floating on the dark canvas.)
- * Offer terms shown are illustrative preview-workspace values; the
- * premium chip reads live product data when available.
+ * The lender card shows the live OpenAI price. The borrower card shows a
+ * funded Devnet offer, or 0 borrowable when the book is empty.
  */
 
 import { ArrowUpRight, Check, Lock } from "lucide-react";
 import { FadeContent, TiltedCard } from "@/components/bits";
 import { OPENAI_MARK } from "@/lib/locate/seed";
-import { useLiveMarket } from "@/lib/locate/useLiveMarket";
+import { useLiveMarket, type LiveRow } from "@/lib/locate/useLiveMarket";
 import { AssetLogo, Eyebrow, RevealHeadline, Section } from "./parts";
 
 const OPENAI = OPENAI_MARK;
@@ -36,7 +36,16 @@ function MiniRow({ label, value, strong }: { label: string; value: string; stron
   );
 }
 
-function LenderPreview() {
+function rawUnits(raw: string, decimals: number): string {
+  if (!/^\d+$/.test(raw)) return "unavailable";
+  const scale = 10n ** BigInt(decimals);
+  const value = BigInt(raw);
+  const whole = value / scale;
+  const frac = (value % scale).toString().padStart(decimals, "0").replace(/0+$/, "");
+  return frac ? `${whole}.${frac}` : whole.toString();
+}
+
+function LenderPreview({ price }: { price: string }) {
   return (
     <div className="w-full max-w-[420px] overflow-hidden rounded-2xl border border-[#232326] bg-[#141416] text-left">
       <div className="flex items-center justify-between border-b border-[#232326] px-5 py-3.5">
@@ -52,10 +61,9 @@ function LenderPreview() {
         </span>
       </div>
       <div className="px-5 py-2">
-        <MiniRow label="AMOUNT" value="0.005000" strong />
-        <MiniRow label="COLLATERAL" value="$12.50 USDC" />
-        <MiniRow label="UPFRONT FEE" value="$0.35 USDC" />
-        <MiniRow label="TERM" value="7 DAYS" />
+        <MiniRow label="LIVE OPENAI" value={price} strong />
+        <MiniRow label="TERMS" value="set in the app" />
+        <MiniRow label="TOKENS" value="stay until take" />
       </div>
       <div className="px-5 pb-2">
         <p className="rounded-xl border border-lime/25 bg-lime-soft px-4 py-3 font-mono text-[10px] font-medium uppercase leading-relaxed tracking-[0.1em] text-lime-deep">
@@ -72,7 +80,7 @@ function LenderPreview() {
   );
 }
 
-function BorrowerPreview({ livePremium }: { livePremium: number | null }) {
+function BorrowerPreview({ row }: { row: LiveRow | undefined }) {
   return (
     <div className="w-full max-w-[420px] overflow-hidden rounded-2xl border border-[#232326] bg-[#141416] text-left">
       <div className="flex items-center justify-between border-b border-[#232326] px-5 py-3.5">
@@ -82,7 +90,7 @@ function BorrowerPreview({ livePremium }: { livePremium: number | null }) {
             BORROWABLE PRESTOCKS
           </span>
         </span>
-        <span className="lc-chip">PREVIEW BOOK</span>
+        <span className="lc-chip">{row?.bestOffer ? "FUNDED OFFER" : "0 BORROWABLE"}</span>
       </div>
       <div className="px-5 py-4">
         <div className="flex items-start justify-between gap-3">
@@ -93,19 +101,21 @@ function BorrowerPreview({ livePremium }: { livePremium: number | null }) {
                 OPENAI
               </p>
               <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.1em] text-ink-3">
-                $12.50 COLLATERAL · $0.35 FEE · 7 DAYS
+                {row?.bestOffer
+                  ? `${rawUnits(row.bestOffer.amountRaw, 9)} · ${rawUnits(row.bestOffer.collateralUsdc, 6)} USDC`
+                  : "No funded Devnet offer"}
               </p>
             </div>
           </div>
           <span className="flex shrink-0 items-center gap-1.5">
-            {livePremium != null && (
-              <span className="lc-chip-ember tabular-nums">{fmtPremium(livePremium)}</span>
+            {row?.premiumPct != null && (
+              <span className="lc-chip-ember tabular-nums">{fmtPremium(row.premiumPct)}</span>
             )}
           </span>
         </div>
         <div className="mt-4 rounded-xl border border-[#232326] bg-[#101012] px-4 py-3">
-          <MiniRow label="COLLATERAL + FEE" value="$12.85 TOTAL" strong />
-          <MiniRow label="ESTIMATED COVER COST" value="≈ $6.69" />
+          <MiniRow label="COLLATERAL" value={row?.bestOffer ? rawUnits(row.bestOffer.collateralUsdc, 6) + " USDC" : "none"} strong />
+          <MiniRow label="FEE" value={row?.bestOffer ? rawUnits(row.bestOffer.feeUsdc, 6) + " USDC" : "none"} />
         </div>
       </div>
       <div className="flex items-center justify-between gap-3 border-t border-[#232326] bg-[#101012] px-5 py-3.5">
@@ -153,7 +163,7 @@ export function UIPreviews() {
             <span className="lc-chip">LENDER VIEW</span>
             <TiltedCard rotationAmount={7} scale={1.03} className="w-full">
               <div className="flex justify-center px-2 py-6">
-                <LenderPreview />
+                <LenderPreview price={openaiRow?.tokenPrice != null ? "$" + Math.round(openaiRow.tokenPrice).toLocaleString("en-US") : "unavailable"} />
               </div>
             </TiltedCard>
             <p className="max-w-sm text-center text-[13.5px] leading-[1.6] text-ink-2">
@@ -168,12 +178,11 @@ export function UIPreviews() {
             <span className="lc-chip">BORROWER VIEW</span>
             <TiltedCard rotationAmount={7} scale={1.03} className="w-full">
               <div className="flex justify-center px-2 py-6">
-                <BorrowerPreview livePremium={openaiRow?.premiumPct ?? null} />
+                <BorrowerPreview row={openaiRow} />
               </div>
             </TiltedCard>
             <p className="max-w-sm text-center text-[13.5px] leading-[1.6] text-ink-2">
-              Take an offer with the full cost visible up front — collateral, fee,
-              and the return obligation. Layout preview only; live numbers live in the book.
+              The book shows funded Devnet offers. An empty book is 0 borrowable, not a sample price.
             </p>
           </div>
         </FadeContent>

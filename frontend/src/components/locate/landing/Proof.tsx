@@ -3,17 +3,16 @@
 /**
  * LOCATE — 07 · verifiable settlement: the proof room.
  * Timeline: BORROW → SELL → BUY BACK → RETURN → VERIFIED
- * plus a receipt pair — one VERIFIED, one REFUSED with the
- * machine reason RETURN_REFUSED_SHORT_DELIVERY. The two receipts shown
- * are sample records from the preview workspace, labeled as such.
+ * plus the recorded Devnet return and the unsigned early-claim refusal.
  */
 
 import { motion } from "framer-motion";
 import { CheckCircle2, XCircle, FileText } from "lucide-react";
+import protocol from "@/app/proof/data/devnet/protocol.json";
 import { FadeContent, SpotlightCard } from "@/components/bits";
 import { EASE, Eyebrow, RevealHeadline, Section } from "./parts";
 
-const TIMELINE = ["BORROW", "SELL", "BUY BACK", "RETURN", "VERIFIED"];
+const TIMELINE = ["LIST", "TAKE", "RETURN", "CLAIM"];
 
 function ReceiptCard({
   status,
@@ -57,7 +56,7 @@ function ReceiptCard({
             {id}
           </span>
           <span className="rounded-full border border-line bg-[#161619] px-2 py-0.5 font-mono text-[8.5px] font-medium uppercase tracking-[0.12em] text-ink-3">
-            LAYOUT EXAMPLE
+            DEVNET REPLICA
           </span>
         </span>
       </div>
@@ -87,7 +86,7 @@ function ReceiptCard({
             </div>
           ))}
         </div>
-        <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-3">
+        <p className="mt-4 break-all font-mono text-[10px] normal-case tracking-normal text-ink-3">
           {sig}
         </p>
       </div>
@@ -133,13 +132,9 @@ export function Proof() {
                       whileInView={{ scale: 1, opacity: 1 }}
                       viewport={{ once: true, margin: "-10%" }}
                       transition={{ duration: 0.5, ease: EASE, delay: 0.2 + i * 0.16 }}
-                      className={`flex h-9 w-9 items-center justify-center rounded-full font-mono text-[10px] font-bold ${
-                        last
-                          ? "bg-lime text-shell shadow-[0_0_0_5px_rgba(201,241,88,0.25)]"
-                          : "border border-line-2 bg-cream text-ink-2"
-                      }`}
+                      className="flex h-9 w-9 items-center justify-center rounded-full border border-line-2 bg-cream font-mono text-[10px] font-bold text-ink-2"
                     >
-                      {last ? <CheckCircle2 className="h-4 w-4" aria-hidden /> : `0${i + 1}`}
+                      {`0${i + 1}`}
                     </motion.span>
                     <span
                       className={`whitespace-nowrap font-mono text-[9.5px] font-semibold uppercase tracking-[0.12em] ${
@@ -172,31 +167,28 @@ export function Proof() {
         <FadeContent delay={0.1} distance={32}>
           <ReceiptCard
             status="VERIFIED"
-            code="RETURN_VERIFIED_NET_DELIVERED"
-            id="R-1038"
+            code="RETURN"
+            id={"slot " + protocol.returnCycle.returnSlot}
             lines={[
-              { label: "NET REQUIRED", value: "0.004000 OPENAI" },
-              { label: "GROSS SENT", value: "0.004040 OPENAI" },
-              { label: "TRANSFER FEE", value: "1% · TOKEN-2022" },
-              { label: "NET DELIVERED", value: "0.004000 OPENAI" },
-              { label: "COLLATERAL", value: "$10.00 RELEASED" },
+              { label: "GROSS RAW", value: protocol.returnCycle.grossRaw },
+              { label: "SLOT", value: String(protocol.returnCycle.returnSlot) },
+              { label: "ASSET", value: "dOPENAI replica" },
             ]}
-            sig="Example layout — not a verified receipt"
+            sig={protocol.returnCycle.return}
           />
         </FadeContent>
         <FadeContent delay={0.2} distance={32}>
           <ReceiptCard
             status="REFUSED"
-            code="RETURN_REFUSED_SHORT_DELIVERY"
-            reason="Returned amount did not satisfy the original net token requirement."
-            id="R-1029"
+            code="NOT_CLAIMABLE_YET"
+            reason="ClaimRefusedNotMatured. The claim button stayed disabled."
+            id="4U3UU…DqnF"
             lines={[
-              { label: "NET REQUIRED", value: "0.005000 OPENAI" },
-              { label: "GROSS SENT", value: "0.004949 OPENAI" },
-              { label: "NET DELIVERED", value: "0.004899 OPENAI" },
-              { label: "SHORTFALL", value: "0.000101 OPENAI" },
+              { label: "LOAN", value: "4U3UUMfK9QdJt2tm2S2NtTvFrBxX15L9JVvVgb2JDqnF" },
+              { label: "RESULT", value: "simulation" },
+              { label: "SIGNATURE", value: "none" },
             ]}
-            sig="Example layout — not a verified receipt"
+            sig="No signature. Early claim was not sent."
           />
         </FadeContent>
       </div>
@@ -209,8 +201,7 @@ export function Proof() {
           >
             <FileText className="h-4 w-4 text-lime-deep" aria-hidden />
             <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-2">
-            Receipts live in the app after backend verification. These cards
-            show receipt layout only — not live verified loans.
+            The return signature is a Devnet replica receipt. The refusal has no signature. dOPENAI is not a PreStock.
             </p>
           </SpotlightCard>
         </div>

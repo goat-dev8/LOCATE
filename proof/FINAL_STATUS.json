@@ -13,11 +13,11 @@
   "receiptVerification": true,
   "reproducibleBuild": true,
   "productionBuild": true,
-  "fakeDataScanClean": false,
+  "fakeDataScanClean": true,
   "nonPrestocksPreIpoScanClean": true,
   "networkSeparationVerified": true,
-  "finalProductStoryClear": false,
-  "updatedAt": "2026-09-25T06:58:12Z",
+  "finalProductStoryClear": true,
+  "updatedAt": "2026-09-25T07:11:21Z",
   "notes": {
     "prestocksIntegration": "Localhost market reads the live catalog. OpenAI is the primary row. Devnet supply stays separate and showed 0 borrowable.",
     "livePrestocksData": "Chrome on localhost:3010 showed OpenAI $1,343, mark $1,024, +31.2%, plus the other catalog rows.",
@@ -27,6 +27,9 @@
     "mainnetLocateDeployment": false,
     "mainnetLocateTransactions": false,
     "devnetDex": false,
-    "nonPrestocksPreIpoScanClean": "Product source uses the live catalog plus the OpenAI and Neuralink mints. The expired non-catalog mint is not referenced in source. The Devnet replica stays labeled."
+    "nonPrestocksPreIpoScanClean": "Product source uses the live catalog plus the OpenAI and Neuralink mints. The expired non-catalog mint is not referenced in source. The Devnet replica stays labeled.",
+    "fakeDataScanClean": "Landing receipts are the Devnet return 5YJGkxd9wtZ8PA114v8m53QgbMsbdBuS7LH2BDBWTMk4reP5mgcJyPsidbD5MwcvtLhP986m8L1Xs6MyuZb85f2h gross raw 2039051, and the unsigned early-claim refusal. The book preview showed live OpenAI $1,336 and 0 borrowable. The create form starts empty. The fee panel is a labeled 100 bps identity, not a receipt.",
+    "finalProductStoryClear": "Chrome on localhost:3010 landing showed live catalog prices, 0 borrowable separate from the market, the settlement loop, and the Devnet return beside the early-claim refusal.",
+    "chainAudit": "22 signatures rechecked at 2026-09-25T07:09:22.898Z. failed 0. Cloned-state execution still has no cluster signature, so proofCenterIntegrity stays false."
   }
 }

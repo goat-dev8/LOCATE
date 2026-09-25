@@ -285,7 +285,7 @@ const STEPS: Step[] = [
     title: "SETTLE",
     who: "PROTOCOL",
     lede: "Time decides. Nothing else does.",
-    body: "Verified net delivery → collateral returns to the borrower. Maturity plus 48 hours of grace with nothing delivered → the collateral goes to the lender. Binary, verifiable, done.",
+    body: "Verified net delivery → collateral returns to the borrower. Maturity plus the loan's grace with nothing delivered → the collateral goes to the lender. Binary, verifiable, done.",
     chips: ["TIME", "DELIVERY", "USDC COLLATERAL"],
     note: { text: "Default after grace → lender claims the USDC.", tone: "ember" },
     diagram: <DiagramSettle />,
@@ -460,7 +460,7 @@ export function Lifecycle() {
                 </p>
                 <p className="mt-1.5 text-[13.5px] leading-[1.6] text-ink-2">
                   If the borrower never returns the tokens, the loan matures,
-                  48 hours of grace pass, and the lender claims the locked USDC
+                  the loan's grace passes, and the lender claims the locked USDC
                   collateral. No auction, no partial fills, no negotiation.
                 </p>
               </div>
