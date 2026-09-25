@@ -1579,5 +1579,15 @@ Files: frontend/src/components/locate/app/views/CreateOffer.tsx, frontend/src/co
 
 Pushed as fe28430.
 
+## 2026-09-25T05:08:00Z — Devnet take and return
+
+PHASE EXECUTION
+
+Borrower CpTxsgPjvaaPSaBKkijvB1h3hzgJmPiTsWNhuS7tRkgX took offer Fp68AVmuxwC8xmtSXmq55bEZLXFpJoHTZGQBaSJTJbZ9. The first approve returned TERMS_CHANGED and was not signed. A fresh simulation passed and Phantom approved. Take signature 61NgvpBToGqvHpwkrbA9oGProjZG5CjioL1m1TGRBWQF8c9tsaSJScPTuDY5iwceS7HJvMMKrDk3Mw87aE5xLfcT, slot 503826986, finalized, err null. Lender dOPENAI 998899494 to 997899494. Borrower dOPENAI 889494 to 1879494 (net 990000). Borrower USDC 18600000 to 17500000. Lender USDC 11350000 to 11450000 (fee only). Receipt loan_taken verified. Loan APjJDEXXhf4jLvz3D8Xmq1FY7fSvNXG4X3reeRnunf9y.
+
+Return during grace. Gross shown 0.00101. Signature 5PHRuUXGaj5bKWybJYt9EwUxBbmBa1GjYviM1MWDTnW39kQfegS9ZtvpPivDtYeMyCCLs2szHpKfRadjDgzFKHHP, slot 503827662, finalized, err null. Borrower dOPENAI 1879494 to 869392 (gross 1010102). Lender dOPENAI 997899494 to 998899494 (net 1000000). Borrower USDC 17500000 to 18500000 (collateral 1000000 released). Receipt loan_returned verified, feeBps 100. Early claim and claim were not run on this loan because it was returned. They still need a second short offer and the lender wallet. Chain audit of 12 signatures failed 0. proofCenterIntegrity stays false. Devnet DEX remains FAIL. Mainnet deployment remains false.
+
+Files: scripts/audit-proof-chain.mjs, proof/verification/chain-audit.json.
+
 
 

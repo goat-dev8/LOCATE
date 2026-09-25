@@ -1,0 +1,128 @@
+{
+  "checkedAt": "2026-09-25T05:06:41.284Z",
+  "checked": 12,
+  "failed": 0,
+  "results": [
+    {
+      "signature": "3oW3dET9hBUwm1EMwvyWBN21hMBVX2LwUt8K5binJi4iE2JkzdRimFQxja886pLQG7wbrzmMAWtpV7fvV7AfWRxi",
+      "cluster": "devnet",
+      "slot": 503264904,
+      "expectedSlot": 503264904,
+      "finalized": true,
+      "err": null,
+      "hasLocate": true,
+      "problems": []
+    },
+    {
+      "signature": "3BpyAK9emZMTyBC4KnNZxYhdR2Z18HwkDgftwAENTLXrX9cHCPcr4vh9NL8rgTGjXnqBy1vU68CYH97L2i2X2Vaq",
+      "cluster": "devnet",
+      "slot": 503264909,
+      "expectedSlot": 503264909,
+      "finalized": true,
+      "err": null,
+      "hasLocate": true,
+      "problems": []
+    },
+    {
+      "signature": "5YJGkxd9wtZ8PA114v8m53QgbMsbdBuS7LH2BDBWTMk4reP5mgcJyPsidbD5MwcvtLhP986m8L1Xs6MyuZb85f2h",
+      "cluster": "devnet",
+      "slot": 503264913,
+      "expectedSlot": 503264913,
+      "finalized": true,
+      "err": null,
+      "hasLocate": true,
+      "problems": []
+    },
+    {
+      "signature": "3ipFume6pxkJGP2vAv3Wf87uwNoBeNa6KhrvvY7eWX9xqu7ywxvZWHrjfViSo2955H3nkFEq9TKkrZpweSG4LeaS",
+      "cluster": "devnet",
+      "slot": 503264916,
+      "expectedSlot": null,
+      "finalized": true,
+      "err": null,
+      "hasLocate": true,
+      "problems": []
+    },
+    {
+      "signature": "Et6n6CopgJQ3EG4NCcKVFNsHcsrzqrHBm7yKQRX2bnzy1gkvvcB81XCEv36J5vC1Ay3nT71CH5VhPa2tAXaJDAH",
+      "cluster": "devnet",
+      "slot": 503264919,
+      "expectedSlot": null,
+      "finalized": true,
+      "err": null,
+      "hasLocate": true,
+      "problems": []
+    },
+    {
+      "signature": "2paQbq9PaVd5gM9nSbJaupauPMVSAzBJxkEQE9tsZpLkqS7P3nCXAfSHeYWrASrBKqwJThe6P6RUGz7KApmDGJHn",
+      "cluster": "devnet",
+      "slot": 503265496,
+      "expectedSlot": 503265496,
+      "finalized": true,
+      "err": null,
+      "hasLocate": true,
+      "problems": []
+    },
+    {
+      "signature": "2C4CND6FqBiTgPzgNQojHKa6KzL221gd2Zm4BiyP7WCRnmichUF3m9ptF9xs7pDgTVaa9GMm6eYtqmUnQMbqmuzr",
+      "cluster": "mainnet",
+      "slot": 450171723,
+      "expectedSlot": 450171723,
+      "finalized": true,
+      "err": null,
+      "hasLocate": false,
+      "problems": []
+    },
+    {
+      "signature": "4FmrxJKrUUaauhd7tksKFZK1xhJTFB7C6AjYq8dcVv7tnArQZY5woCEBzTeKCuKH1AbzRs3mQcwaGTKD6pVPcKSw",
+      "cluster": "mainnet",
+      "slot": 450174357,
+      "expectedSlot": 450174357,
+      "finalized": true,
+      "err": null,
+      "hasLocate": false,
+      "problems": []
+    },
+    {
+      "signature": "5cHQQxCByufmPazGRqKPgfdPDVJHMvCVFkz3NdutoPjrjc1p6RhboJXcjzMmQRgcQ8KoqkQNH8NJSGnpPRQZgR6F",
+      "cluster": "mainnet",
+      "slot": 450174446,
+      "expectedSlot": 450174446,
+      "finalized": true,
+      "err": null,
+      "hasLocate": false,
+      "problems": []
+    },
+    {
+      "signature": "2LmWm8igo7LfDKWeKpQmR6o9ZZfjGHCZ5bBzuMSh18fqVB76tvLko9DWm938Ryz6wTjeKa1V8a9vBM5ZRguCBSv3",
+      "cluster": "devnet",
+      "slot": 503824247,
+      "expectedSlot": 503824247,
+      "finalized": true,
+      "err": null,
+      "hasLocate": true,
+      "problems": []
+    },
+    {
+      "signature": "61NgvpBToGqvHpwkrbA9oGProjZG5CjioL1m1TGRBWQF8c9tsaSJScPTuDY5iwceS7HJvMMKrDk3Mw87aE5xLfcT",
+      "cluster": "devnet",
+      "slot": 503826986,
+      "expectedSlot": 503826986,
+      "finalized": true,
+      "err": null,
+      "hasLocate": true,
+      "problems": []
+    },
+    {
+      "signature": "5PHRuUXGaj5bKWybJYt9EwUxBbmBa1GjYviM1MWDTnW39kQfegS9ZtvpPivDtYeMyCCLs2szHpKfRadjDgzFKHHP",
+      "cluster": "devnet",
+      "slot": 503827662,
+      "expectedSlot": 503827662,
+      "finalized": true,
+      "err": null,
+      "hasLocate": true,
+      "problems": []
+    }
+  ],
+  "note": "Chain signatures only. Cloned-state execution has no cluster signature. proofCenterIntegrity stays false until every proof artifact is checked."
+}
