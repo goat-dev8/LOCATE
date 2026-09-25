@@ -108,7 +108,7 @@ export function LogoMarquee({ className }: { className?: string }) {
   }, [reduced, hovered]);
 
   const items = useMemo(
-    () => live.rows.filter((row) => row.symbol !== "SPACEX").map((row) => catalogAsset(row.symbol)),
+    () => live.rows.map((row) => catalogAsset(row.symbol)),
     [live.rows],
   );
 

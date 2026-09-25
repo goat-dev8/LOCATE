@@ -1635,3 +1635,11 @@ The first frontend deploy failed because the local validator suite was ignored, 
 
 
 
+
+## 2026-09-25T06:18:41Z — Live catalog is the market allowlist
+
+PHASE MARKET
+
+The market proxy no longer names symbols itself. It reads the live PreStocks catalog and drops any row without a mint and both prices. xAI is not in that catalog, so it is not requested. A catalog symbol that the upstream returns, including the one previously stripped by name, stays in the market list. Market now leads with the live OpenAI mark and price, then the other catalog rows, then Devnet borrowable supply. Backend economics tests 11/11. No new signature. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
+
+Files: frontend/src/app/api/prestocks/route.ts, frontend/src/lib/locate/useLiveMarket.ts, frontend/src/components/locate/app/views/Book.tsx, frontend/src/components/locate/landing/LogoMarquee.tsx, backend/src/market/prestocks.ts, backend/src/market/opportunities.ts, backend/test/economics.test.ts. Removed the unused preview app under frontend/locate, which carried illustrative prices.

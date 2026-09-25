@@ -135,7 +135,7 @@ export function useLiveMarket(pollMs = 60_000): LiveMarket {
               action: (best ? "TAKE_OFFER" : "LIST_YOURS") as LiveRow["action"],
             };
           })
-          .filter((row) => row.symbol && row.symbol !== "SPACEX");
+          .filter((row) => row.symbol);
         const map = new Map(rows.map((r) => [r.symbol, r]));
         const stale = rows.length > 0 && rows.every((row) => row.state === "STALE_DATA" || row.tokenPrice == null);
         const live = rows.some((row) => row.tokenPrice != null && row.markPrice != null);

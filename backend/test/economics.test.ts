@@ -55,15 +55,15 @@ describe("economics", () => {
 });
 
 describe("opportunities", () => {
-  it("A-01 A-03 A-05 seven rows and no SPACEX", () => {
+  it("A-01 A-03 A-05 catalog rows stay on the supplied symbols", () => {
     const rows = buildOpportunities(catalog(), [], 0);
-    expect(rows.map((row) => row.symbol).sort()).toEqual(["ANDURIL", "ANTHROPIC", "FIGUREAI", "KALSHI", "NEURALINK", "OPENAI", "POLYMARKET"]);
+    expect(rows.map((row) => row.symbol).sort()).toEqual([...symbols].sort());
     expect(rows.every((row) => row.bestOffer === null)).toBe(true);
     expect(rows.every((row) => row.state === "NO_SUPPLY")).toBe(true);
   });
-  it("A-02 a SPACEX offer does not create a row", () => {
+  it("A-02 a catalog offer creates its row", () => {
     const rows = buildOpportunities(catalog(), [offer("SPACEX-mint")], 0);
-    expect(rows.some((row) => row.symbol === "SPACEX")).toBe(false);
+    expect(rows.find((row) => row.symbol === "SPACEX")?.state).toBe("BORROWABLE");
   });
   it("A-04 A-06 only the funded positive-premium row is borrowable", () => {
     const neural = buildOpportunities(catalog(), [offer("NEURALINK-mint")], 0);

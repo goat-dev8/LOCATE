@@ -21,7 +21,7 @@ const ORDER = ["BORROWABLE", "NO_SUPPLY", "LOW_NEGATIVE_PREMIUM", "UNAVAILABLE",
 
 export function buildOpportunities(catalog: OpportunityInput[], offers: OfferInput[], ageMs: number, requestedRaw?: bigint) {
   const stale = ageMs > 120_000;
-  const rows = catalog.filter((row) => row.symbol !== "SPACEX").map((row) => {
+  const rows = catalog.map((row) => {
     const funded = offers.filter((offer) => offer.mint === row.mint && offer.funded && (requestedRaw === undefined || offer.amountRaw >= requestedRaw));
     const short = offers.filter((offer) => offer.mint === row.mint && offer.funded && requestedRaw !== undefined && offer.amountRaw < requestedRaw);
     const supply = funded.reduce((sum, offer) => sum + offer.amountRaw, 0n);

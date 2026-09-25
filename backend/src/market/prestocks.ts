@@ -22,7 +22,7 @@ export function parseCatalog(text: string): CatalogRow[] {
   return blocks.flatMap((block) => {
     const symbol = /"symbol"\s*:\s*"([^"]+)"/.exec(block)?.[1];
     const mint = /"contract_address"\s*:\s*"([^"]+)"/.exec(block)?.[1];
-    if (!symbol || !mint || symbol === "SPACEX") return [];
+    if (!symbol || !mint) return [];
     return [{
       symbol,
       mint,

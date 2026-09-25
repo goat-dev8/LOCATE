@@ -1,41 +1,32 @@
 import { NextResponse } from "next/server";
 
 /**
- * LOCATE — live PreStock market data proxy.
+ * Live PreStocks catalog proxy.
  *
- * Live Mainnet market catalog. Prices are context, not a settlement oracle.
- *   GET /api/metrics                     → per-symbol token price + on-chain metrics
- *   GET /api/mark-price/batch?symbols=…  → per-symbol mark (reference) price
- *
- * The upstream has no CORS headers, so the client consumes this server-side
- * proxy instead. Cached in local memory for 60s — no external middleware.
+ * The allowlist is the upstream catalog. A symbol that is not in that
+ * response is not shown. Prices are market context, not a settlement oracle.
  */
-
-const SYMBOLS = [
-  "ANDURIL",
-  "ANTHROPIC",
-  "FIGUREAI",
-  "KALSHI",
-  "NEURALINK",
-  "OPENAI",
-  "POLYMARKET",
-  "OPENAI",
-  "XAI",
-] as const;
 
 const BASE = "https://prestocks.com";
 const TTL_MS = 60_000;
 
 export interface PreStockRow {
   symbol: string;
-  /** Trading price of the PreStock token (market). */
+  name: string;
+  mint: string;
   tokenPrice: number;
-  /** Mark price — the reference value. */
   markPrice: number;
-  /** (tokenPrice − markPrice) / markPrice, percent. */
   premiumPct: number;
-  thirtyDayChange: number | null;
-  holderCount: number | null;
+  supply: number | null;
+}
+
+interface CatalogItem {
+  symbol?: string;
+  name?: string;
+  contract_address?: string;
+  tokenPrice?: number;
+  markPrice?: number;
+  supply?: number;
 }
 
 interface CacheEntry {
@@ -44,6 +35,10 @@ interface CacheEntry {
 }
 
 let cache: CacheEntry | null = null;
+
+function finite(value: unknown): number | null {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
 
 export async function GET() {
   const now = Date.now();
@@ -57,58 +52,31 @@ export async function GET() {
   }
 
   try {
-    const [metricsRes, markRes] = await Promise.all([
-      fetch(`${BASE}/api/metrics`, {
-        signal: AbortSignal.timeout(8000),
-        headers: { accept: "application/json" },
-      }),
-      fetch(
-        `${BASE}/api/mark-price/batch?symbols=${SYMBOLS.join(",")}`,
-        {
-          signal: AbortSignal.timeout(8000),
-          headers: { accept: "application/json" },
-        },
-      ),
-    ]);
-
-    if (!metricsRes.ok || !markRes.ok) throw new Error("upstream status");
-
-    const metricsJson = (await metricsRes.json()) as {
-      metrics?: Array<{
-        symbol: string;
-        tokenPrice: number;
-        holderCount?: number;
-        thirtyDayChange?: number | null;
-      }>;
-    };
-    const marks = (await markRes.json()) as Record<string, number | { markPrice?: number }>;
-
+    const response = await fetch(`${BASE}/api/prestocks`, {
+      signal: AbortSignal.timeout(8000),
+      headers: { accept: "application/json" },
+    });
+    if (!response.ok) throw new Error("upstream status");
+    const catalog = (await response.json()) as CatalogItem[];
     const rows: PreStockRow[] = [];
-    for (const symbol of SYMBOLS) {
-      const m = metricsJson.metrics?.find((x) => x.symbol === symbol);
-      const markRaw = marks[symbol];
-      const mark = typeof markRaw === "number" ? markRaw : markRaw?.markPrice;
-      if (!m || typeof mark !== "number") continue;
+    for (const item of catalog) {
+      const tokenPrice = finite(item.tokenPrice);
+      const markPrice = finite(item.markPrice);
+      if (!item.symbol || !item.contract_address || tokenPrice == null || markPrice == null || markPrice === 0) continue;
       rows.push({
-        symbol,
-        tokenPrice: m.tokenPrice,
-        markPrice: mark,
-        premiumPct: ((m.tokenPrice - mark) / mark) * 100,
-        thirtyDayChange:
-          typeof m.thirtyDayChange === "number" ? m.thirtyDayChange : null,
-        holderCount: typeof m.holderCount === "number" ? m.holderCount : null,
+        symbol: item.symbol,
+        name: item.name || item.symbol,
+        mint: item.contract_address,
+        tokenPrice,
+        markPrice,
+        premiumPct: ((tokenPrice - markPrice) / markPrice) * 100,
+        supply: finite(item.supply),
       });
     }
-
     if (rows.length === 0) throw new Error("empty upstream");
 
-    const body = JSON.stringify({
-      at: now,
-      source: "live-market",
-      rows,
-    });
+    const body = JSON.stringify({ at: now, source: "prestocks-catalog", rows });
     cache = { at: now, body };
-
     return new NextResponse(body, {
       headers: {
         "content-type": "application/json",
@@ -116,7 +84,6 @@ export async function GET() {
       },
     });
   } catch {
-    // Serve stale data if we have it; otherwise an honest unavailable state.
     if (cache) {
       return new NextResponse(cache.body, {
         status: 200,
@@ -128,7 +95,7 @@ export async function GET() {
       });
     }
     return NextResponse.json(
-      { at: null, source: "live-market", rows: [] },
+      { at: null, source: "prestocks-catalog", rows: [] },
       { status: 502, headers: { "cache-control": "no-store" } },
     );
   }

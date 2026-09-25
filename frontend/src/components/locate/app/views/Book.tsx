@@ -43,7 +43,9 @@ export function BookView() {
 
   const totalSupply = live.reduce((a, o) => a + o.amount, 0);
   const price = openai?.tokenPrice != null ? `$${Math.round(openai.tokenPrice).toLocaleString("en-US")}` : "unavailable";
+  const mark = openai?.markPrice != null ? `$${Math.round(openai.markPrice).toLocaleString("en-US")}` : "unavailable";
   const move = openai?.premiumPct != null ? `${openai.premiumPct >= 0 ? "+" : ""}${openai.premiumPct.toFixed(1)}%` : "unavailable";
+  const catalog = market.byPremium.filter((row) => row.symbol !== "OPENAI");
 
   return (
     <div>
@@ -69,18 +71,38 @@ export function BookView() {
         Live market → borrowable supply → lend / borrow → short → return → settle
       </p>
 
-      <section className="lc-card mb-8 p-6">
-        <p className="lc-label">Mainnet market context</p>
-        <div className="mt-4 flex items-end justify-between gap-4">
+      <section className="mb-10">
+        <p className="lc-label">Live PreStock</p>
+        <div className="mt-4 flex items-end justify-between gap-6">
           <div>
-            <p className="font-sans text-[18px] font-semibold text-white">OPENAI</p>
-            <p className="mt-1 text-[13px] text-ink-2">Live Mainnet price. Not borrowable supply.</p>
+            <p className="font-sans text-[32px] font-semibold tracking-[-0.03em] text-white">OpenAI</p>
+            <p className="mt-2 max-w-md text-[15px] leading-[1.5] text-ink-2">
+              Mainnet market context. Borrowable supply below is the Devnet replica, not this price.
+            </p>
           </div>
           <div className="text-right">
-            <p className="font-sans text-[28px] font-semibold tabular-nums text-white">{price}</p>
-            <p className="mt-1 font-mono text-[12px] text-ink-2">{move}</p>
+            <p className="font-sans text-[40px] font-semibold leading-none tabular-nums text-white">{price}</p>
+            <p className="mt-2 font-mono text-[13px] text-ink-2">Mark {mark} · {move}</p>
           </div>
         </div>
+        {catalog.length > 0 && (
+          <ul className="mt-6 divide-y divide-line/70 border-y border-line/70">
+            {catalog.map((row) => (
+              <li key={row.symbol} className="flex items-baseline justify-between gap-4 py-2.5">
+                <span className="font-sans text-[14px] text-white">{row.symbol}</span>
+                <span className="font-mono text-[13px] tabular-nums text-ink-2">
+                  {row.tokenPrice != null ? `$${Math.round(row.tokenPrice).toLocaleString("en-US")}` : "unavailable"}
+                  <span className="ml-3">
+                    {row.premiumPct != null ? `${row.premiumPct >= 0 ? "+" : ""}${row.premiumPct.toFixed(1)}%` : "unavailable"}
+                  </span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+        {market.status !== "live" && catalog.length === 0 && openai?.tokenPrice == null && (
+          <p className="mt-4 font-mono text-[13px] text-ink-2">UNAVAILABLE</p>
+        )}
       </section>
 
       <p className="lc-label mb-3">Devnet short supply</p>
