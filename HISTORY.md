@@ -1621,5 +1621,11 @@ PHASE EXECUTION
 
 Borrower CpTxsgPjvaaPSaBKkijvB1h3hzgJmPiTsWNhuS7tRkgX took offer 4igJGLucK9F7yLqjvrENp8pfxQ47Z4QJY1Q1jV9sM3Pf. Signature 5tCumUozhPqcZonmzqZoW78QHmT3h3KM8uTiYyo7Ruf7rDcAUeU7WGRCZpcpUFv3A3WtfBXP3EPNtXhWhq74ebVn, slot 503832748, finalized, err null. Loan AaTkPse9CNP2uk75sXzHbfAMhi4Wa59HQQ6RRmTncwn3. Lender dOPENAI 998899494 to 997899494. Borrower dOPENAI 869392 to 1859392. Borrower USDC 18500000 to 17400000. Lender USDC 11450000 to 11550000. Receipt loan_taken verified. The borrower stayed connected through maturity and grace, so an early claim was not sent. The position now says CLAIMABLE and the next action is for the lender to claim. Devnet DEX remains FAIL. Mainnet deployment remains false.
 
+## 2026-09-25T05:25:00Z — Lender claimed the short loan
+
+PHASE EXECUTION
+
+Lender Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC claimed loan AaTkPse9CNP2uk75sXzHbfAMhi4Wa59HQQ6RRmTncwn3 after grace. Signature 4TbTczrhivm4Gq9eFA9i8s9B1E4o4Yqr4cnyzgp2HEK5zqF4iUtXszEsRhvYxxmTWBvCxqMKQFaC5hABoobFhA9G, slot 503834342, finalized, err null. Instruction ClaimCollateral. Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6. USDC vault 1000000 to 0. Lender USDC 11550000 to 12550000. Delta 1000000. Receipt loan_claimed verified. The loan page shows CLAIMED with that signature and no second claim action. Early claim was not sent on this loan. Devnet DEX remains FAIL. Mainnet deployment remains false.
+
 
 
