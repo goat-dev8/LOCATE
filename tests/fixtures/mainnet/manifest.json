@@ -21,6 +21,20 @@
       "bytes": 82,
       "slot": 449882177
     },
+    "openai_pool_reserve.json": {
+      "pubkey": "CiGhjdnp4ARJt79ZRzCW72AQuQRMteKymCR4D6wsTFdB",
+      "sha256": "cb35bb7a92ae127da4988b28cf2586f94cc928696e34d0afc5d342c4c3010094",
+      "bytes": 191,
+      "slot": 450212574,
+      "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+    },
+    "usdc_pool_reserve.json": {
+      "pubkey": "9d3aURGUgCkj3bRFYtnyhQ4D37VgGFWwGUoS5DziR4RF",
+      "sha256": "f84f641cac77add32c7e934a868c27db44709ae976d7bb15e260b1de50f5bd80",
+      "bytes": 165,
+      "slot": 450212574,
+      "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    },
     "openai_usdc_pool.json": {
       "pubkey": "4HTy7aTjPm5PTSEws2yWRDPX6gjWM6sC2dV5mv9u8JsH",
       "sha256": "34b099babce812026d0cae72f11150a074e9034854d11e2fab8b1bf8bb2b553b",

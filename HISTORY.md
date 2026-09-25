@@ -1391,6 +1391,16 @@ The Mainnet pool account `4HTy7aTjPm5PTSEws2yWRDPX6gjWM6sC2dV5mv9u8JsH` was read
 
 Devnet DEX remains FAIL. Mainnet deployment remains false. The five instructions were not changed.
 
+Pushed as ff48b0e.
+
+## 2026-09-25T06:15:00Z — Pool reserves cloned
+
+PHASE FORK
+
+The pool account names its two reserves. Both were read at slot 450212574. OpenAI reserve `CiGhjdnp4ARJt79ZRzCW72AQuQRMteKymCR4D6wsTFdB` is 191 bytes. USDC reserve `9d3aURGUgCkj3bRFYtnyhQ4D37VgGFWwGUoS5DziR4RF` is 165 bytes. Hashes match the saved fixtures. The DLMM program data account is 2,229,821 bytes and was not stored. Bin arrays were not stored. No swap was executed.
+
+Devnet DEX remains FAIL. Mainnet deployment remains false.
+
 Not pushed in this step.
 
 
