@@ -1421,6 +1421,16 @@ The DLMM program data account `HZcJwcJ2njPDxZtpPoKnF8v2w9QAx2rS7TdJPSRkbEhu` was
 
 Devnet DEX remains FAIL. Mainnet deployment remains false.
 
+Pushed as 1316602.
+
+## 2026-09-25T07:20:00Z — Local swap on the cloned pool
+
+PHASE FORK
+
+`cloned_pool_swap_attempt` loaded the cloned pool, both reserves, the active bin array, the oracle, and the swap program, then sent swap2 for 1000 raw OpenAI. The local machine credited 2013 raw USDC. `dexSellExecution` is true in `proof/mainnet-fork/dex-attempt.json` and `lifecycle.json`. Buyback was not run. This was not a mainnet transaction. Fork suite: 2 passed.
+
+Devnet DEX remains FAIL. Mainnet deployment remains false.
+
 Not pushed in this step.
 
 

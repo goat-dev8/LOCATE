@@ -16,8 +16,8 @@
     "secondClaimRefused": true
   },
   "dexBuybackExecution": false,
-  "dexNote": "The OpenAI USDC pool, both reserves, the active bin array, and the swap program ELF are cloned under tests/fixtures/mainnet. No swap instruction was built or executed. External Mainnet DEX remains a separate layer.",
-  "dexSellExecution": false,
+  "dexNote": "dex-attempt.json records a local swap2 against the cloned pool. Buyback was not executed in that run. External Mainnet DEX remains a separate layer.",
+  "dexSellExecution": true,
   "label": "Cloned Mainnet State — Local Execution",
   "network": "mainnet-fork",
   "neuralink": {

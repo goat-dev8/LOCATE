@@ -139,6 +139,25 @@ impl World {
         world
     }
 
+    /// Cloned OpenAI/USDC pool, reserves, active bin array, oracle, and the swap program ELF.
+    pub fn load_cloned_dex(&mut self) {
+        let dlmm: Address = "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo".parse().unwrap();
+        let elf = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../tests/fixtures/mainnet/dlmm.so");
+        self.svm
+            .add_program_from_file(dlmm, &elf)
+            .unwrap_or_else(|e| panic!("load dlmm.so: {e}"));
+        for name in [
+            "openai_usdc_pool.json",
+            "openai_pool_reserve.json",
+            "usdc_pool_reserve.json",
+            "openai_usdc_bin_array.json",
+            "openai_usdc_oracle.json",
+        ] {
+            let (pubkey, account) = load_fixture(name);
+            self.svm.set_account(pubkey, account).unwrap();
+        }
+    }
+
     pub fn live_fee(&self) -> (u16, u64) {
         let acct = self.svm.get_account(&self.mint_id).expect("mint");
         let flags = locate::token2022::read_mint_flags(&acct.data, self.epoch).expect("mint flags");

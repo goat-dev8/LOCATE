@@ -10,7 +10,8 @@ use common::*;
 use locate::token2022::{gross_for_net, read_mint_flags};
 use serde_json::{json, Value};
 use sha2::{Digest, Sha256};
-use solana_instruction::AccountMeta;
+use solana_address::{address, Address};
+use solana_instruction::{AccountMeta, Instruction};
 use solana_keypair::Keypair;
 use solana_signer::Signer;
 use spl_token_2022_interface::extension::pausable::PausableConfig;
@@ -536,6 +537,15 @@ fn neuralink() -> Value {
     })
 }
 
+fn dex_attempt_flag() -> bool {
+    let path = proof_dir().join("dex-attempt.json");
+    let text = fs::read_to_string(&path).unwrap_or_default();
+    serde_json::from_str::<Value>(&text)
+        .ok()
+        .and_then(|v| v["dexSellExecution"].as_bool())
+        .unwrap_or(false)
+}
+
 fn write_proof(rows: &[Row], lifecycle: &Value, claim: &Value, neural: &Value) {
     let dir = proof_dir();
     fs::create_dir_all(dir.join("accounts")).unwrap();
@@ -575,9 +585,9 @@ fn write_proof(rows: &[Row], lifecycle: &Value, claim: &Value, neural: &Value) {
         "openai": lifecycle,
         "claim": claim,
         "neuralink": neural,
-        "dexSellExecution": false,
+        "dexSellExecution": dex_attempt_flag(),
         "dexBuybackExecution": false,
-        "dexNote": "The OpenAI USDC pool, both reserves, the active bin array, and the swap program ELF are cloned under tests/fixtures/mainnet. No swap instruction was built or executed. External Mainnet DEX remains a separate layer.",
+        "dexNote": "dex-attempt.json records a local swap2 against the cloned pool. Buyback was not executed in that run. External Mainnet DEX remains a separate layer.",
     });
     fs::write(dir.join("lifecycle.json"), serde_json::to_string_pretty(&life).unwrap()).unwrap();
     let manifest = json!({
@@ -601,6 +611,73 @@ fn write_proof(rows: &[Row], lifecycle: &Value, claim: &Value, neural: &Value) {
         serde_json::to_string_pretty(&body).unwrap(),
     )
     .unwrap();
+}
+
+#[test]
+fn cloned_pool_swap_attempt() {
+    let mut w = World::fork(1041);
+    w.load_cloned_dex();
+    let dlmm: Address = "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo".parse().unwrap();
+    let pool: Address = "4HTy7aTjPm5PTSEws2yWRDPX6gjWM6sC2dV5mv9u8JsH".parse().unwrap();
+    let reserve_x: Address = "CiGhjdnp4ARJt79ZRzCW72AQuQRMteKymCR4D6wsTFdB".parse().unwrap();
+    let reserve_y: Address = "9d3aURGUgCkj3bRFYtnyhQ4D37VgGFWwGUoS5DziR4RF".parse().unwrap();
+    let oracle: Address = "5uEJp3mknNxN4RH1Amj7BkPc5dNbzoCPVF18oFf8HPLM".parse().unwrap();
+    let bin_array: Address = "By1xEHvXdYq2obytSAd3HXeXyrnoopWqdijggUYHCeN5".parse().unwrap();
+    let openai: Address = "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF".parse().unwrap();
+    let usdc: Address = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v".parse().unwrap();
+    let event = Address::find_program_address(&[b"__event_authority"], &dlmm).0;
+    let user_in = w.borrower_ata();
+    let user_out = w.borrower_usdc();
+    let before_out = w.amount(&user_out);
+    let memo: Address = address!("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr");
+    let mut data = disc("swap2").to_vec();
+    data.extend_from_slice(&1_000u64.to_le_bytes());
+    data.extend_from_slice(&0u64.to_le_bytes());
+    data.extend_from_slice(&0u32.to_le_bytes());
+    let metas = [
+        pool, dlmm, reserve_x, reserve_y, user_in, user_out, openai, usdc, oracle, dlmm,
+    ];
+    let mut accounts: Vec<AccountMeta> = metas
+        .into_iter()
+        .map(|pubkey| AccountMeta { pubkey, is_signer: false, is_writable: true })
+        .collect();
+    accounts.push(AccountMeta { pubkey: w.borrower.pubkey(), is_signer: true, is_writable: true });
+    accounts.push(AccountMeta { pubkey: TOKEN_2022, is_signer: false, is_writable: false });
+    accounts.push(AccountMeta { pubkey: TOKEN_CLASSIC, is_signer: false, is_writable: false });
+    accounts.push(AccountMeta { pubkey: memo, is_signer: false, is_writable: false });
+    accounts.push(AccountMeta { pubkey: event, is_signer: false, is_writable: false });
+    accounts.push(AccountMeta { pubkey: dlmm, is_signer: false, is_writable: false });
+    accounts.push(AccountMeta { pubkey: bin_array, is_signer: false, is_writable: true });
+    let budget = Instruction {
+        program_id: address!("ComputeBudget111111111111111111111111111111"),
+        accounts: vec![],
+        data: {
+            let mut raw = vec![2u8];
+            raw.extend_from_slice(&1_400_000u32.to_le_bytes());
+            raw
+        },
+    };
+    let ix = Instruction { program_id: dlmm, accounts, data };
+    let borrower = w.borrower.insecure_clone();
+    let result = w.send_signers(&[borrower], vec![budget, ix]);
+    let after_out = w.amount(&user_out);
+    let executed = result.ok && after_out > before_out;
+    let body = json!({
+        "label": "Cloned Mainnet State — Local Execution",
+        "notAMainnetTransaction": true,
+        "dexSellExecution": executed,
+        "amountInRaw": "1000",
+        "usdcBefore": before_out.to_string(),
+        "usdcAfter": after_out.to_string(),
+        "ok": result.ok,
+        "errorCode": result.code,
+        "detail": result.detail,
+        "logs": result.logs,
+    });
+    let path = proof_dir().join("dex-attempt.json");
+    fs::write(&path, serde_json::to_string_pretty(&body).unwrap()).unwrap();
+    assert!(executed, "{}", result.detail);
+    assert!(after_out > before_out);
 }
 
 #[test]

@@ -44,6 +44,13 @@
       "slot": 450212574,
       "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
     },
+    "openai_usdc_oracle.json": {
+      "pubkey": "5uEJp3mknNxN4RH1Amj7BkPc5dNbzoCPVF18oFf8HPLM",
+      "sha256": "6398a81c1d1b04784a28726a653a70346a14e7d98cf2fb23496e3d3c154da64f",
+      "bytes": 3232,
+      "slot": 450214174,
+      "owner": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo"
+    },
     "openai_usdc_bin_array.json": {
       "pubkey": "By1xEHvXdYq2obytSAd3HXeXyrnoopWqdijggUYHCeN5",
       "sha256": "5cd2e4eb6fbea5fa1091a6ce048070f5e8ab7e7fd64071fdd013facbed5a1d60",
