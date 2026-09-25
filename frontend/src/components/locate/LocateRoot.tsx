@@ -6,10 +6,11 @@
  */
 
 import { useEffect } from "react";
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle2, Info, X } from "lucide-react";
 import { locateApi, DEVNET_MINT } from "@/lib/locate/env";
+import { loansFromChain, settledLoansFromReceipts } from "@/lib/locate/chainLoans";
 import { useLocate } from "@/lib/locate/store";
 import { Landing } from "./landing/Landing";
 import { AppShell } from "./app/AppShell";
@@ -98,6 +99,7 @@ export default function LocateRoot() {
   const setOffers = useLocate((s) => s.setOffers);
   const setLoans = useLocate((s) => s.setLoans);
   const { publicKey } = useWallet();
+  const { connection } = useConnection();
 
   useEffect(() => {
     let alive = true;
@@ -114,7 +116,7 @@ export default function LocateRoot() {
               amount: Number(row.amountRaw) / 1e9,
               collateralUsdc: Number(row.collateralUsdc) / 1e6,
               feeUsdc: Number(row.feeUsdc) / 1e6,
-              termDays: Math.max(1, Math.round(Number(row.termSecs) / 86_400)),
+              termDays: Math.round(Number(row.termSecs) / 86_400),
               expiryAt: Number(row.expiresAt) * 1000,
               lender: String(row.lender),
               mint: String(row.mint),
@@ -159,6 +161,20 @@ export default function LocateRoot() {
           /* keep other role results; do not invent loans */
         }
       }
+      if (rows.length === 0) {
+        try {
+          rows.push(...await loansFromChain(connection, wallet));
+        } catch {
+          /* a failed chain read stays empty rather than inventing loans */
+        }
+      }
+      try {
+        const stored = await locateApi.receipts({ wallet, limit: 50 });
+        const open = new Set(rows.map((loan) => String(loan.pubkey)));
+        rows.push(...settledLoansFromReceipts(stored.receipts ?? [], wallet, open));
+      } catch {
+        /* settled history stays blank when the receipt API is down */
+      }
       if (!alive) return;
       setLoans(rows.map((loan) => ({
         id: String(loan.pubkey),
@@ -172,8 +188,12 @@ export default function LocateRoot() {
         feeUsdc: Number(loan.feeUsdc) / 1e6,
         startedAt: Number(loan.startTs) * 1000,
         maturityAt: Number(loan.maturityTs) * 1000,
-        graceHours: Math.max(0, (Number(loan.claimAfterTs) - Number(loan.maturityTs)) / 3600),
-        status: loan.claimableNow ? "CLAIMABLE" as const : "ACTIVE" as const,
+        graceHours: loan.termsKnown === false ? 0 : Math.max(0, (Number(loan.claimAfterTs) - Number(loan.maturityTs)) / 3600),
+        status: (loan.status === "RETURNED" || loan.status === "CLAIMED"
+          ? loan.status
+          : loan.claimableNow ? "CLAIMABLE" : "ACTIVE") as "ACTIVE" | "RETURNED" | "CLAIMABLE" | "CLAIMED",
+        termsKnown: loan.termsKnown !== false,
+        feeKnown: loan.feeKnown !== false,
         mint: String(loan.mint),
         amountRaw: String(loan.amountRaw),
         collateralRaw: String(loan.collateralUsdc),
@@ -189,7 +209,7 @@ export default function LocateRoot() {
       alive = false;
       clearInterval(timer);
     };
-  }, [publicKey, setLoans]);
+  }, [connection, publicKey, setLoans]);
 
   return (
     <>

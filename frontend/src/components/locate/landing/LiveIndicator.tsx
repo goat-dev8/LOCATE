@@ -53,7 +53,7 @@ export function LiveIndicator({
       />
       <span className={status === "live" ? "text-lime-deep" : "text-ink-3"}>{label}</span>
       {status === "live" && at != null && (
-        <span className="text-ink-3">· PRESTOCKS · {fmtTime(at)}</span>
+        <span className="text-ink-3">· LIVE MARKET · {fmtTime(at)}</span>
       )}
     </span>
   );

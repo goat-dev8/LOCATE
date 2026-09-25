@@ -1,202 +1,230 @@
 "use client";
 
-/**
- * LOCATE — Overview: the market at a glance + your position.
- */
-
-import { ArrowUpRight, TrendingDown } from "lucide-react";
-import { CountUp, FadeContent } from "@/components/bits";
+import { useEffect, useState } from "react";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { PublicKey } from "@solana/web3.js";
+import { DEVNET_USDC, TOKEN, TOKEN_2022, ata } from "@locate/sdk";
 import { useLocate } from "@/lib/locate/store";
-import { fmtToken } from "@/lib/locate/seed";
+import { fmtToken, fmtUsd, uiFromRaw } from "@/lib/locate/seed";
 import { useLiveMarket } from "@/lib/locate/useLiveMarket";
+import { executionTrace } from "@/lib/locate/executionFacts";
+import { loanPhase, nextLoanAction } from "@/lib/locate/loanPhase";
 import { AssetLogo } from "../../landing/parts";
-import { DataRow, StatusChip, useCountdown, ViewHead } from "../parts";
-import { motion } from "framer-motion";
+import { StatusChip, useCountdown, ViewHead } from "../parts";
+
+const REPLICA = new PublicKey("9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P");
+
+const FLOW = [
+  { n: "01", title: "LEND", body: "Supply a PreStock", layer: "LOCATE PROTOCOL" },
+  { n: "02", title: "BORROW", body: "Post USDC collateral", layer: "LOCATE PROTOCOL" },
+  { n: "03", title: "SHORT", body: "Use the borrowed token externally", layer: "EXTERNAL MARKET" },
+  { n: "04", title: "RETURN", body: "Deliver the required token amount", layer: "LOCATE PROTOCOL" },
+  { n: "05", title: "SETTLE", body: "Collateral returns — or lender claims after default", layer: "LOCATE PROTOCOL" },
+];
 
 export function OverviewView() {
   const { navigate, offers, loans } = useLocate();
+  const { connection } = useConnection();
+  const { publicKey, connected } = useWallet();
   const live = useLiveMarket();
   const openai = live.bySymbol("OPENAI");
-  const activeSupply = offers
-    .filter((o) => o.status === "ACTIVE" && !o.isYours)
-    .reduce((acc, o) => acc + o.amount, 0);
-  const activeOffers = offers.filter((o) => o.status === "ACTIVE" && !o.isYours).length;
-  const myBorrowed = loans.find((l) => l.direction === "BORROWED" && l.status === "ACTIVE");
-  const claimable = loans.find((l) => l.status === "CLAIMABLE");
-  const borrowedCd = useCountdown(myBorrowed?.maturityAt ?? 0);
+  const [replica, setReplica] = useState<number | null>(null);
+  const [usdc, setUsdc] = useState<number | null>(null);
+
+  useEffect(() => {
+    setReplica(null);
+    setUsdc(null);
+    if (!publicKey) return;
+    let alive = true;
+    connection.getTokenAccountBalance(ata(publicKey, REPLICA, TOKEN_2022), "confirmed")
+      .then((row) => { if (alive) setReplica(uiFromRaw(row.value.amount, row.value.decimals)); })
+      .catch(() => { if (alive) setReplica(0); });
+    connection.getTokenAccountBalance(ata(publicKey, DEVNET_USDC, TOKEN), "confirmed")
+      .then((row) => { if (alive) setUsdc(uiFromRaw(row.value.amount, row.value.decimals)); })
+      .catch(() => { if (alive) setUsdc(0); });
+    return () => { alive = false; };
+  }, [connection, publicKey]);
+
+  const openOffers = offers.filter((o) => o.status === "ACTIVE");
+  const borrowable = openOffers.reduce((sum, o) => sum + o.amount, 0);
+  const liveLoans = loans.filter((l) => l.status === "ACTIVE" || l.status === "CLAIMABLE");
+  const claimable = loans.find((l) => l.direction === "LENT" && loanPhase(l) === "CLAIMABLE");
+  const borrowed = loans.find((l) => l.direction === "BORROWED" && l.status === "ACTIVE");
+
+  let primary = { label: "CREATE OFFER", go: () => navigate("create"), why: "List a PreStock to make short supply available." };
+  if (!connected) {
+    primary = { label: "BROWSE BOOK", go: () => navigate("book"), why: "Connect the Devnet wallet in the sidebar to lend or borrow." };
+  } else if (replica == null || usdc == null) {
+    primary = { label: "BROWSE BOOK", go: () => navigate("book"), why: "Reading this wallet’s Devnet balances." };
+  } else if (claimable) {
+    primary = { label: "CLAIM COLLATERAL", go: () => navigate("loan", claimable.id), why: "A loan passed maturity and grace without a return." };
+  } else if (borrowed) {
+    primary = { label: "RETURN LOAN", go: () => navigate("loan", borrowed.id), why: "Deliver the required token amount and release your collateral." };
+  } else if ((replica ?? 0) > 0) {
+    primary = { label: "LEND THIS PRESTOCK", go: () => navigate("create"), why: "This wallet holds dOPENAI, the Devnet replica. Listing it creates borrowable short supply." };
+  } else if ((usdc ?? 0) > 0) {
+    primary = { label: "BORROW PRESTOCK", go: () => navigate("book"), why: "This wallet holds Devnet USDC. Take an open offer to borrow." };
+  }
 
   return (
     <div>
       <ViewHead
-        label="LIVE DEVNET BOOK"
-        title="The book at a glance."
-        serif="OpenAI first."
+        label="LOCATE"
+        title="Lend the PreStock."
+        serif="Let someone short it."
         actions={
-          <>
-            <button onClick={() => navigate("execute")} className="lc-btn lc-btn-ink lc-btn-sm group">
-              MAINNET DEX
-              <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden />
-            </button>
-            <button onClick={() => navigate("book")} className="lc-btn lc-btn-ink lc-btn-sm group">
-              BROWSE BOOK
-              <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden />
-            </button>
-            <button onClick={() => navigate("create")} className="lc-btn lc-btn-lime lc-btn-sm">
-              CREATE OFFER
-            </button>
-          </>
+          <button onClick={primary.go} className="lc-btn lc-btn-lime lc-btn-sm">
+            {primary.label}
+          </button>
         }
       />
+      <p className="mb-6 max-w-2xl text-[15px] leading-[1.6] text-ink-2">
+        LOCATE turns idle PreStocks into borrowable short supply, secured by USDC collateral and settled by delivery.
+      </p>
+      <p className="mb-8 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-3">{primary.why}</p>
 
-      {/* market hero */}
-      <FadeContent distance={22}>
-        <div className="lc-card overflow-hidden">
-          <div className="flex flex-wrap items-center justify-between gap-5 border-b border-line px-6 py-5">
-            <div className="flex items-center gap-4">
-              <AssetLogo asset={{ id: "OPENAI", symbol: "OPENAI", name: "OpenAI PreStock", logo: "", refPrice: openai?.markPrice ?? null, marketPrice: openai?.tokenPrice ?? null, transferFeeBps: 100, standard: "TOKEN-2022", blurb: "" }} size={52} className="rounded-2xl" />
-              <div>
-                <p className="font-sans text-[17px] font-semibold tracking-[-0.01em] text-white">
-                  OpenAI PreStock
-                </p>
-                <p className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-ink-3">
-                  TOKEN-2022 · 1% TRANSFER FEE
-                </p>
-              </div>
-            </div>
-            <span className="lc-chip-ember">
-              <TrendingDown className="h-3 w-3" aria-hidden /> SHORTABLE
-            </span>
-          </div>
-          <div className="grid grid-cols-2 divide-line sm:grid-cols-4 sm:divide-x sm:divide-y-0">
-            {[
-              { label: "REFERENCE", node: openai?.markPrice ? <CountUp to={openai.markPrice} prefix="$" separator="," duration={1.4} /> : "unavailable", tone: "muted" },
-              { label: "MARKET", node: openai?.tokenPrice ? <CountUp to={openai.tokenPrice} prefix="$" separator="," duration={1.4} delay={0.1} /> : "unavailable", tone: "white" },
-              { label: "PREMIUM", node: openai?.premiumPct ? <CountUp to={openai.premiumPct} prefix="+" suffix="%" decimals={1} duration={1.4} delay={0.2} /> : "unavailable", tone: "ember" },
-              { label: "FEE / TERM", node: "1% · live term", tone: "muted" },
-            ].map((s) => (
-              <div key={s.label} className="flex flex-col gap-1.5 px-6 py-5 [&:nth-child(odd)]:border-b [&:nth-child(odd)]:border-line sm:[&:nth-child(odd)]:border-b-0">
-                <span className="lc-label">{s.label}</span>
-                <span
-                  className={`font-sans text-[clamp(1.3rem,2vw,1.65rem)] font-semibold tracking-[-0.02em] tabular-nums ${
-                    s.tone === "ember"
-                      ? "text-ember"
-                      : s.tone === "white"
-                        ? "text-white"
-                        : "text-ink-2"
-                  }`}
-                >
-                  {s.node}
-                </span>
-              </div>
-            ))}
-          </div>
-          <p className="border-t border-line px-6 py-4 text-[13.5px] leading-[1.6] text-ink-2">
-            Live PreStocks mark and token price from the LOCATE API. The mark is not an oracle and is not used for settlement.
-          </p>
+      <section className="lc-card p-6">
+        <p className="lc-label">LIVE MARKET CONTEXT · OPENAI</p>
+        <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-3">Live Mainnet market data</p>
+        <div className="mt-4 flex items-center gap-4">
+          <AssetLogo asset={{ id: "OPENAI", symbol: "OPENAI", name: "OpenAI PreStock", logo: "", refPrice: openai?.markPrice ?? null, marketPrice: openai?.tokenPrice ?? null, transferFeeBps: 100, standard: "TOKEN-2022", blurb: "" }} size={44} className="rounded-xl" />
+          <p className="font-sans text-[16px] font-semibold text-white">OpenAI PreStock</p>
         </div>
-      </FadeContent>
-
-      <div className="mt-5 grid gap-5 lg:grid-cols-3">
-        {/* short supply */}
-        <FadeContent delay={0.08} distance={22}>
-          <div className="lc-card lc-card-hover flex h-full flex-col p-6">
-            <p className="lc-label mb-4">SHORT SUPPLY · OPENAI</p>
-            <p className="font-sans text-[clamp(1.8rem,3vw,2.4rem)] font-semibold tracking-[-0.03em] tabular-nums text-white">
-              {fmtToken(activeSupply)}
-            </p>
-            <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.12em] text-ink-3">
-              BORROWABLE NOW · {activeOffers} LIVE OFFERS
-            </p>
-            <div className="mt-auto pt-5">
-              <button onClick={() => navigate("book")} className="lc-btn lc-btn-ghost lc-btn-sm w-full">
-                PRESS AGAINST THE PREMIUM
-              </button>
+        <dl className="mt-5 grid gap-3 sm:grid-cols-5">
+          {[
+            ["Reference", openai?.markPrice ? `$${Math.round(openai.markPrice).toLocaleString("en-US")}` : "unavailable"],
+            ["Market", openai?.tokenPrice ? `$${Math.round(openai.tokenPrice).toLocaleString("en-US")}` : "unavailable"],
+            ["Premium", openai?.premiumPct != null ? `${openai.premiumPct >= 0 ? "+" : ""}${openai.premiumPct.toFixed(1)}%` : "unavailable"],
+            ["Transfer fee", "100 bps"],
+            ["Token status", "Token-2022"],
+          ].map(([k, v]) => (
+            <div key={k}>
+              <dt className="lc-label">{k}</dt>
+              <dd className="mt-1 font-mono text-[14px] text-white">{v}</dd>
             </div>
-          </div>
-        </FadeContent>
+          ))}
+        </dl>
+        <p className="mt-4 text-[13.5px] leading-[1.6] text-ink-2">
+          This market data is live Mainnet information. It is not used as the settlement oracle.
+        </p>
+      </section>
 
-        {/* active loans */}
-        <FadeContent delay={0.14} distance={22}>
-          <div className="lc-card lc-card-hover flex h-full flex-col p-6">
-            <p className="lc-label mb-4">ACTIVE LOANS</p>
-            {myBorrowed && (
-              <button
-                onClick={() => navigate("loan", myBorrowed.id)}
-                className="group text-left"
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <span className="font-mono text-[12px] font-semibold text-white">
-                    {myBorrowed.id} · BORROWED
-                  </span>
-                  <StatusChip status={myBorrowed.status} />
-                </div>
-                <p className="mt-2 font-mono text-[22px] font-semibold tabular-nums text-lime-deep transition-colors group-hover:text-white">
-                  {borrowedCd.past ? "PAST DUE" : borrowedCd.label}
-                </p>
-                <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-3">
-                  RETURN {fmtToken(myBorrowed.netRequired)} NET OPENAI
-                </p>
-              </button>
-            )}
-            {claimable && (
-              <button
-                onClick={() => navigate("loan", claimable.id)}
-                className="mt-5 w-full rounded-xl border border-ember/30 bg-ember-soft p-4 text-left transition-colors hover:border-ember/50"
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <span className="font-mono text-[12px] font-semibold text-white">
-                    {claimable.id} · LENT
-                  </span>
-                  <StatusChip status={claimable.status} />
-                </div>
-                <p className="mt-2 font-mono text-[13px] font-bold text-ember">
-                  CLAIM ${claimable.collateralUsdc.toFixed(2)} USDC
-                </p>
-                <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-3">
-                  GRACE ELAPSED · NOTHING RETURNED
-                </p>
-              </button>
-            )}
-            <div className="mt-auto pt-5">
-              <button onClick={() => navigate("loans")} className="lc-btn lc-btn-ghost lc-btn-sm w-full">
-                ALL LOANS
-              </button>
-            </div>
-          </div>
-        </FadeContent>
+      <section className="mt-5">
+        <p className="lc-label mb-3">THE PROTOCOL FLOW</p>
+        <div className="grid gap-3 md:grid-cols-5">
+          {FLOW.map((step) => (
+            <article key={step.n} className="lc-card p-4">
+              <p className="font-mono text-[10px] text-ink-3">{step.n}</p>
+              <p className="mt-2 font-sans text-[15px] font-semibold text-white">{step.title}</p>
+              <p className="mt-1 text-[13px] text-ink-2">{step.body}</p>
+              <p className="mt-3 font-mono text-[9px] uppercase tracking-[0.12em] text-ink-3">{step.layer}</p>
+            </article>
+          ))}
+        </div>
+        <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-3">
+          LOCATE executes lend, borrow, return, and claim. The short and the buyback are external market execution.
+        </p>
+      </section>
 
-        {/* receipts */}
-        <FadeContent delay={0.2} distance={22}>
-          <div className="lc-card lc-card-hover flex h-full flex-col p-6">
-            <p className="lc-label mb-4">SETTLEMENT INPUTS</p>
-            <DataRow label="ORACLE" value="NONE" tone="accent" />
-            <DataRow label="LIQUIDATION ENGINE" value="NONE" tone="accent" />
-            <DataRow label="TRIGGER" value="TIME + DELIVERY" tone="strong" />
-            <DataRow label="COLLATERAL" value="USDC · LOCKED" />
-            <div className="mt-auto pt-5">
-              <button onClick={() => navigate("verify")} className="lc-btn lc-btn-ghost lc-btn-sm w-full">
-                PROOF ROOM
-              </button>
-            </div>
-          </div>
-        </FadeContent>
-      </div>
+      <section className="mt-5 grid gap-5 lg:grid-cols-2">
+        <article className="lc-card p-6">
+          <p className="lc-label">HOW A LOAN COMPLETES</p>
+          <ol className="mt-4 space-y-2 font-mono text-[12px] uppercase tracking-[0.08em] text-ink-2">
+            <li>Lender supplies a PreStock → offer</li>
+            <li>Borrower posts USDC collateral → receives the PreStock</li>
+            <li>Borrower may sell through external market liquidity</li>
+            <li>Borrower buys back enough tokens</li>
+            <li>Return delivers the required amount to the lender</li>
+            <li>Borrower receives the USDC collateral</li>
+          </ol>
+        </article>
+        <article className="lc-card p-6">
+          <p className="lc-label">DEFAULT PATH</p>
+          <ol className="mt-4 space-y-2 font-mono text-[12px] uppercase tracking-[0.08em] text-ink-2">
+            <li>Offer</li>
+            <li>Take</li>
+            <li>Maturity</li>
+            <li>Grace</li>
+            <li>Token not returned</li>
+            <li>Lender claims USDC collateral</li>
+          </ol>
+        </article>
+      </section>
 
-      {/* supply discovery note */}
-      <FadeContent delay={0.25} distance={18}>
-        <motion.div
-          className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-2xl border border-lime/20 bg-lime-soft px-5 py-4"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          <span className="lc-chip-lime">SUPPLY DISCOVERY</span>
-          <p className="text-[13px] leading-[1.55] text-ink-2">
-            Every offer listed is real deliverable supply — tokens that exist,
-            with terms attached. Premiums compress when shorts can finally borrow.
-          </p>
-        </motion.div>
-      </FadeContent>
+      <section className="mt-5 grid gap-5 lg:grid-cols-3">
+        <article className="lc-card flex flex-col p-6">
+          <p className="lc-label">SHORT SUPPLY · OPENAI</p>
+          {openOffers.length === 0 ? (
+            <>
+              <p className="mt-4 font-sans text-[22px] font-semibold text-white">NO OPEN OFFERS</p>
+              <p className="mt-2 text-[13.5px] text-ink-2">List a PreStock to make short supply available.</p>
+            </>
+          ) : (
+            <>
+              <p className="mt-4 font-sans text-[28px] font-semibold tabular-nums text-white">{fmtToken(borrowable)}</p>
+              <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-3">Borrowable now · {openOffers.length} open offers</p>
+            </>
+          )}
+          <button onClick={() => navigate("create")} className="lc-btn lc-btn-ink lc-btn-sm mt-5">CREATE OFFER</button>
+        </article>
+
+        <article className="lc-card p-6">
+          <p className="lc-label">ACTIVE LOANS</p>
+          {liveLoans.length === 0 ? (
+            <p className="mt-4 text-[13.5px] text-ink-2">No active loans on this wallet.</p>
+          ) : liveLoans.map((loan) => (
+            <LoanLine key={loan.id} loanId={loan.id} />
+          ))}
+        </article>
+
+        <article className="lc-card p-6">
+          <p className="lc-label">SETTLEMENT</p>
+          <p className="mt-4 text-[14px] text-white">No price oracle required.</p>
+          <p className="mt-2 text-[14px] text-white">Settlement is deterministic.</p>
+          <p className="mt-2 text-[13.5px] leading-[1.55] text-ink-2">Return the required token amount.</p>
+          <p className="mt-2 text-[13.5px] leading-[1.55] text-ink-2">Miss maturity + grace → lender can claim USDC collateral.</p>
+        </article>
+      </section>
+
+      <section className="mt-5 lc-card p-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="lc-label">EXECUTION TRACE</p>
+          <div className="flex gap-2">
+            <button onClick={() => navigate("verify")} className="lc-btn lc-btn-ghost lc-btn-sm">PROOF</button>
+            <button onClick={() => navigate("execute")} className="lc-btn lc-btn-ghost lc-btn-sm">MARKET EXECUTION</button>
+          </div>
+        </div>
+        <ul className="mt-4 space-y-2">
+          {executionTrace.map((step) => (
+            <li key={step.label} className="flex flex-wrap items-baseline justify-between gap-3 border-b border-line/70 py-2">
+              <span className="font-mono text-[12px] text-white">{step.confirmed ? "✓" : "·"} {step.label}</span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-ink-3">{step.layer}</span>
+              {step.href ? (
+                <a href={step.href} target="_blank" rel="noreferrer" className="font-mono text-[11px] text-ink-2 underline">{step.confirmed ? "receipt" : "evidence"}</a>
+              ) : null}
+            </li>
+          ))}
+        </ul>
+        <p className="mt-3 text-[12.5px] text-ink-3">Devnet protocol receipts and external Mainnet DEX receipts are separate. A DEX signature is not a LOCATE transaction.</p>
+      </section>
     </div>
+  );
+}
+
+function LoanLine({ loanId }: { loanId: string }) {
+  const loan = useLocate((s) => s.loans.find((row) => row.id === loanId));
+  const navigate = useLocate((s) => s.navigate);
+  const cd = useCountdown(loan?.maturityAt ?? 0);
+  if (!loan) return null;
+  const phase = loanPhase(loan);
+  return (
+    <button onClick={() => navigate("loan", loan.id)} className="mt-4 block w-full border-t border-line/70 pt-3 text-left">
+      <div className="flex items-center justify-between gap-3">
+        <span className="font-mono text-[12px] text-white">{loan.assetId} · {fmtToken(loan.amount)}</span>
+        <StatusChip status={phase} />
+      </div>
+      <p className="mt-1 font-mono text-[11px] text-ink-3">{loan.direction} · collateral {fmtUsd(loan.collateralUsdc)} · {cd.past ? "past maturity" : cd.label}</p>
+      <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.1em] text-ink-2">{nextLoanAction(loan)}</p>
+    </button>
   );
 }

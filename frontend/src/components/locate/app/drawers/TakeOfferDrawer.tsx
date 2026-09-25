@@ -11,7 +11,7 @@ import { ILLUSTRATIVE, quoteEconomics } from "@locate/sdk";
 import { takeInstructions } from "@/lib/locate/tx";
 import { phaseCopy, usePreparedTx } from "@/lib/locate/usePreparedTx";
 import { useLocate } from "@/lib/locate/store";
-import { ASSETS, fmtUsd, fmtToken, netFromGross } from "@/lib/locate/seed";
+import { ASSETS, fmtUsd, fmtToken, formatDuration, netFromGross } from "@/lib/locate/seed";
 import { locateApi } from "@/lib/locate/env";
 import { useLiveMarket } from "@/lib/locate/useLiveMarket";
 import type { Offer } from "@/lib/locate/types";
@@ -141,10 +141,10 @@ function TakeOfferInner({
               </div>
 
               <DataRow label="AMOUNT OFFERED" value={`${fmtToken(offer.amount)} ${asset.symbol}`} />
-              <DataRow label="YOU RECEIVE NET" value={`${fmtToken(net)} ${asset.symbol}`} tone="accent" />
+              <DataRow label="YOU RECEIVE NET" value={`${fmtToken(net, 6)} ${asset.symbol}`} tone="accent" />
               <DataRow label="COLLATERAL LOCKED" value={fmtUsd(offer.collateralUsdc)} />
               <DataRow label="UPFRONT FEE" value={fmtUsd(offer.feeUsdc)} />
-              <DataRow label="TERM" value={`${offer.termDays} DAYS + 48H GRACE`} />
+              <DataRow label="TERM" value={`${formatDuration(Number(offer.termSecs ?? offer.termDays * 86_400))} + ${formatDuration(Number(offer.graceSecs ?? 48 * 3600))} GRACE`} />
               <DataRow
                 label="RETURN REQUIREMENT"
                 value={`${fmtToken(offer.amount)} NET`}

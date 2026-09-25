@@ -45,6 +45,48 @@ const EMPTY: LiveMarket = {
   byPremium: [],
 };
 
+function stateFromPrices(prices: Map<string, { tokenPrice: number; markPrice: number; premiumPct: number }>): LiveMarket {
+  const rows: LiveRow[] = [...prices.entries()].map(([symbol, price]) => ({
+    symbol,
+    mint: "",
+    state: "LIVE",
+    tokenPrice: price.tokenPrice,
+    markPrice: price.markPrice,
+    premiumPct: price.premiumPct,
+    fundedRaw: 0,
+    bestOffer: null,
+    action: "LIST_YOURS",
+  }));
+  const map = new Map(rows.map((row) => [row.symbol, row]));
+  return {
+    status: "live",
+    rows,
+    at: Date.now(),
+    bySymbol: (symbol) => map.get(symbol),
+    byPremium: [...rows].sort((a, b) => (b.premiumPct ?? -1) - (a.premiumPct ?? -1)),
+  };
+}
+
+async function localPrices(): Promise<Map<string, { tokenPrice: number; markPrice: number; premiumPct: number }>> {
+  const map = new Map<string, { tokenPrice: number; markPrice: number; premiumPct: number }>();
+  try {
+    const response = await fetch("/api/prestocks");
+    if (!response.ok) return map;
+    const body = (await response.json()) as { rows?: Array<{ symbol?: string; tokenPrice?: number; markPrice?: number; premiumPct?: number }> };
+    for (const row of body.rows ?? []) {
+      if (!row.symbol || row.tokenPrice == null || row.markPrice == null || !Number.isFinite(row.tokenPrice) || !Number.isFinite(row.markPrice)) continue;
+      map.set(row.symbol, {
+        tokenPrice: row.tokenPrice,
+        markPrice: row.markPrice,
+        premiumPct: Number.isFinite(row.premiumPct) ? row.premiumPct! : ((row.tokenPrice - row.markPrice) / row.markPrice) * 100,
+      });
+    }
+  } catch {
+    /* The offer API can be up while the market proxy is not. */
+  }
+  return map;
+}
+
 function asText(value: unknown): string {
   return typeof value === "string" ? value : value == null ? "" : String(value);
 }
@@ -55,6 +97,9 @@ export function useLiveMarket(pollMs = 60_000): LiveMarket {
   useEffect(() => {
     let alive = true;
     const load = async () => {
+      const prices = await localPrices();
+      if (!alive) return;
+      if (prices.size > 0) setState(stateFromPrices(prices));
       try {
         const data = await locateApi.opportunities();
         if (!alive) return;
@@ -62,8 +107,11 @@ export function useLiveMarket(pollMs = 60_000): LiveMarket {
           .map((raw) => {
             const symbol = asText(raw.symbol);
             const best = raw.bestOffer && typeof raw.bestOffer === "object" ? (raw.bestOffer as Record<string, unknown>) : null;
-            const token = raw.tokenPrice == null ? null : Number(raw.tokenPrice) / 1_000_000;
-            const mark = raw.markPrice == null ? null : Number(raw.markPrice) / 1_000_000;
+            const local = prices.get(symbol);
+            const tokenRemote = raw.tokenPrice == null ? null : Number(raw.tokenPrice) / 1_000_000;
+            const markRemote = raw.markPrice == null ? null : Number(raw.markPrice) / 1_000_000;
+            const token = tokenRemote ?? local?.tokenPrice ?? null;
+            const mark = markRemote ?? local?.markPrice ?? null;
             const premiumBps = raw.premiumBps == null ? null : Number(raw.premiumBps);
             return {
               symbol,
@@ -71,7 +119,9 @@ export function useLiveMarket(pollMs = 60_000): LiveMarket {
               state: asText(raw.state),
               tokenPrice: Number.isFinite(token) ? token : null,
               markPrice: Number.isFinite(mark) ? mark : null,
-              premiumPct: premiumBps == null || !Number.isFinite(premiumBps) ? null : premiumBps / 100,
+              premiumPct: premiumBps != null && Number.isFinite(premiumBps)
+                ? premiumBps / 100
+                : local?.premiumPct ?? (token != null && mark != null && mark !== 0 ? ((token - mark) / mark) * 100 : null),
               fundedRaw: Number(raw.fundedRaw ?? 0) / 1e9,
               bestOffer: best
                 ? {
@@ -98,6 +148,12 @@ export function useLiveMarket(pollMs = 60_000): LiveMarket {
         });
       } catch {
         if (!alive) return;
+        const prices = await localPrices();
+        if (!alive) return;
+        if (prices.size > 0) {
+          setState(stateFromPrices(prices));
+          return;
+        }
         setState((s) =>
           s.rows.length > 0
             ? { ...s, status: s.status === "live" ? "live" : "waking" }

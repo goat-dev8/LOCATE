@@ -38,7 +38,7 @@ const NAV: { view: View; label: string; short: string; icon: typeof LayoutGrid }
   { view: "offers", label: "My Offers", short: "OFFERS", icon: Tag },
   { view: "loans", label: "My Loans", short: "LOANS", icon: ArrowLeftRight },
   { view: "verify", label: "Verify", short: "VERIFY", icon: ShieldCheck },
-  { view: "execute", label: "Mainnet DEX", short: "DEX", icon: Radio },
+  { view: "execute", label: "Execution", short: "EXEC", icon: Radio },
 ];
 
 const VIEW_TITLES: Record<View, string> = {
@@ -49,7 +49,7 @@ const VIEW_TITLES: Record<View, string> = {
   offers: "MY OFFERS",
   loans: "MY LOANS",
   verify: "PROOF ROOM",
-  execute: "MAINNET EXECUTION",
+  execute: "MARKET EXECUTION",
 };
 
 function Wallet() {
@@ -64,18 +64,34 @@ function Wallet() {
       return;
     }
     const mint = new PublicKey("9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P");
-    connection.getTokenAccountBalance(ata(publicKey, DEVNET_USDC, TOKEN), "confirmed")
-      .then((result) => setUsdc(result.value.uiAmountString ?? "0"))
-      .catch(() => setUsdc("0"));
-    connection.getTokenAccountBalance(ata(publicKey, mint, TOKEN_2022), "confirmed")
-      .then((result) => setToken(result.value.uiAmountString ?? "0"))
-      .catch(() => setToken("0"));
+    const shown = (amount: string, decimals: number) => {
+      const negative = amount.startsWith("-");
+      const digits = (negative ? amount.slice(1) : amount).padStart(decimals + 1, "0");
+      const cut = digits.length - decimals;
+      const text = `${digits.slice(0, cut)}.${digits.slice(cut)}`.replace(/0+$/, "").replace(/\.$/, "");
+      return `${negative ? "-" : ""}${text}`;
+    };
+    const read = () => {
+      connection.getTokenAccountBalance(ata(publicKey, DEVNET_USDC, TOKEN), "confirmed")
+        .then((result) => setUsdc(shown(result.value.amount, result.value.decimals)))
+        .catch(() => setUsdc(null));
+      connection.getTokenAccountBalance(ata(publicKey, mint, TOKEN_2022), "confirmed")
+        .then((result) => setToken(shown(result.value.amount, result.value.decimals)))
+        .catch(() => setToken(null));
+    };
+    read();
+    const timer = setInterval(read, 15_000);
+    return () => clearInterval(timer);
   }, [connection, publicKey]);
   const onConnect = () => {
     const phantom = wallets.find((w) => w.adapter.name === "Phantom") ?? wallets[0];
     if (!phantom) return;
-    select(phantom.adapter.name);
-    connect().catch(() => undefined);
+    try {
+      select(phantom.adapter.name);
+      void connect().catch(() => undefined);
+    } catch {
+      /* The wallet adapter throws when no account is selected yet. */
+    }
   };
   return (
     <div className="rounded-2xl border border-shell-line bg-shell-2 p-4">
@@ -95,15 +111,19 @@ function Wallet() {
         )}
       </div>
       <div className="mt-2.5 border-t border-shell-line pt-2.5">
-        {token && Number(token) > 0 ? (
-          <div className="flex items-baseline justify-between py-0.5">
-            <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-shell-ink-2">dOPENAI</span>
-            <span className="font-mono text-[11.5px] tabular-nums text-shell-ink">{token}</span>
-          </div>
+        {connected ? (
+          <>
+            <div className="flex items-baseline justify-between py-0.5">
+              <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-shell-ink-2">dOPENAI</span>
+              <span className="font-mono text-[11.5px] tabular-nums text-shell-ink">{token ?? "…"}</span>
+            </div>
+            <div className="flex items-baseline justify-between py-0.5">
+              <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-shell-ink-2">USDC</span>
+              <span className="font-mono text-[11.5px] tabular-nums text-shell-ink">{usdc ?? "…"}</span>
+            </div>
+          </>
         ) : (
-          <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-shell-ink-2">
-            {connected ? `USDC ${usdc ?? "…"}` : "NO PRESTOCK BALANCES"}
-          </p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-shell-ink-2">NO PRESTOCK BALANCES</p>
         )}
       </div>
     </div>

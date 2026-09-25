@@ -12,7 +12,7 @@ import { TOKEN_2022, ata } from "@locate/sdk";
 import { returnInstructions } from "@/lib/locate/tx";
 import { phaseCopy, usePreparedTx } from "@/lib/locate/usePreparedTx";
 import { useLocate, locateAsset } from "@/lib/locate/store";
-import { fmtToken, fmtUsd, grossForNet } from "@/lib/locate/seed";
+import { fmtToken, fmtUsd, grossForNet, uiFromRaw } from "@/lib/locate/seed";
 import { DEVNET_MINT } from "@/lib/locate/env";
 import { ClickSpark } from "@/components/bits";
 import { DataRow, DoneState, Note, Payline, StagedProgress } from "../parts";
@@ -56,7 +56,7 @@ function Body({ loanId, onClose }: { loanId: string; onClose: () => void }) {
     const mint = new PublicKey(loan?.mint || DEVNET_MINT);
     connection
       .getTokenAccountBalance(ata(publicKey, mint, TOKEN_2022), "confirmed")
-      .then((result) => setHeld(Number(result.value.uiAmountString ?? result.value.uiAmount ?? 0)))
+      .then((result) => setHeld(uiFromRaw(result.value.amount, result.value.decimals)))
       .catch(() => setHeld(0));
   }, [connection, publicKey, loan?.mint]);
 
@@ -86,23 +86,23 @@ function Body({ loanId, onClose }: { loanId: string; onClose: () => void }) {
         <div className="flex flex-col gap-1">
           <DataRow
             label="NET REQUIRED"
-            value={`${fmtToken(loan.netRequired)} ${asset.symbol}`}
+            value={`${fmtToken(loan.netRequired, 6)} ${asset.symbol}`}
             tone="lime"
           />
           <DataRow
             label="GROSS TO SEND"
-            value={`${fmtToken(gross)} ${asset.symbol}`}
+            value={`${fmtToken(gross, 6)} ${asset.symbol}`}
           />
           <DataRow
             label="HELD IN WALLET"
-            value={`${fmtToken(held)} ${asset.symbol}`}
+            value={`${fmtToken(held, 6)} ${asset.symbol}`}
             tone="muted"
           />
           <DataRow
             label="SHORTFALL"
             value={
               shortfall > 0
-                ? `${fmtToken(shortfall)} ${asset.symbol}`
+                ? `${fmtToken(shortfall, 6)} ${asset.symbol}`
                 : `NONE`
             }
             tone={shortfall > 0 ? "refuse" : "muted"}
@@ -110,7 +110,7 @@ function Body({ loanId, onClose }: { loanId: string; onClose: () => void }) {
           {shortfall > 0 && (
             <DataRow
               label="ESTIMATED COVER COST"
-              value={fmtUsd(coverCost)}
+              value={asset.marketPrice ? fmtUsd(coverCost) : "UNAVAILABLE"}
               tone="ember"
             />
           )}
@@ -118,7 +118,7 @@ function Body({ loanId, onClose }: { loanId: string; onClose: () => void }) {
           <div className="mt-4">
             <Payline
               label="COVER COST AT MARKET"
-              value={fmtUsd(coverCost)}
+              value={asset.marketPrice ? fmtUsd(coverCost) : "UNAVAILABLE"}
               variant="total"
             />
           </div>
@@ -130,8 +130,8 @@ function Body({ loanId, onClose }: { loanId: string; onClose: () => void }) {
             )}
             {shortfall > 0 ? (
               <Note tone="ember">
-                WALLET HOLDS {fmtToken(held)} OF {fmtToken(gross)}{" "}
-                {asset.symbol} GROSS — THE REST IS FILLED AT MARKET.
+                WALLET HOLDS {fmtToken(held, 6)} OF {fmtToken(gross, 6)}{" "}
+                {asset.symbol} GROSS. THE TRANSFER FEE MEANS THE RECEIVED NET IS NOT ENOUGH TO RETURN. NO DEVNET VENUE FILLS THIS SHORTFALL.
               </Note>
             ) : (
               <Note tone="lime">WALLET COVERS FULL RETURN.</Note>

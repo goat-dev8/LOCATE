@@ -6,7 +6,7 @@
 
 import { useState } from "react";
 import { useLocate } from "@/lib/locate/store";
-import { ASSETS, fmtUsd, fmtToken } from "@/lib/locate/seed";
+import { ASSETS, fmtUsd, fmtToken, formatDuration } from "@/lib/locate/seed";
 import type { Offer } from "@/lib/locate/types";
 import { AssetLogo } from "../../landing/parts";
 import { EmptyState, Segmented, StatusChip, ViewHead } from "../parts";
@@ -25,9 +25,9 @@ export function MyOffersView() {
   return (
     <div>
       <ViewHead
-        label="YOUR LISTINGS"
-        title="My offers."
-        serif="Your supply."
+        label="WHAT AM I LENDING"
+        title="What am I lending?"
+        serif="Your offers."
         actions={
           <button onClick={() => navigate("create")} className="lc-btn lc-btn-lime lc-btn-sm">
             NEW OFFER
@@ -77,7 +77,7 @@ export function MyOffersView() {
                   <div>
                     <p className="font-mono text-[12px] font-semibold text-white">{o.id}</p>
                     <p className="font-mono text-[9.5px] uppercase tracking-[0.12em] text-ink-3">
-                      {o.termDays} DAY TERM
+                      {formatDuration(Number(o.termSecs ?? o.termDays * 86_400))} TERM
                     </p>
                   </div>
                   <div className="flex items-center gap-2.5">
@@ -96,6 +96,9 @@ export function MyOffersView() {
                     <StatusChip status={o.status} />
                   </div>
                   <div className="flex items-center gap-2 lg:justify-end">
+                    <p className="font-mono text-[9px] uppercase tracking-[0.1em] text-ink-3">
+                      {o.status === "ACTIVE" ? "Next: cancel, or wait for a take" : o.status === "TAKEN" ? "Next: open the loan" : o.status}
+                    </p>
                     {o.status === "ACTIVE" && (
                       <button
                         onClick={() => setCancelling(o)}

@@ -63,6 +63,8 @@ export interface Loan {
   lenderPubkey?: string;
   borrowerPubkey?: string;
   feeBps?: number;
+  termsKnown?: boolean;
+  feeKnown?: boolean;
 }
 
 export interface ReceiptLine {
@@ -91,6 +93,8 @@ export interface CreateOfferInput {
   feeUsdc: number;
   termDays: number;
   expiryHours: number;
+  termSecs?: number;
+  graceSecs?: number;
 }
 
 export type ToastTone = "ink" | "lime" | "ember" | "refuse";

@@ -997,4 +997,197 @@ Outstanding blockers: Devnet replica mint has no working DEX venue; cloned-fork 
 
 Git SHA: 10eef72f8888e43e73c96ae12879acab0dad5576
 
+## 2026-09-24T23:40:00Z — Product story on the dashboard
+
+PHASE PRODUCT NARRATIVE
+
+What changed: Overview now leads with “Lend the PreStock. Let someone short it.” Live Mainnet market context is labeled as not a settlement oracle. The flow is LEND, BORROW, SHORT, RETURN, SETTLE, with SHORT marked external. Short supply, active loans, and deterministic settlement sit under that. Mainnet DEX nav is Execution / Market execution. Proof and Verify group Devnet protocol, cloned Mainnet state, external DEX, and security. Execution trace links real Devnet and Mainnet receipts. Role action on the connected wallet was LEND THIS PRESTOCK because the Devnet replica balance is non-zero.
+
+Chrome: localhost:3010 app, wallet Hbkp…TvaC connected, dOPENAI 1.485985334. Book reported no funded Devnet offers while the API status was waking. No new protocol transaction was sent.
+
+Tests: frontend checker 0. New view files typecheck. Pre-existing AddressLookupTableAccount errors in dex swap routes remain.
+
+Outstanding blockers: API waking, so create/take/return/claim was not re-run this step. Devnet DEX remains FAIL.
+
+Git SHA: a8c81a3
+
+## 2026-09-24T23:45:00Z — Devnet listing attempted from the dashboard
+
+PHASE LENDER CREATE
+
+What ran: Chrome create-offer for 0.005 dOPENAI, collateral 12.50 Devnet USDC, fee 0.35, term 7 days, grace 48h, expiry 48h. Wallet Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC. Simulation passed. Two Phantom approvals returned signatures that are absent on both Devnet and Mainnet: ECvDaUc1K8Ufa1DurWsfLriqMX3NmoR3jYGo6nx1RacuiHeyyvbJHrTX8Zaox9xyMbNskb4CmkrctPyYbrG4cZo and 2QZjbc5Bwj8obpXy39zkrRsjvYbofe9aTSf7ibQ2UwefPxuogzvaywtaEfqtbxumjpuhycfm3dthtzpu95nphzvq. Book remains empty. No LOCATE Mainnet transaction.
+
+Root cause: the prepared blockhash aged out during Phantom approval, and sign-and-send used Phantom's sender instead of the app Devnet connection. A later attempt hit Devnet RPC 429 before a signature existed.
+
+Fix: refresh the blockhash immediately before signing, keep polling until the confirmation window ends, retry one 429 on the blockhash fetch, and send the signed transaction through the app Devnet connection.
+
+Blocker: the same wallet cannot take its own offer. Take refuses self-take. Borrow, return, and claim still need a second Devnet wallet. Devnet DEX remains FAIL.
+
+Git SHA: a8c81a3
+
+## 2026-09-24T23:52:00Z — Devnet offer listed from the dashboard
+
+PHASE LENDER CREATE
+
+What ran: same form, Phantom sign, then send through the app Devnet connection. Confirmed. err null. Slot 503713393. Signature 2PrXLPkMsdn14iqSBowcYj5oqEFkAGDoep6JtuqFxUzDNoZNReoDB32hPGCYJARYq29VzxMw67tdpNnhmkUDH4b9. Offer Gxs3bCKMnrB4RRxP8Kq4rH76TRxR7NVaKp5z143VKMHy is ACTIVE in My Offers and the Book count is 1. Amount 0.005 dOPENAI. Collateral 12.50. Fee 0.35. Term 7 days. Wallet dOPENAI balance unchanged at 1.485985334 because tokens stay with the lender until take.
+
+Network: Devnet. Mint 9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P. Not a Mainnet LOCATE transaction.
+
+Next: a second wallet must take. This wallet is refused as borrower of its own offer.
+
+Git SHA: a8c81a3
+
+## 2026-09-24T23:58:00Z — Second wallet took the Devnet offer; return simulation refused
+
+PHASE BORROWER TAKE
+
+Network: Devnet. Not a Mainnet LOCATE transaction. Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6.
+
+Wallet: CpTxsgPjvaaPSaBKkijvB1h3hzgJmPiTsWNhuS7tRkgX (borrower). Lender remains Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC. Mint 9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P. Offer Gxs3bCKMnrB4RRxP8Kq4rH76TRxR7NVaKp5z143VKMHy. Loan vault 4HfFgpHfyqY2StzQw7voUMH9JyKyuz19ixKFag6H2RXN.
+
+Take signature 2dv9sbvrxdZUZmP4vtdjooxDUvTjk5AG8rnQhWcyw3TqcNE5PuFcwt3PP9ApZztjP7CYFfQffHqymoE4b2MqNB3g. Slot 503715155. err null. Fee 155000 lamports.
+
+Balances from the transaction:
+- Lender dOPENAI raw 999899494 → 994899494 (delta −5000000 gross).
+- Borrower dOPENAI raw 0 → 4950000 (received net 0.00495 after the 100 bps transfer fee).
+- Borrower Devnet USDC raw 20000000 → 7150000 (delta −12850000 = 12.50 collateral + 0.35 fee).
+- Lender Devnet USDC raw 9950000 → 10300000 (delta +350000 fee).
+- Collateral account raw 12500000 (12.50) locked.
+
+UI after take: Book count cleared. My Loans shows 1, phase RETURN READY, about 6d 23h remaining. Chrome wallet was CpTx…RkgX.
+
+PHASE RETURN
+
+Simulation only. No return transaction was sent. Custom 1 — Program log: Error: insufficient funds. Borrower holds raw 4950000. Required return gross is about 0.005051. Shortfall about 0.000101. The Token-2022 fee makes the received net smaller than the gross that must be sent back. Devnet DEX remains FAIL, so nothing on Devnet fills that shortfall. Claim is not reachable in this session: term is 7 days plus 48h grace, and this wallet is the borrower.
+
+Display fix in the same step: Token-2022 jsonParsed uiAmountString reported 0.007356366 for raw 4950000. The sidebar, create form, overview role check, and return drawer now use raw amount and decimals. Fee lines show six decimals so 0.00495 is not rounded to 0.005. Return copy no longer says the shortfall is filled at market.
+
+Next: return still needs the gross shortfall from a real venue or an already-held balance. Claim waits for maturity plus grace. Do not mark Devnet DEX as pass.
+
+Git SHA: a8c81a3
+
+## 2026-09-25T00:10:00Z — Short claim term is available; lender wallet is not selected
+
+PHASE CLAIM PREP
+
+The deployed Devnet program was built with the devnet feature. Minimum term is 60 seconds. Minimum grace is 30 seconds. Create offer now has a 1 MIN choice that sends termSecs 60 and graceSecs 30 through the existing create_offer instruction. Book, My Offers, and the take drawer format those durations from the chain values instead of rounding them up to 1 day or 0 hours.
+
+No new transaction. Phantom is still CpTxsgPjvaaPSaBKkijvB1h3hzgJmPiTsWNhuS7tRkgX. That wallet holds raw 4950000 dOPENAI and 7.15 Devnet USDC. It cannot list the short offer because it does not hold a spare balance, and it cannot claim the open loan because it is the borrower. The lender Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC is not the selected Phantom account. The extension popup cannot be opened from this browser session.
+
+Return on loan 4HfFgpHfyqY2StzQw7voUMH9JyKyuz19ixKFag6H2RXN remains unsent. Simulation: Custom 1, insufficient funds. Held 0.00495. Required gross about 0.005051. Devnet DEX remains FAIL.
+
+Sidebar now shows both balances from raw amounts: dOPENAI 0.00495, USDC 7.15.
+
+Next: select the lender account in Phantom, list a 1 MIN offer, take it from CpTx, refuse the early claim, then claim after 60 seconds plus 30 seconds of grace.
+
+Git SHA: a8c81a3
+
+## 2026-09-25T00:20:00Z — Live market prices render when the offer API is stale
+
+PHASE MARKET CONTEXT
+
+The offer API returned STALE_DATA with null prices, so the dashboard said market data was unavailable. The mark batch now returns an object with markPrice, and the local market proxy treated that as empty. The proxy reads both a bare number and markPrice. The dashboard publishes those prices before it waits on the offer API.
+
+Chrome on localhost:3010 showed OpenAI reference $1,023.61, market $1,332.10, premium +30.1%. No new chain transaction. Phantom remains CpTxsgPjvaaPSaBKkijvB1h3hzgJmPiTsWNhuS7tRkgX. Return and claim are unchanged: insufficient gross for return, and the lender account is not selected for a 1 MIN claim loan.
+
+Git SHA: a8c81a3
+
+## 2026-09-25T00:25:00Z — One-minute offer listed; early claim refused
+
+PHASE LENDER CREATE
+
+Network: Devnet. Wallet Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC. Mint 9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P.
+
+Signature 2ocNgsJrwtCwcR65AXeqQc83K1DX6NoEeC5KedD9a1ZLSZM2QWorVcceemNZJkdqquLtNcJkNhp3L5LfAYiSMwgC. Slot 503722504. err null. Instruction CreateOffer. Offer 96RP66nAg4E5uZYmZyMs2JCmEp5KgsTUbz1Suqq5RPC7 is ACTIVE. Amount 0.001 dOPENAI. Collateral 1.00 Devnet USDC. Fee 0.05. Term 60 seconds. Grace 30 seconds. Listing expiry 48 hours. Lender dOPENAI stayed 0.994899494 because tokens stay in the wallet until take. Devnet USDC stayed 10.3.
+
+PHASE EARLY CLAIM
+
+Loan 4HfFgpHfyqY2StzQw7voUMH9JyKyuz19ixKFag6H2RXN. Simulation only. No claim transaction was sent. Result ClaimRefusedNotMatured. About 6d 23h remained before maturity. The claim button stayed disabled.
+
+Next: switch Phantom to CpTxsgPjvaaPSaBKkijvB1h3hzgJmPiTsWNhuS7tRkgX and take offer 96RP66nAg4E5uZYmZyMs2JCmEp5KgsTUbz1Suqq5RPC7. Collateral plus fee is 1.05 Devnet USDC. After take, wait 60 seconds plus 30 seconds of grace, switch back to the lender, and claim.
+
+Git SHA: a8c81a3
+
+## 2026-09-25T00:19:16Z — Borrower took the one-minute offer
+
+PHASE BORROWER TAKE
+
+Network: Devnet. Borrower CpTxsgPjvaaPSaBKkijvB1h3hzgJmPiTsWNhuS7tRkgX. Lender Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC. Offer 96RP66nAg4E5uZYmZyMs2JCmEp5KgsTUbz1Suqq5RPC7. Mint 9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P.
+
+Signature 45Yj8EMD82v8oLaMt36f6gL8Sz8UGCik1y5dNbzsGK7MPy2AL2myqpubGDmr56ifyYAHdQMi2yaoavyajenzEjUJ. Slot 503724179. err null. Block time 1790295556 (2026-09-25T00:19:16Z).
+
+Balances:
+- Lender dOPENAI raw 994899494 → 993899494 (delta −1000000 gross).
+- Borrower dOPENAI raw 4950000 → 5940000 (delta +990000, received net 0.00099).
+- Borrower Devnet USDC raw 7150000 → 6100000 (delta −1050000 = 1.00 collateral + 0.05 fee).
+- Lender Devnet USDC raw 10300000 → 10350000 (delta +50000 fee).
+- Collateral account FU7wNF9W4pCa3d8syBTHcZfMNNo5aDTUeg5RRd6jaHD6 raw 1000000.
+
+Claim is allowed after block time plus 60 seconds plus 30 seconds of grace: 2026-09-25T00:20:46Z. The borrower wallet was still selected at confirmation, so the lender must be selected again before claim.
+
+Git SHA: a8c81a3
+
+## 2026-09-25T00:21:00Z — Short loan is claimable; lender wallet is not selected
+
+PHASE CLAIM WINDOW
+
+The grace window for offer 96RP66nAg4E5uZYmZyMs2JCmEp5KgsTUbz1Suqq5RPC7 passed. My Loans on CpTxsgPjvaaPSaBKkijvB1h3hzgJmPiTsWNhuS7tRkgX shows loan FU7wNF9W4pCa3d8syBTHcZfMNNo5aDTUeg5RRd6jaHD6 as CLAIMABLE, with next action await lender claim. No claim transaction was sent. Phantom is still the borrower.
+
+The card had labeled that loan SETTLED and shown grace as 0.0083 hours. CLAIMABLE now stays claimable, and grace renders as 30S.
+
+Next: select Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC and claim loan FU7wNF9W4pCa3d8syBTHcZfMNNo5aDTUeg5RRd6jaHD6. Collateral to claim is 1.00 Devnet USDC.
+
+Git SHA: a8c81a3
+
+## 2026-09-25T00:28:00Z — Lender claimed the one-minute loan
+
+PHASE CLAIM
+
+Network: Devnet. Wallet Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC. Loan FU7wNF9W4pCa3d8syBTHcZfMNNo5aDTUeg5RRd6jaHD6. Offer 96RP66nAg4E5uZYmZyMs2JCmEp5KgsTUbz1Suqq5RPC7. Borrower CpTxsgPjvaaPSaBKkijvB1h3hzgJmPiTsWNhuS7tRkgX. Mint 9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P.
+
+The loans API returned 500 because its Devnet RPC call was rate limited, so the My Loans screen could not list the loan. A direct account read still saw the loan. Simulation of claim_collateral returned err null. Phantom signed. The signed transaction was sent on Devnet.
+
+Signature 44tmkCp24ctT6dYc4xK4Q1UDQ4BtRCgjQ5QXVMh8VxA5pCn3sKkZjwyurGrH9ZHurdB4uBiW8CpHsWrD5dtuuE5C. Slot 503728891. err null.
+
+Devnet USDC:
+- Collateral account FU7wNF9W raw 1000000 before, account absent after.
+- Lender raw 10350000 → 11350000 (delta +1000000, the 1.00 collateral).
+
+Not a Mainnet LOCATE transaction. The 7-day loan 4HfFgpHfyqY2StzQw7voUMH9JyKyuz19ixKFag6H2RXN remains active and was refused early as ClaimRefusedNotMatured. Return of that loan remains blocked by the Token-2022 gross shortfall. Devnet DEX remains FAIL.
+
+Git SHA: a8c81a3
+
+## 2026-09-25T00:38:00Z — Borrower returned the 7-day loan
+
+PHASE RETURN
+
+Network: Devnet. Borrower CpTxsgPjvaaPSaBKkijvB1h3hzgJmPiTsWNhuS7tRkgX. Lender Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC. Loan 4HfFgpHfyqY2StzQw7voUMH9JyKyuz19ixKFag6H2RXN. Mint 9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P.
+
+The borrower held raw 5940000 after the one-minute loan delivered 990000 net. Required return gross was 5050506. The wallet covered it. No Devnet DEX fill was used. Simulation passed. Phantom signed.
+
+Signature 4FUqtNoxVjN3E2tJoSKeN8K9awDV9fU1GQ5AZH9yfKbS9FhULGYRgK4pB4zC7nwsGroSbHXv2n4uGp1JNshYDa7t. Slot 503731052. err null.
+
+Balances:
+- Borrower dOPENAI raw 5940000 → 889494 (delta −5050506 gross).
+- Lender dOPENAI raw 993899494 → 998899494 (delta +5000000, the required net).
+- Collateral account 4HfFgpHfyqY2StzQw7voUMH9JyKyuz19ixKFag6H2RXN raw 12500000 before, absent after.
+- Borrower Devnet USDC raw 6100000 → 18600000 (delta +12500000, the 12.50 collateral).
+
+My Loans reads loan accounts from the Devnet RPC when the loans API returns none. Devnet DEX remains FAIL. Not a Mainnet LOCATE transaction.
+
+Git SHA: a8c81a3
+
+## 2026-09-25T00:45:00Z — Settled loans stay visible from receipts
+
+PHASE UI
+
+The return receipt is verified by the API: kind loan_returned, commitment finalized, grossRaw 5050506, netReceivedRaw 5000000, collateralReleased 12500000. The claim receipt for the 60-second loan is also finalized.
+
+Closed loan accounts disappear from getProgramAccounts. My Loans now adds terminal receipts for the connected wallet. Open accounts still win when both exist. The return receipt has no upfront fee and no term, so those fields stay unlabeled instead of showing zero. The claim row uses the paired take receipt, including the 30-second grace.
+
+Chrome, borrower CpTxsgPjvaaPSaBKkijvB1h3hzgJmPiTsWNhuS7tRkgX: dOPENAI 0.000889494, Devnet USDC 18.6. RETURNED lists only 4HfFgpHfyqY2StzQw7voUMH9JyKyuz19ixKFag6H2RXN. CLAIMED lists FU7wNF9W4pCa3d8syBTHcZfMNNo5aDTUeg5RRd6jaHD6. Devnet DEX remains FAIL. Not a Mainnet LOCATE transaction.
+
+Git SHA: a8c81a3
+
+
 

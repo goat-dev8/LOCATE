@@ -23,6 +23,8 @@ const files = [
   "qa/lighthouse-proof.json",
   "EXECUTION_STATUS.json",
   "mainnet-dex/sell.json",
+  "mainnet-dex/balance-before.json",
+  "mainnet-dex/balance-after-buyback.json",
   "mainnet-dex/sell-2.json",
   "mainnet-dex/buyback.json",
   "mainnet-fork/lifecycle.json",

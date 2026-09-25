@@ -11,6 +11,8 @@ export type TxResult =
 
 export type PreparedTx = {
   tx: VersionedTransaction;
+  instructions: TransactionInstruction[];
+  payer: PublicKey;
   blockhash: string;
   lastValidBlockHeight: number;
 };
@@ -75,7 +77,7 @@ async function confirmByPolling(
       height = 0;
     }
     if (height > lastValidBlockHeight && !value) {
-      return { confirmed: false, error: `The signed transaction did not land. Signature ${signature}` };
+      continue;
     }
     await sleep(2000);
   }
@@ -99,13 +101,17 @@ export async function prepareInstructions(
 ): Promise<{ ok: true; prepared: PreparedTx } | TxResult> {
   const preview = await simulateAndDecode(connection, payer, instructions);
   if (preview.err) {
-    return { ok: false, simulated: true, error: preview.name ?? "Simulation failed. No transaction was sent." };
+    const named = preview.name ?? (preview.code != null ? `Custom ${preview.code}` : JSON.stringify(preview.err));
+    const log = preview.logs?.find((line) => /insufficient|error|failed/i.test(line));
+    return { ok: false, simulated: true, error: log ? `${named} — ${log}` : named };
   }
   const latest = await connection.getLatestBlockhash("confirmed");
   return {
     ok: true,
     prepared: {
       tx: compile(payer, instructions, latest.blockhash),
+      instructions,
+      payer,
       blockhash: latest.blockhash,
       lastValidBlockHeight: latest.lastValidBlockHeight,
     },
@@ -118,24 +124,21 @@ export async function approvePrepared(
   prepared: PreparedTx,
   onSent?: (signature: string) => void,
 ): Promise<TxResult> {
-  const phantom = phantomInjected();
+  let latest = await connection.getLatestBlockhash("confirmed").catch(async (error: unknown) => {
+    const messageText = error instanceof Error ? error.message : String(error);
+    if (!messageText.includes("429")) throw error;
+    await sleep(3000);
+    return connection.getLatestBlockhash("confirmed");
+  });
+  const tx = compile(prepared.payer, prepared.instructions, latest.blockhash);
   let signature: string;
   try {
-    if (phantom?.signAndSendTransaction) {
-      const sent = await phantom.signAndSendTransaction(prepared.tx, {
-        skipPreflight: false,
-        preflightCommitment: "confirmed",
-        maxRetries: 5,
-      });
-      signature = sent.signature;
-    } else {
-      const signed = await signTransaction(prepared.tx);
-      signature = await connection.sendRawTransaction(signed.serialize(), {
-        skipPreflight: false,
-        preflightCommitment: "confirmed",
-        maxRetries: 5,
-      });
-    }
+    const signed = await signTransaction(tx);
+    signature = await connection.sendRawTransaction(signed.serialize(), {
+      skipPreflight: false,
+      preflightCommitment: "confirmed",
+      maxRetries: 5,
+    });
   } catch (error) {
     const messageText = error instanceof Error ? error.message : "";
     if (/reject/i.test(messageText)) return { ok: false, simulated: false, error: "Signing was rejected." };
@@ -145,7 +148,7 @@ export async function approvePrepared(
     return { ok: false, simulated: false, error: messageText || "Phantom did not return a signature." };
   }
   onSent?.(signature);
-  const landed = await confirmByPolling(connection, signature, prepared.lastValidBlockHeight);
+  const landed = await confirmByPolling(connection, signature, latest.lastValidBlockHeight);
   if (!landed.confirmed) {
     return { ok: false, simulated: false, error: landed.error ?? `Signed. Signature ${signature}` };
   }
@@ -187,7 +190,7 @@ function termsFromRow(row: {
 
 export function listInstructions(
   payer: PublicKey,
-  input: { amount: number; collateralUsdc: number; feeUsdc: number; termDays: number; expiryHours: number },
+  input: { amount: number; collateralUsdc: number; feeUsdc: number; termDays: number; expiryHours: number; termSecs?: number; graceSecs?: number },
 ): TransactionInstruction[] {
   const now = BigInt(Math.floor(Date.now() / 1000));
   const terms: OfferTerms = {
@@ -198,8 +201,8 @@ export function listInstructions(
     amountRaw: BigInt(Math.round(input.amount * 1e9)),
     collateralUsdc: BigInt(Math.round(input.collateralUsdc * 1e6)),
     feeUsdc: BigInt(Math.round(input.feeUsdc * 1e6)),
-    termSecs: BigInt(input.termDays * 86_400),
-    graceSecs: 48n * 3600n,
+    termSecs: BigInt(input.termSecs ?? input.termDays * 86_400),
+    graceSecs: BigInt(input.graceSecs ?? 48 * 3600),
     expiresAt: now + BigInt(input.expiryHours * 3600),
     decimals: 9,
   };

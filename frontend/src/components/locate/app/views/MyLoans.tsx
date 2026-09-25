@@ -8,7 +8,8 @@ import { useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { FadeContent } from "@/components/bits";
 import { useLocate } from "@/lib/locate/store";
-import { ASSETS, fmtToken } from "@/lib/locate/seed";
+import { ASSETS, fmtToken, formatDuration, grossForNet, netFromGross } from "@/lib/locate/seed";
+import { loanPhase, nextLoanAction } from "@/lib/locate/loanPhase";
 import { AssetLogo } from "../../landing/parts";
 import { EmptyState, Segmented, StatusChip, useCountdown, ViewHead } from "../parts";
 import { cn } from "@/lib/utils";
@@ -23,9 +24,9 @@ export function MyLoansView() {
   return (
     <div>
       <ViewHead
-        label="BORROWED & LENT"
-        title="My loans."
-        serif="The clocks."
+        label="WHAT HAVE I BORROWED"
+        title="What have I borrowed?"
+        serif="And what I lent."
       />
 
       <FadeContent distance={16}>
@@ -72,6 +73,10 @@ function LoanRow({
   const asset = ASSETS.find((a) => a.id === loan.assetId)!;
   const cd = useCountdown(loan.maturityAt);
   const borrowed = loan.direction === "BORROWED";
+  const feeBps = loan.feeBps ?? asset.transferFeeBps;
+  const received = netFromGross(loan.amount, feeBps);
+  const requiredGross = grossForNet(loan.netRequired, feeBps);
+  const phase = loanPhase(loan);
 
   return (
     <FadeContent delay={delay} distance={20} duration={0.55}>
@@ -85,7 +90,7 @@ function LoanRow({
             <div>
               <p className="font-mono text-[12px] font-semibold text-white">{loan.id}</p>
               <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-3">
-                {borrowed ? "YOU BORROWED" : "YOU LENT"} · {fmtToken(loan.netRequired)} NET
+                {borrowed ? "YOU BORROWED" : "YOU LENT"} · {fmtToken(loan.netRequired, 6)} NET
               </p>
             </div>
           </div>
@@ -100,12 +105,18 @@ function LoanRow({
             >
               {loan.direction}
             </span>
-            <StatusChip status={loan.status} />
+            <StatusChip status={phase} />
           </div>
         </div>
 
+        <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-3">
+          Borrowed gross {fmtToken(loan.amount, 6)} → fee {feeBps} bps → received net {fmtToken(received, 6)} → required return gross {fmtToken(requiredGross, 6)} → lender receives required net {fmtToken(loan.netRequired, 6)}
+        </p>
+        <p className="font-mono text-[10px] uppercase tracking-[0.1em] text-ink-2">{nextLoanAction(loan)}{loan.termsKnown === false ? "" : ` · grace ${formatDuration(loan.graceHours * 3600)}`} · collateral ${loan.collateralUsdc.toFixed(2)}</p>
         <div className="flex items-center justify-between border-t border-line/70 pt-4">
-          {loan.status === "ACTIVE" ? (
+          {loan.status === "CLAIMABLE" ? (
+            <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.12em] text-ember">CLAIMABLE</p>
+          ) : loan.status === "ACTIVE" ? (
             <p
               className={cn(
                 "font-mono text-[17px] font-bold tabular-nums",

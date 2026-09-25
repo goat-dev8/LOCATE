@@ -97,7 +97,32 @@ export default function ProofPage() {
     devnetLocateLifecycle: boolean;
     frontendExecutionWiring: boolean;
   }>("EXECUTION_STATUS.json");
-  const dexSell = load<{ result: string; mainnetTransaction: boolean; reason: string; network: string }>("mainnet-dex/sell.json");
+  const dexSell = load<{
+    result: string;
+    mainnetTransaction: boolean;
+    network: string;
+    signature: string;
+    slot: number;
+    amountRaw: string;
+    quoteOutRaw: string;
+    minOutRaw: string;
+    actualOutRaw: string;
+    locateProtocol: boolean;
+    route: string[];
+  }>("mainnet-dex/sell.json");
+  const dexBuy = load<{
+    result: string;
+    signature: string;
+    slot: number;
+    inAmountUsdcRaw: string;
+    quoteOutRaw: string;
+    minOutRaw: string;
+    openaiDeltaFromPreBuyback: string;
+    locateProtocol: boolean;
+    route: string[];
+  }>("mainnet-dex/buyback.json");
+  const before = load<{ solLamports: string; openaiRaw: string; usdcRaw: string }>("mainnet-dex/balance-before.json");
+  const after = load<{ solLamports: string; openaiRaw: string; usdcRaw: string }>("mainnet-dex/balance-after-buyback.json");
   const proto = load<{ network: string; returnCycle: { create: string; take: string; return: string } }>("devnet/protocol.json");
 
   return (
@@ -112,11 +137,32 @@ export default function ProofPage() {
       </p>
 
       <section className="mt-10">
-        <h2 className="font-display text-2xl">Layer 1 — Mainnet DEX (external)</h2>
-        <p className="mt-2 text-sm text-zinc-500">Real external DEX only. Not LOCATE protocol.</p>
-        <p className="mt-3 font-mono text-sm">{dexSell.result} · network {dexSell.network} · mainnetTransaction {String(dexSell.mainnetTransaction)}</p>
-        <p className="mt-2 text-sm text-zinc-500">{dexSell.reason}</p>
-        <p className="mt-2 font-mono text-xs text-zinc-500">Jupiter sell simulation {sell.result}. Jupiter buyback simulation {buy.result}. Both marked mainnetTransaction false.</p>
+        <h2 className="font-display text-2xl">A. Protocol execution — real Devnet</h2>
+        <p className="mt-2 text-sm text-zinc-500">{cycle.label}. dOPENAI is a Devnet replica, not a Mainnet PreStock.</p>
+        <ul className="mt-4 space-y-2 font-mono text-xs text-zinc-400">
+          <li>create {proto.returnCycle.create}</li>
+          <li>take {proto.returnCycle.take}</li>
+          <li>return {proto.returnCycle.return}</li>
+          <li>claim {cycle.claimCycle.claim}</li>
+          <li>early claim refusal code {cycle.claimCycle.earlyClaimSimulationCode}</li>
+        </ul>
+      </section>
+      <section className="mt-10">
+        <h2 className="font-display text-2xl">B. Cloned Mainnet state — local execution</h2>
+        <p className="mt-2 text-sm text-zinc-500">{fork.label}. Not a Mainnet transaction. OpenAI and Neuralink mint bytes, Token-2022, lifecycle, adversarial cases.</p>
+        <p className="mt-3 font-mono text-sm">{fork.matrix.passed}/{fork.matrix.total} passed</p>
+      </section>
+      <section className="mt-10">
+        <h2 className="font-display text-2xl">C. Mainnet market execution — real external DEX</h2>
+        <p className="mt-2 text-sm text-zinc-500">Real Mainnet DEX transaction. Not a LOCATE Mainnet transaction. locateProtocol {String(dexSell.locateProtocol)}.</p>
+        <p className="mt-3 font-mono text-xs text-zinc-400">Sell {dexSell.result} {dexSell.signature} slot {dexSell.slot}. In {dexSell.amountRaw} out {dexSell.actualOutRaw} min {dexSell.minOutRaw} route {dexSell.route.join(" > ")}.</p>
+        <p className="mt-2 font-mono text-xs text-zinc-400">Buyback {dexBuy.result} {dexBuy.signature} slot {dexBuy.slot}. USDC in {dexBuy.inAmountUsdcRaw} quoted {dexBuy.quoteOutRaw} min {dexBuy.minOutRaw} OpenAI delta {dexBuy.openaiDeltaFromPreBuyback}.</p>
+        <p className="mt-2 font-mono text-xs text-zinc-400">Before SOL {before.solLamports} OpenAI {before.openaiRaw} USDC {before.usdcRaw}. After SOL {after.solLamports} OpenAI {after.openaiRaw} USDC {after.usdcRaw}.</p>
+        <p className="mt-2 text-sm text-zinc-500">Devnet DEX remains {devnet.result}. Quote simulations are not Mainnet transactions: sell {sell.result}, buyback {buy.result}.</p>
+      </section>
+      <section className="mt-10">
+        <h2 className="font-display text-2xl">D. Security and consistency</h2>
+        <p className="mt-2 text-sm text-zinc-500">Local validator {local.passed}/{local.total}. Functional {sec.functional.passed}. Security {sec.security.passed}. Mutation {sec.mutation.passed}. Replay {replay.total}.</p>
       </section>
 
       <section className="mt-10">

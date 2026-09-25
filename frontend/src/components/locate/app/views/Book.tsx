@@ -12,6 +12,7 @@ import {
   ASSETS,
   fmtUsd,
   fmtToken,
+  formatDuration,
   netFromGross,
 } from "@/lib/locate/seed";
 import type { Offer } from "@/lib/locate/types";
@@ -42,13 +43,15 @@ export function BookView() {
   return (
     <div>
       <ViewHead
-        label="BORROWABLE PRESTOCKS"
-        title="The book."
-        serif="Real supply."
+        label="WHAT CAN I BORROW"
+        title="What PreStocks can I borrow"
+        serif="right now?"
         actions={
-          <span className="lc-chip-lime">
-            {live.length} LIVE · {fmtToken(totalSupply)} UNITS
-          </span>
+          live.length > 0 ? (
+            <span className="lc-chip-lime">
+              {live.length} LIVE · {fmtToken(totalSupply)} UNITS
+            </span>
+          ) : null
         }
       />
 
@@ -128,7 +131,8 @@ function OfferCard({
           {[
             { label: "COLLATERAL", value: fmtUsd(offer.collateralUsdc) },
             { label: "UPFRONT FEE", value: fmtUsd(offer.feeUsdc) },
-            { label: "TERM", value: `${offer.termDays} DAYS` },
+            { label: "TERM", value: formatDuration(Number(offer.termSecs ?? offer.termDays * 86_400)) },
+            { label: "GRACE", value: offer.graceSecs ? formatDuration(Number(offer.graceSecs)) : "on chain" },
             { label: "EXPIRES", value: cd.past ? "EXPIRED" : `IN ${cd.label}` },
           ].map((r) => (
             <div
@@ -144,7 +148,7 @@ function OfferCard({
         </div>
 
         <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.1em] text-ink-3">
-          YOU RECEIVE {fmtToken(net)} NET · {asset.transferFeeBps / 100}% FEE-AWARE
+          YOU RECEIVE {fmtToken(net, 6)} NET · {asset.transferFeeBps / 100}% FEE-AWARE
         </p>
 
         <div className="mt-auto flex items-center justify-between gap-3 pt-5">

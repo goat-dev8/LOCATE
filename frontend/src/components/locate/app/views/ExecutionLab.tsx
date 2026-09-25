@@ -6,6 +6,7 @@ import { TOKEN_2022 } from "@locate/sdk";
 import { evaluateDexQuote, OPENAI_MAINNET_MINT } from "@locate/sdk";
 import { ViewHead } from "../parts";
 import { OPENAI_MINT, USDC_MINT } from "@/lib/locate/mainnetDex";
+import { dexEvidence } from "@/lib/locate/executionFacts";
 import { resolveSign } from "@/lib/locate/tx";
 import { VersionedTransaction } from "@solana/web3.js";
 
@@ -246,12 +247,18 @@ export function ExecutionLabView() {
   return (
     <div>
       <ViewHead
-        label="EXTERNAL MAINNET DEX"
-        title="Real Mainnet execution."
-        serif="Not a LOCATE contract."
+        label="MARKET EXECUTION"
+        title="External to the protocol."
+        serif="Sell, then buy back."
       />
-      <p className="mb-6 max-w-2xl font-mono text-[11px] uppercase tracking-[0.12em] text-ink-3">
-        External Mainnet DEX execution. LOCATE protocol remains deployed on Devnet and exercised against cloned Mainnet state.
+      <p className="mb-3 max-w-2xl text-[14px] leading-[1.6] text-ink-2">
+        Market execution is external to the LOCATE protocol.
+      </p>
+      <p className="mb-6 max-w-2xl text-[14px] leading-[1.6] text-ink-2">
+        When a borrower receives the PreStock, they can sell it through external Solana liquidity and later acquire enough tokens to satisfy LOCATE’s return requirement.
+      </p>
+      <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-3">
+        LOCATE borrow → external market → short → buy back → LOCATE return. LOCATE remains on Devnet and in cloned Mainnet state.
       </p>
       <div className="lc-card p-6">
         <p className="lc-label">MAINNET EXECUTION</p>
@@ -270,6 +277,13 @@ export function ExecutionLabView() {
         {balances?.blocker && <p className="mt-4 font-mono text-[11px] text-ember">{balances.blocker}</p>}
         {error && <p className="mt-4 font-mono text-[11px] text-refuse">{error}</p>}
         {signature && <p className="mt-4 break-all font-mono text-[11px] text-ink-2">signature {signature}</p>}
+        <div className="mt-6 border-t border-line pt-4 font-mono text-[11px] text-ink-2">
+          <p className="lc-label mb-2">REAL MAINNET DEX TRANSACTION</p>
+          <p>Sell {dexEvidence.sell.signature} slot {dexEvidence.sell.slot} in {dexEvidence.sell.amountRaw} out {dexEvidence.sell.actualOutRaw} min {dexEvidence.sell.minOutRaw}</p>
+          <p className="mt-2">Buyback {dexEvidence.buyback.signature} slot {dexEvidence.buyback.slot} USDC {dexEvidence.buyback.inAmountUsdcRaw} OpenAI delta {dexEvidence.buyback.openaiDeltaFromPreBuyback}</p>
+          <p className="mt-2">Before OpenAI {dexEvidence.before.openaiRaw} USDC {dexEvidence.before.usdcRaw}. After OpenAI {dexEvidence.after.openaiRaw} USDC {dexEvidence.after.usdcRaw}.</p>
+          <p className="mt-2">Devnet venue for the replica mint: {dexEvidence.devnetDexResult}.</p>
+        </div>
         <div className="mt-6 flex gap-3">
           <button onClick={() => run("sell")} className="lc-btn lc-btn-ink lc-btn-sm" disabled={phase !== "READY" && phase !== "VERIFIED"}>
             SELL

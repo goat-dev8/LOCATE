@@ -11,6 +11,8 @@ import { verifyReceiptInBrowser } from "@locate/sdk";
 import { DecryptionText, FadeContent } from "@/components/bits";
 import type { Receipt } from "@/lib/locate/types";
 import { locateApi, SOLANA_RPC_URL, LOCATE_PROGRAM_ID_TEXT } from "@/lib/locate/env";
+import { executionTrace } from "@/lib/locate/executionFacts";
+import { useLocate } from "@/lib/locate/store";
 import { Segmented, ViewHead } from "../parts";
 import { cn } from "@/lib/utils";
 
@@ -69,8 +71,36 @@ export function VerifyView() {
 
   const list = receipts.filter((r) => filter === "ALL" || r.status === filter);
 
+  const navigate = useLocate((s) => s.navigate);
   return (
     <div>
+      <div className="lc-card mb-6 p-5">
+        <div className="flex items-center justify-between gap-3">
+          <p className="lc-label">EXECUTION TRACE</p>
+          <button onClick={() => navigate("execute")} className="lc-btn lc-btn-ghost lc-btn-sm">MARKET EXECUTION</button>
+        </div>
+        <ul className="mt-3 space-y-2">
+          {executionTrace.map((step) => (
+            <li key={step.label} className="font-mono text-[11px] text-ink-2">
+              {step.confirmed ? "✓" : "·"} {step.label} · {step.layer}
+              {step.href ? <> · <a className="underline" href={step.href} target="_blank" rel="noreferrer">evidence</a></> : null}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="mb-6 grid gap-3 md:grid-cols-2">
+        {[
+          ["A. PROTOCOL EXECUTION", "Real Devnet create, take, return, claim, and early-claim refusal."],
+          ["B. CLONED MAINNET STATE", "Real Mainnet account state. Local LOCATE execution. Not a Mainnet transaction."],
+          ["C. MAINNET MARKET EXECUTION", "Real external Mainnet DEX sell and buyback. Not a LOCATE transaction."],
+          ["D. SECURITY / CONSISTENCY", "Local validator, property tests, replay, mutation, Token-2022 matrix."],
+        ].map(([title, body]) => (
+          <article key={title} className="lc-card p-4">
+            <p className="font-mono text-[11px] font-semibold text-white">{title}</p>
+            <p className="mt-2 text-[13px] text-ink-2">{body}</p>
+          </article>
+        ))}
+      </div>
       <div className="lc-card mb-6 p-5">
         <p className="lc-label">SEPARATE EXECUTION LAYERS</p>
         <ul className="mt-3 space-y-2 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-2">

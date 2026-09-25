@@ -1,0 +1,17 @@
+{
+  "head": "10eef72f8888e43e73c96ae12879acab0dad5576",
+  "command": "cargo build-sbf --manifest-path programs/locate/Cargo.toml",
+  "features": "default = mainnet (not the devnet feature)",
+  "exit": 0,
+  "elapsedMs": 121180,
+  "finishedAt": "2026-09-24T22:15:35.954Z",
+  "output": "target/deploy/locate.so",
+  "bytes": 359712,
+  "sha256": "ade3240160bfb905cfad0fcb98df5b98c688bc44044bf059ee1f776ec8f570f5",
+  "previousMainnetFeatureRecord": {
+    "path": "target/deploy/locate-mainnet.so",
+    "bytes": 342712,
+    "sha256": "acb6b4a814edf90696beac9090018d5416cd7a89c2bfe406891d2ffad21fe3dd"
+  },
+  "note": "This rebuild is larger than the previously recorded mainnet-feature file. It is not the Devnet-feature hash 69886235. solana-verify was not run. verified remains false. This binary was not deployed to mainnet."
+}

@@ -1,0 +1,23 @@
+{
+  "head": "10eef72f8888e43e73c96ae12879acab0dad5576",
+  "command": "cargo build-sbf --manifest-path programs/locate/Cargo.toml --features devnet --sbf-out-dir target/deploy/devnet-feature-10eef72",
+  "exit": 0,
+  "elapsedMs": 23715,
+  "finishedAt": "2026-09-24T22:19:45.172Z",
+  "devnetFeature": {
+    "path": "target/deploy/devnet-feature-10eef72/locate.so",
+    "bytes": 359712,
+    "sha256": "698862354901ab1a262c378fcac6c424ee349bf8fa229e496e4ff933db56abc2"
+  },
+  "mainnetFeature": {
+    "path": "target/deploy/mainnet-feature-10eef72/locate.so",
+    "bytes": 359712,
+    "sha256": "ade3240160bfb905cfad0fcb98df5b98c688bc44044bf059ee1f776ec8f570f5"
+  },
+  "hashesDifferAcrossFeatures": true,
+  "matchesPreviousDevnetFeatureFile": true,
+  "matchesOnChainDevnetPayloadRecord": "698862354901ab1a262c378fcac6c424ee349bf8fa229e496e4ff933db56abc2",
+  "solanaVerify": "not run",
+  "verified": false,
+  "note": "Do not deploy this Devnet-feature binary to Mainnet. The Mainnet-feature hash is ade32401."
+}

@@ -1,0 +1,27 @@
+{
+  "head": "10eef72f8888e43e73c96ae12879acab0dad5576",
+  "cargoBuildSbf": "4.1.0",
+  "platformTools": "v1.54",
+  "sbfRustc": "1.89.0",
+  "hostRustc": "1.96.0 (ac68faa20 2026-05-25)",
+  "anchorCli": "1.2.0",
+  "solanaCli": "4.1.2",
+  "command": "cargo build-sbf --manifest-path programs/locate/Cargo.toml",
+  "features": "default = mainnet; not feature=devnet",
+  "builds": [
+    {
+      "path": "target/deploy/mainnet-feature-10eef72/locate.so",
+      "bytes": 359712,
+      "sha256": "ade3240160bfb905cfad0fcb98df5b98c688bc44044bf059ee1f776ec8f570f5"
+    },
+    {
+      "path": "target/deploy/mainnet-feature-10eef72-b/locate.so",
+      "bytes": 359712,
+      "sha256": "ade3240160bfb905cfad0fcb98df5b98c688bc44044bf059ee1f776ec8f570f5"
+    }
+  ],
+  "deterministicOnThisToolchain": true,
+  "solanaVerify": "not run; Docker unavailable in WSL",
+  "verified": false,
+  "deployedToMainnet": false
+}

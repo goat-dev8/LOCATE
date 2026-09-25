@@ -12,13 +12,19 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { listInstructions } from "@/lib/locate/tx";
 import { phaseCopy, usePreparedTx } from "@/lib/locate/usePreparedTx";
 import { useLocate } from "@/lib/locate/store";
-import { ASSETS, fmtUsd, fmtToken } from "@/lib/locate/seed";
+import { ASSETS, fmtUsd, fmtToken, formatDuration, uiFromRaw } from "@/lib/locate/seed";
 import type { CreateOfferInput } from "@/lib/locate/types";
 import { AssetLogo } from "../../landing/parts";
 import { DataRow, DoneState, Payline, Segmented, StagedProgress, ViewHead } from "../parts";
 import { cn } from "@/lib/utils";
 
-const TERMS = ["7 DAYS", "14 DAYS", "30 DAYS"];
+const TERMS = ["1 MIN", "7 DAYS", "14 DAYS", "30 DAYS"];
+const TERM_SPEC: Record<string, { termSecs: number; graceSecs: number; termDays: number }> = {
+  "1 MIN": { termSecs: 60, graceSecs: 30, termDays: 0 },
+  "7 DAYS": { termSecs: 7 * 86_400, graceSecs: 48 * 3600, termDays: 7 },
+  "14 DAYS": { termSecs: 14 * 86_400, graceSecs: 48 * 3600, termDays: 14 },
+  "30 DAYS": { termSecs: 30 * 86_400, graceSecs: 48 * 3600, termDays: 30 },
+};
 const EXPIRIES = ["24H", "48H", "72H"];
 
 function NumberField({
@@ -90,7 +96,7 @@ export function CreateOfferView() {
     const account = ata(publicKey, mint, TOKEN_2022);
     connection
       .getTokenAccountBalance(account, "confirmed")
-      .then((result) => setBalance(Number(result.value.uiAmountString ?? result.value.uiAmount ?? 0)))
+      .then((result) => setBalance(uiFromRaw(result.value.amount, result.value.decimals)))
       .catch(() => setBalance(0));
   }, [connection, publicKey]);
 
@@ -113,20 +119,23 @@ export function CreateOfferView() {
 
   const amountError =
     amountNum > balance
-      ? `EXCEEDS BALANCE (${fmtToken(balance)})`
+      ? `EXCEEDS BALANCE (${fmtToken(balance, 6)})`
       : amountNum <= 0
         ? "ENTER AN AMOUNT"
         : null;
   const collateralError = collateralNum <= 0 ? "REQUIRED" : null;
   const valid = !amountError && !collateralError && feeNum >= 0;
 
+  const spec = TERM_SPEC[term] ?? TERM_SPEC["7 DAYS"];
   const input: CreateOfferInput = {
     assetId,
     amount: amountNum,
     collateralUsdc: collateralNum,
     feeUsdc: feeNum,
-    termDays: parseInt(term),
+    termDays: spec.termDays,
     expiryHours: parseInt(expiry),
+    termSecs: spec.termSecs,
+    graceSecs: spec.graceSecs,
   };
 
   return (
@@ -137,7 +146,7 @@ export function CreateOfferView() {
         serif="On your terms."
         actions={
           <span className="lc-chip-lime">
-            BALANCE {fmtToken(balance)} {asset.symbol}
+            BALANCE {fmtToken(balance, 6)} {asset.symbol}
           </span>
         }
       />
@@ -348,7 +357,7 @@ function ConfirmOfferInner({
               <DataRow label="AMOUNT" value={fmtToken(input.amount)} />
               <DataRow label="COLLATERAL REQUIRED" value={fmtUsd(input.collateralUsdc)} />
               <DataRow label="UPFRONT FEE" value={fmtUsd(input.feeUsdc)} tone="accent" />
-              <DataRow label="TERM" value={`${input.termDays} DAYS + 48H GRACE`} />
+              <DataRow label="TERM" value={`${formatDuration(input.termSecs ?? input.termDays * 86_400)} + ${formatDuration(input.graceSecs ?? 48 * 3600)} GRACE`} />
               <DataRow label="LISTING EXPIRES" value={`IN ${input.expiryHours}H`} />
 
               <Payline

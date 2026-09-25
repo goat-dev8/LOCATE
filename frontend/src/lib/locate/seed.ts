@@ -15,6 +15,22 @@ export function fmtUsd(n: number): string {
   );
 }
 
+export function uiFromRaw(amount: string, decimals: number): number {
+  const negative = amount.startsWith("-");
+  const digits = (negative ? amount.slice(1) : amount).padStart(decimals + 1, "0");
+  const cut = digits.length - decimals;
+  const value = Number(`${digits.slice(0, cut)}.${digits.slice(cut)}`);
+  return negative ? -value : value;
+}
+
+export function formatDuration(secs: number): string {
+  if (!Number.isFinite(secs) || secs <= 0) return "ON CHAIN";
+  if (secs < 3600) return `${Math.round(secs)}S`;
+  if (secs < 86_400) return `${Math.round(secs / 3600)}H`;
+  const days = Math.round(secs / 86_400);
+  return `${days} DAY${days === 1 ? "" : "S"}`;
+}
+
 export function fmtToken(n: number, decimals = 4): string {
   return n.toLocaleString("en-US", {
     minimumFractionDigits: 0,

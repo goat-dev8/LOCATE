@@ -10,7 +10,7 @@ import { useState } from "react";
 import { claimInstructions, simulateEarlyClaim } from "@/lib/locate/tx";
 import { phaseCopy, usePreparedTx } from "@/lib/locate/usePreparedTx";
 import { useLocate, locateAsset } from "@/lib/locate/store";
-import { fmtToken, fmtUsd } from "@/lib/locate/seed";
+import { fmtToken, fmtUsd, formatDuration } from "@/lib/locate/seed";
 import { ClickSpark } from "@/components/bits";
 import { DataRow, DoneState, Note, Payline, StagedProgress } from "../parts";
 import { ActionDrawer } from "./frame";
@@ -70,7 +70,7 @@ function Body({ loanId, onClose }: { loanId: string; onClose: () => void }) {
             tone="muted"
           />
           <DataRow label="RETURNED" value="NONE" tone="refuse" />
-          <DataRow label="GRACE ELAPSED" value={`${loan.graceHours}H`} tone="muted" />
+          <DataRow label="GRACE WINDOW" value={formatDuration(loan.graceHours * 3600)} tone="muted" />
           <DataRow
             label="NET REQUIRED"
             value={`${fmtToken(loan.netRequired)} ${asset.symbol}`}

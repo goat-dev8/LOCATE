@@ -81,12 +81,13 @@ export async function GET() {
         thirtyDayChange?: number | null;
       }>;
     };
-    const marks = (await markRes.json()) as Record<string, number>;
+    const marks = (await markRes.json()) as Record<string, number | { markPrice?: number }>;
 
     const rows: PreStockRow[] = [];
     for (const symbol of SYMBOLS) {
       const m = metricsJson.metrics?.find((x) => x.symbol === symbol);
-      const mark = marks[symbol];
+      const markRaw = marks[symbol];
+      const mark = typeof markRaw === "number" ? markRaw : markRaw?.markPrice;
       if (!m || typeof mark !== "number") continue;
       rows.push({
         symbol,

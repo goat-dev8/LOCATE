@@ -12,6 +12,7 @@ import {
   DAY,
   fmtUsd,
   fmtToken,
+  formatDuration,
   grossForNet,
 } from "@/lib/locate/seed";
 import { AssetLogo } from "../../landing/parts";
@@ -94,16 +95,16 @@ export function LoanDetailView() {
             </span>
           </MaturityRing>
           <p className="text-center font-mono text-[10px] uppercase leading-[1.7] tracking-[0.12em] text-ink-3">
-            MATURITY + {loan.graceHours}H GRACE
-            <br />
-            THEN LENDER CAN CLAIM
+            {loan.termsKnown === false
+              ? "SETTLED ON THE VERIFIED RECEIPT"
+              : <>MATURITY + {formatDuration(loan.graceHours * 3600)} GRACE<br />THEN LENDER CAN CLAIM</>}
           </p>
           {loan.direction === "BORROWED" && loan.status === "ACTIVE" && (
             <button onClick={() => setBuyOpen(true)} className="lc-btn lc-btn-lime w-full">
               RETURN
             </button>
           )}
-          {loan.direction === "LENT" && (
+          {loan.direction === "LENT" && (loan.status === "ACTIVE" || loan.status === "CLAIMABLE") && (
             <button onClick={() => setClaimOpen(true)} className="lc-btn lc-btn-ink w-full">
               {loan.status === "CLAIMABLE" ? "CLAIM COLLATERAL" : "SIMULATE EARLY CLAIM"}
             </button>
@@ -118,19 +119,19 @@ export function LoanDetailView() {
                 {asset.name}
               </p>
             </div>
-            <DataRow label="AMOUNT" value={`${fmtToken(loan.amount)} ${asset.symbol}`} />
+            <DataRow label="AMOUNT" value={`${fmtToken(loan.amount, 6)} ${asset.symbol}`} />
             <DataRow
               label="NET REQUIRED"
-              value={`${fmtToken(loan.netRequired)} ${asset.symbol}`}
+              value={`${fmtToken(loan.netRequired, 6)} ${asset.symbol}`}
               tone="strong"
             />
             <DataRow
               label="GROSS TO RETURN"
-              value={`${fmtToken(gross)} ${asset.symbol}`}
+              value={`${fmtToken(gross, 6)} ${asset.symbol}`}
               tone="accent"
             />
             <DataRow label="COLLATERAL" value={`${fmtUsd(loan.collateralUsdc)} USDC`} />
-            <DataRow label="UPFRONT FEE" value={`${fmtUsd(loan.feeUsdc)} USDC`} />
+            <DataRow label="UPFRONT FEE" value={loan.feeKnown === false ? "NOT IN THIS RECEIPT" : `${fmtUsd(loan.feeUsdc)} USDC`} />
             <DataRow
               label="TRANSFER FEE"
               value={`${asset.transferFeeBps / 100}% · TOKEN-2022`}

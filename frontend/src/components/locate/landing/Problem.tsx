@@ -155,7 +155,7 @@ export function Problem() {
             <div className="border-t border-line px-7 py-4 sm:px-8">
               <p className="font-mono text-[10px] uppercase leading-relaxed tracking-[0.14em] text-ink-3">
                 {live.status === "live"
-                  ? "Live product data · prestocks.com · refreshes each minute"
+                  ? "Live Mainnet market data · refreshes each minute"
                   : live.status === "loading"
                     ? "Resolving live PreStock market data…"
                     : "Live market data unavailable right now — the problem stands without it."}
