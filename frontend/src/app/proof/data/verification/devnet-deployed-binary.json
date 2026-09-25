@@ -1,0 +1,21 @@
+{
+  "claim": "Devnet Deployed Binary Correspondence",
+  "mainnetVerifiedProgram": false,
+  "programId": "F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6",
+  "programdata": "DSbRjFotfkpDqdKNPQ9dFshpTi5cg57bXL72VRxM7Vhh",
+  "elfOffset": 45,
+  "programdataAllocationBytes": 395728,
+  "deployedRegionBytes": 395683,
+  "deployedElfBytes": 359712,
+  "paddingBytes": 35971,
+  "paddingIsZero": true,
+  "localPath": "target/devnet-feature-verify/locate.so",
+  "localElfBytes": 359712,
+  "localSha256": "698862354901ab1a262c378fcac6c424ee349bf8fa229e496e4ff933db56abc2",
+  "deployedElfSha256": "698862354901ab1a262c378fcac6c424ee349bf8fa229e496e4ff933db56abc2",
+  "equality": true,
+  "paddedRegionSha256": "12f9355d6a5c9cc4478500a2dbdcd80f2112833a90d2c64b89d751d6589f878a",
+  "build": "cargo build-sbf --features devnet in solanafoundation/solana-verifiable-build@sha256:2e0b78f44ee76612e9260c7c988570c5e14de6fbd93e0ab07115ec7054473b4f",
+  "commit": "51311195a77927f318f05da8196fc9b92a4904c8",
+  "timestamp": "2026-09-25T03:42:00Z"
+}

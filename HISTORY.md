@@ -1495,5 +1495,15 @@ Devnet DEX remains FAIL. Mainnet deployment remains false.
 
 Pushed as d64ac63.
 
+## 2026-09-25T03:42:00Z — Reproducible build and Devnet ELF match
+
+PHASE PROOF
+
+`solana-verify` 0.5.2 `build --library-name locate` used image `solanafoundation/solana-verifiable-build@sha256:2e0b78f44ee76612e9260c7c988570c5e14de6fbd93e0ab07115ec7054473b4f` (Solana 4.1.2, container Cargo 1.95.0, platform-tools v1.54). The first run compiled, then `find` under `target/deploy` returned several `locate.so` copies and the tool exited 2. Those extra copies were moved aside. Two following builds wrote the same `target/deploy/locate.so`: 359712 bytes, sha256 `ade3240160bfb905cfad0fcb98df5b98c688bc44044bf059ee1f776ec8f570f5`. The tool digest, which drops trailing zero bytes, was `1bd7ae124c8374a6e020d4d682c34d2497681126e78ac712e1aecb799d2671cc` both times. Source commit `51311195a77927f318f05da8196fc9b92a4904c8`. Recorded in `proof/verification/reproducible-build.json`.
+
+The same image built `--features devnet` to `target/devnet-feature-verify/locate.so`, sha256 `698862354901ab1a262c378fcac6c424ee349bf8fa229e496e4ff933db56abc2`, 359712 bytes. `solana program dump` of `F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6` on Devnet is 395683 bytes. The first 359712 bytes match that ELF. The remaining 35971 bytes are zero allocation padding. Programdata `DSbRjFotfkpDqdKNPQ9dFshpTi5cg57bXL72VRxM7Vhh`, ELF offset 45. Recorded in `proof/verification/devnet-deployed-binary.json`.
+
+`verified` stays false. This is not a Mainnet verified program. Devnet DEX remains FAIL. Mainnet deployment remains false.
+
 
 

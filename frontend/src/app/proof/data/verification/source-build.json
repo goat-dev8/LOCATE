@@ -1,8 +1,9 @@
 {
-  "claim": "source/build correspondence is not established",
+  "claim": "Reproducible LOCATE Build. Not a Mainnet verified program.",
   "verified": false,
+  "reproducibleBuild": "proof/verification/reproducible-build.json",
   "solanaVerify": "/home/devmo/.cargo/bin/solana-verify\nsolana-verify 0.5.2",
-  "reason": "git worktree is dirty. solana-verify build failed: the Solana 3.0.1 image cargo is 1.84.0 and cannot parse edition2024 in block-buffer 0.12.1.",
+  "reason": "The Solana 3.0.1 image failed and that failure is kept in buildAttempt. A later build with workspace metadata solana 4.1.2 produced two identical executables. verified stays false because LOCATE is not deployed on Mainnet.",
   "buildAttempt": {
     "command": "solana-verify build --library-name locate",
     "image": "solanafoundation/solana-verifiable-build@sha256:b970a392e4ad5170680f7d1b37b1f25c75675f095e8309b5cb0a7d18bc314eec",
