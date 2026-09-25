@@ -1643,3 +1643,9 @@ PHASE MARKET
 The market proxy no longer names symbols itself. It reads the live PreStocks catalog and drops any row without a mint and both prices. xAI is not in that catalog, so it is not requested. A catalog symbol that the upstream returns, including the one previously stripped by name, stays in the market list. Market now leads with the live OpenAI mark and price, then the other catalog rows, then Devnet borrowable supply. Backend economics tests 11/11. No new signature. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
 
 Files: frontend/src/app/api/prestocks/route.ts, frontend/src/lib/locate/useLiveMarket.ts, frontend/src/components/locate/app/views/Book.tsx, frontend/src/components/locate/landing/LogoMarquee.tsx, backend/src/market/prestocks.ts, backend/src/market/opportunities.ts, backend/test/economics.test.ts. Removed the unused preview app under frontend/locate, which carried illustrative prices.
+
+## 2026-09-25T06:21:00Z — Scoreboard
+
+PHASE STATUS
+
+Chrome on localhost:3010 opened Market. OpenAI showed ,343, mark ,024, +31.2%. The other live catalog rows were listed under it. Borrowable supply showed 0. The connected wallet was Hbkp…TvaC, chain dOPENAI 0.997899494, USDC 12.55. proof/FINAL_STATUS.json records that. chromeWalletVerification stays false because early claim was not sent. productionBuild stays false because this commit is not deployed. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
