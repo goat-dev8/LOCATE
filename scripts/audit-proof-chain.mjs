@@ -29,6 +29,15 @@ async function check(connection, row) {
   const hasLocate = keys.includes(LOCATE);
   if (row.locate === true && !hasLocate) problems.push("program");
   if (row.locate === false && hasLocate) problems.push("program");
+  if (row.wallet && tx && !keys.includes(row.wallet)) problems.push("wallet");
+  const deltas = tokenDeltas(tx);
+  for (const expected of row.deltas ?? []) {
+    const actual = deltas
+      .filter((item) => item.mint === expected.mint && (!expected.owner || item.owner === expected.owner))
+      .reduce((sum, item) => sum + BigInt(item.delta), 0n)
+      .toString();
+    if (actual !== expected.delta) problems.push("delta:" + expected.mint.slice(0, 4));
+  }
   return {
     signature: row.signature,
     cluster: row.cluster,
@@ -41,6 +50,23 @@ async function check(connection, row) {
   };
 }
 
+function tokenDeltas(tx) {
+  if (!tx?.meta) return [];
+  const pre = tx.meta.preTokenBalances ?? [];
+  const post = tx.meta.postTokenBalances ?? [];
+  const indexes = new Set([...pre, ...post].map((row) => row.accountIndex));
+  const rows = [];
+  for (const index of indexes) {
+    const before = pre.find((item) => item.accountIndex === index);
+    const after = post.find((item) => item.accountIndex === index);
+    const mint = (after ?? before).mint;
+    const owner = (after ?? before).owner;
+    const delta = BigInt(after?.uiTokenAmount.amount ?? "0") - BigInt(before?.uiTokenAmount.amount ?? "0");
+    if (delta !== 0n) rows.push({ mint, owner, delta: delta.toString() });
+  }
+  return rows;
+}
+
 const protocol = load("proof/devnet/protocol.json");
 const rows = [
   { cluster: "devnet", signature: protocol.returnCycle.create, slot: protocol.returnCycle.createSlot, locate: true },
@@ -50,14 +76,23 @@ const rows = [
   { cluster: "devnet", signature: protocol.claimCycle.take, slot: null, locate: true },
   { cluster: "devnet", signature: protocol.claimCycle.claim, slot: protocol.claimCycle.claimSlot, locate: true },
 ];
-for (const file of ["proof/mainnet-dex/sell.json", "proof/mainnet-dex/sell-2.json", "proof/mainnet-dex/buyback.json"]) {
-  const body = load(file);
-  rows.push({ cluster: "mainnet", signature: body.signature, slot: body.slot, locate: false, file });
-}
+const OPENAI = "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF";
+const USDC = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+const WALLET = "Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC";
+const sell = load("proof/mainnet-dex/sell.json");
+const sell2 = load("proof/mainnet-dex/sell-2.json");
+const buyback = load("proof/mainnet-dex/buyback.json");
+rows.push(
+  { cluster: "mainnet", signature: sell.signature, slot: sell.slot, locate: false, wallet: sell.wallet, deltas: [{ mint: OPENAI, owner: WALLET, delta: sell.openaiDelta }, { mint: USDC, owner: WALLET, delta: sell.usdcDelta }] },
+  { cluster: "mainnet", signature: sell2.signature, slot: sell2.slot, locate: false, wallet: sell2.wallet },
+  { cluster: "mainnet", signature: buyback.signature, slot: buyback.slot, locate: false, wallet: buyback.wallet, deltas: [{ mint: OPENAI, owner: WALLET, delta: buyback.openaiDeltaFromPreBuyback }] },
+);
 rows.push(
   { cluster: "devnet", signature: "2LmWm8igo7LfDKWeKpQmR6o9ZZfjGHCZ5bBzuMSh18fqVB76tvLko9DWm938Ryz6wTjeKa1V8a9vBM5ZRguCBSv3", slot: 503824247, locate: true },
   { cluster: "devnet", signature: "61NgvpBToGqvHpwkrbA9oGProjZG5CjioL1m1TGRBWQF8c9tsaSJScPTuDY5iwceS7HJvMMKrDk3Mw87aE5xLfcT", slot: 503826986, locate: true },
   { cluster: "devnet", signature: "5PHRuUXGaj5bKWybJYt9EwUxBbmBa1GjYviM1MWDTnW39kQfegS9ZtvpPivDtYeMyCCLs2szHpKfRadjDgzFKHHP", slot: 503827662, locate: true },
+  { cluster: "devnet", signature: "x5xL7wjduwWhZtkbe9uvV1j1kBf1kzW5Z13o1w4yxvDonWW5aiYC9gz5z1MvvBkJzzp9qWNTwuMyDt8r8rRV8QU", slot: 503831696, locate: true, wallet: WALLET },
+  { cluster: "devnet", signature: "5tCumUozhPqcZonmzqZoW78QHmT3h3KM8uTiYyo7Ruf7rDcAUeU7WGRCZpcpUFv3A3WtfBXP3EPNtXhWhq74ebVn", slot: 503832748, locate: true, wallet: "CpTxsgPjvaaPSaBKkijvB1h3hzgJmPiTsWNhuS7tRkgX" },
 );
 
 const results = [];
