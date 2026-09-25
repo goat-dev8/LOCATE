@@ -1483,7 +1483,7 @@ PHASE PROOF
 
 Devnet DEX remains FAIL. Mainnet deployment remains false.
 
-Not pushed in this step.
+Pushed as b25d449.
 
 
 
