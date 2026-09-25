@@ -1760,3 +1760,11 @@ Chrome on https://locate-blue.vercel.app, commit 9cb36be. Phantom connected as H
 
 Files: frontend/src/components/locate/app/views/LoanDetail.tsx, proof/FINAL_STATUS.json, evidence/qa/vercel-deploy.json, evidence/backend/render-create.json.
 
+## 2026-09-25T15:28:09Z — The loan names the Devnet replica
+
+PHASE PRODUCT
+
+Production dpl_8HWNUCy3GXgU9PQdKWgg958XdApS is READY for 9938e59 and aliased to https://locate-blue.vercel.app. Chrome on that loan showed the card title dOPENAI · Devnet replica. The amount lines still said OPENAI. This commit uses dOPENAI for those lines when the mint is the Devnet replica. No new signature. Devnet DEX remains an external venue blocker. Mainnet LOCATE deployment remains false.
+
+Files: frontend/src/components/locate/app/views/LoanDetail.tsx.
+

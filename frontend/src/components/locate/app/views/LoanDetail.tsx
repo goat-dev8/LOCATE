@@ -114,6 +114,7 @@ export function LoanDetailView() {
   }
 
   const asset = ASSETS.find((a) => a.id === loan.assetId) ?? ASSETS[0]!;
+  const symbol = loan.mint === DEVNET_MINT ? "dOPENAI" : asset.symbol;
   const feeBps = feeBpsAtTake(loan.feeBps);
   const gross = feeBps == null ? null : grossForNet(loan.netRequired, feeBps);
   const span = loan.maturityAt - loan.startedAt || DAY;
@@ -129,7 +130,7 @@ export function LoanDetailView() {
       </button>
 
       <ViewHead
-        label={<><span className="normal-case">{loan.id}</span>{` · ${asset.symbol}`}</>}
+        label={<><span className="normal-case">{loan.id}</span>{` · ${symbol}`}</>}
         title={loan.direction === "BORROWED" ? "You borrowed." : "You lent."}
         serif="The clock decides."
         actions={
@@ -190,15 +191,15 @@ export function LoanDetailView() {
             <button onClick={() => setAdvanced((value) => !value)} className="mb-3 font-mono text-[12px] text-ink-3">
               {advanced ? "Hide details" : "Details"}
             </button>
-            <DataRow label="AMOUNT" value={`${fmtToken(loan.amount, 6)} ${asset.symbol}`} />
+            <DataRow label="AMOUNT" value={`${fmtToken(loan.amount, 6)} ${symbol}`} />
             <DataRow
               label="NET REQUIRED"
-              value={`${fmtToken(loan.netRequired, 6)} ${asset.symbol}`}
+              value={`${fmtToken(loan.netRequired, 6)} ${symbol}`}
               tone="strong"
             />
             <DataRow
               label="GROSS TO RETURN"
-              value={gross == null ? "not on this loan" : `${fmtToken(gross, 6)} ${asset.symbol}`}
+              value={gross == null ? "not on this loan" : `${fmtToken(gross, 6)} ${symbol}`}
               tone="accent"
             />
             <DataRow label="COLLATERAL" value={`${fmtUsd(loan.collateralUsdc)} USDC`} />
