@@ -30,7 +30,6 @@ import {
   SplitText,
 } from "@/components/bits";
 import { useLocate } from "@/lib/locate/store";
-import { LimeUnderline } from "./parts";
 import { cn } from "@/lib/utils";
 
 /* ------------------------------------------------------------------
@@ -119,6 +118,7 @@ function TechNote({
 
 export function Hero() {
   const openApp = useLocate((s) => s.openApp);
+  const navigate = useLocate((s) => s.navigate);
   const reduced = useReducedMotion();
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
@@ -378,7 +378,7 @@ export function Hero() {
 
           <h1 className="lc-display text-[clamp(2.85rem,7.4vw,5.75rem)] leading-[1.0]">
             <SplitText
-              text="LEND OUT YOUR PRESTOCKS."
+              text="LEND THE PRESTOCK."
               as="span"
               className="block"
               animationStyle="up"
@@ -389,7 +389,7 @@ export function Hero() {
             />
             <span className="mt-3 block">
               <SplitText
-                text="SHORT THE"
+                text="LET SOMEONE SHORT THEM."
                 as="span"
                 className="inline-block"
                 animationStyle="up"
@@ -397,26 +397,13 @@ export function Hero() {
                 delay={0.55}
                 stagger={0.08}
                 threshold={0}
-              />{" "}
-              <motion.span
-                initial={{ opacity: 0, y: "0.6em", filter: "blur(10px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                transition={{
-                  duration: 0.9,
-                  ease: [0.22, 1, 0.36, 1],
-                  delay: 0.85,
-                }}
-                className="lc-serif relative inline-block"
-              >
-                premium.
-                <LimeUnderline />
-              </motion.span>
+              />
             </span>
           </h1>
 
           <BlurText
             className="mx-auto mt-9 max-w-2xl text-balance font-sans text-[16.5px] leading-[1.65] text-ink-2 sm:text-[17.5px]"
-            text="LOCATE turns idle PreStocks into borrowable short supply. Holders lend tokens for an upfront fee. Borrowers post USDC collateral, sell the borrowed token, then return it — or the collateral goes to the lender."
+            text="Turn idle PreStocks into borrowable short supply — secured by USDC, settled by delivery."
             delay={0.95}
             by="word"
           />
@@ -449,11 +436,14 @@ export function Hero() {
               <Magnet padding={30} magnetStrength={0.32}>
                 <ClickSpark sparkColor="#7D9BFF" sparkCount={9} sparkDuration={0.55}>
                   <button
-                    onClick={openApp}
+                    onClick={() => {
+                      openApp();
+                      navigate("create");
+                    }}
                     className="lc-btn lc-btn-ink group h-[52px] px-8 text-[15px]"
                   >
                     <ShinyText
-                      text="OPEN LOCATE"
+                      text="LEND A PRESTOCK"
                       className="font-sans font-semibold tracking-[-0.01em]"
                       speed={3.6}
                     />
@@ -465,10 +455,10 @@ export function Hero() {
                 </ClickSpark>
               </Magnet>
               <a
-                href="#mechanism"
+                href="#proof"
                 className="lc-btn lc-btn-ghost h-[52px] px-8 text-[15px] group"
               >
-                SEE HOW IT WORKS
+                VIEW PROOF
                 <ArrowDown
                   className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5"
                   aria-hidden

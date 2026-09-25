@@ -11,6 +11,7 @@ import { RevealHeadline } from "./parts";
 
 export function FinalCTA() {
   const openApp = useLocate((s) => s.openApp);
+  const navigate = useLocate((s) => s.navigate);
 
   return (
     <section className="relative py-24 sm:py-32">
@@ -52,11 +53,14 @@ export function FinalCTA() {
                     <Magnet padding={34} magnetStrength={0.35}>
                       <ClickSpark sparkColor="#7D9BFF" sparkCount={10} sparkDuration={0.6}>
                         <button
-                          onClick={openApp}
+                          onClick={() => {
+                            openApp();
+                            navigate("verify");
+                          }}
                           className="lc-btn lc-btn-ink group h-[54px] px-9 text-[15px]"
                         >
                           <ShinyText
-                            text="OPEN LOCATE"
+                            text="OPEN PROOF"
                             className="font-sans font-semibold tracking-[-0.01em]"
                             speed={3.2}
                           />

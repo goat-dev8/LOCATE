@@ -35,21 +35,15 @@ export function Problem() {
             segments={[
               { text: "You can buy a PreStock." },
               { text: "You can sell one.", break: true },
-              { text: "You still can't" },
-              { text: "borrow", serif: true },
-              { text: "one." },
+              { text: "Short supply exists." },
+              { text: "Access", serif: true },
+              { text: "doesn't." },
             ]}
           />
           <FadeContent delay={0.25} direction="up">
             <p className="mt-7 max-w-xl text-[17px] leading-[1.7] text-ink-2">
-              PreStocks trade at a premium over their reference price. Holders
-              sit on idle supply that earns nothing. Shorts have nothing to
-              sell. With no borrow rail, nothing ever presses against the
-              premium.
-            </p>
-            <p className="mt-4 max-w-xl text-[17px] leading-[1.7] text-ink-2">
-              Every mature market has a borrow rail. PreStocks don&apos;t —
-              until now.
+              Idle supply sits in wallets. Borrowers need secured delivery.
+              Settlement is return the token, or collateral becomes claimable after maturity and grace.
             </p>
           </FadeContent>
           <FadeContent delay={0.35} direction="up">

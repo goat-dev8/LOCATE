@@ -104,16 +104,15 @@ export function Proof() {
         <RevealHeadline
           className="lc-display mt-6 text-[clamp(2rem,4.2vw,3.3rem)] leading-[1.06]"
           segments={[
-            { text: "Every return is verified —" },
-            { text: "or refused,", break: true },
-            { text: "with a reason.", serif: true },
+            { text: "Built to be" },
+            { text: "inspected.", serif: true },
           ]}
         />
         <FadeContent delay={0.25}>
           <p className="mx-auto mt-6 max-w-xl text-[17px] leading-[1.7] text-ink-2">
             Verification checks the delivered amount against the original net
-            requirement. Short deliveries are refused with a machine-generated,
-            human-readable code — no support ticket required.
+            requirement. 24/24 cloned Mainnet. 42/42 local validator. 45,000 replay.
+            17 functional. 14 security. 10 mutation.
           </p>
         </FadeContent>
       </div>

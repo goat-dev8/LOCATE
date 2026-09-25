@@ -50,3 +50,12 @@ tests/fixtures/scratch/
 Thumbs.db
 .vscode/
 .idea/
+
+# local engineering notes stay on disk; only README.md is tracked
+HISTORY.md
+IMPLEMENTATION_PLAN.md
+docs/*.md
+frontend/worklog.md
+frontend/download/README.md
+frontend/AGENTS.md
+frontend/CLAUDE.md

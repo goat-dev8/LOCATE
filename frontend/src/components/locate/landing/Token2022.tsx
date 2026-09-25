@@ -120,9 +120,9 @@ export function Token2022() {
             <RevealHeadline
               className="lc-display mt-6 text-[clamp(1.9rem,3.8vw,3rem)] leading-[1.08] text-shell-ink"
               segments={[
-                { text: "Fees, accounted to" },
-                { text: "the last", break: true },
-                { text: "decimal.", serif: true },
+                { text: "Token-2022 is part of" },
+                { text: "the protocol,", break: true },
+                { text: "not an afterthought.", serif: true },
               ]}
             />
             <FadeContent delay={0.25}>

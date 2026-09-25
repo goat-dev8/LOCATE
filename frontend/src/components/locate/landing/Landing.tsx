@@ -18,6 +18,7 @@
 
 import { Nav } from "./Nav";
 import { Hero } from "./Hero";
+import { ProofStrip } from "./ProofStrip";
 import { LogoMarquee } from "./LogoMarquee";
 import { Mechanism } from "./Mechanism";
 import { Problem } from "./Problem";
@@ -36,6 +37,7 @@ export function Landing() {
       <Nav />
       <main>
         <Hero />
+        <ProofStrip />
         <LogoMarquee />
         <Mechanism />
         <Problem />
