@@ -1703,3 +1703,12 @@ Files: scripts/audit-proof-chain.mjs, proof/verification/chain-audit.json, front
 PHASE SCAN
 
 Source search of the program, SDK, frontend, backend, and scripts found the live OpenAI and Neuralink mints and the Devnet replica. The expired mint that is not in the current catalog is not referenced in that source. A test asserts an extra symbol is not invented. The landing still labels sample offer terms as illustrative, so the fake-data flag stays false. Chrome still has the borrower connected on loan 4U3UUMfK9QdJt2tm2S2NtTvFrBxX15L9JVvVgb2JDqnF with about 6d 23h remaining. Early claim was not sent. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
+
+## 2026-09-25T06:58:12Z — Early claim refused before maturity
+
+PHASE EXECUTION
+
+Lender Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC connected in Chrome on localhost:3010. Loan 4U3UUMfK9QdJt2tm2S2NtTvFrBxX15L9JVvVgb2JDqnF was ACTIVE with 6d 23h 50m remaining. Chain dOPENAI 0.995899494. USDC 13.75. The screen offered SIMULATE EARLY CLAIM and kept the claim button disabled. The simulation returned ClaimRefusedNotMatured. The screen then showed NOT_CLAIMABLE_YET. No wallet approval was requested. The latest signature on the lender and on the loan is still the take 4vtXFRpvbLBeneBSHf5LzsKP9FvGim2DkGfkaZHLPAPDJ7RUnNRuq4c9Q8ub6vM6AUtRLt86FzZHsnzb1re6iV5W, slot 503863794, finalized, err null. The loan was not returned. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
+
+Files: frontend/src/lib/locate/tx.ts, proof/FINAL_STATUS.json, proof/EXECUTION_STATUS.json, frontend/src/app/proof/data/EXECUTION_STATUS.json.
+

@@ -364,5 +364,5 @@ export async function simulateEarlyClaim(connection: Connection, payer: PublicKe
   const built = await claimInstructions(payer, loan);
   if (typeof built === "string") return built;
   const preview = await simulateAndDecode(connection, payer, built);
-  return preview.name ?? "Simulation — not a transaction.";
+  return typedRefusal(preview.name, preview.code, preview.name ?? "Simulation — not a transaction.");
 }

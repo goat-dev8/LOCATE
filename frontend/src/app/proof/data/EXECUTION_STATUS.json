@@ -18,12 +18,12 @@
   "chromeRealWalletExecution": true,
   "frontendExecutionWiring": true,
   "receiptVerification": true,
-  "chromeRealWalletVerification": false,
+  "chromeRealWalletVerification": true,
   "proofCenterIntegrity": false,
   "productionDeployment": true,
   "designImplemented": false,
   "proofCenterImplemented": false,
-  "updatedAt": "2026-09-25T05:40:00Z",
+  "updatedAt": "2026-09-25T06:58:12Z",
   "evidence": {
     "fork": "proof/mainnet-fork/manifest.json 24/24 local execution, not a Mainnet transaction",
     "localValidator": "proof/local-validator/suite.json 42/42",
@@ -33,6 +33,7 @@
     "devnetDex": "proof/devnet/dex.json result FAIL — Jupiter TOKEN_NOT_TRADABLE, DLMM 6073, Phoenix absent, Whirlpool/Pump executable with no replica pool",
     "sourceBuild": "proof/verification/reproducible-build.json equality true; proof/verification/devnet-deployed-binary.json equality true; verified false because this is not a Mainnet program",
     "mainnetDexSell": "proof/mainnet-dex/sell.json PASS 2C4CND6FqBiTgPzgNQojHKa6KzL221gd2Zm4BiyP7WCRnmichUF3m9ptF9xs7pDgTVaa9GMm6eYtqmUnQMbqmuzr slot 450171723; sell-2.json PASS 4FmrxJKrUUaauhd7tksKFZK1xhJTFB7C6AjYq8dcVv7tnArQZY5woCEBzTeKCuKH1AbzRs3mQcwaGTKD6pVPcKSw slot 450174357",
-    "mainnetDexBuyback": "proof/mainnet-dex/buyback.json PASS 5cHQQxCByufmPazGRqKPgfdPDVJHMvCVFkz3NdutoPjrjc1p6RhboJXcjzMmQRgcQ8KoqkQNH8NJSGnpPRQZgR6F slot 450174446 ExactIn 3964 USDC → 1956 OpenAI, no LOCATE program"
+    "mainnetDexBuyback": "proof/mainnet-dex/buyback.json PASS 5cHQQxCByufmPazGRqKPgfdPDVJHMvCVFkz3NdutoPjrjc1p6RhboJXcjzMmQRgcQ8KoqkQNH8NJSGnpPRQZgR6F slot 450174446 ExactIn 3964 USDC → 1956 OpenAI, no LOCATE program",
+    "earlyClaimRefusal": "Chrome simulation on loan 4U3UUMfK9QdJt2tm2S2NtTvFrBxX15L9JVvVgb2JDqnF returned ClaimRefusedNotMatured. Screen NOT_CLAIMABLE_YET. Claim button disabled. No new signature."
   }
 }
