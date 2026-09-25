@@ -5,7 +5,7 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 import { DEVNET_USDC, TOKEN, TOKEN_2022, ata } from "@locate/sdk";
 import { useLocate } from "@/lib/locate/store";
-import { fmtToken, fmtUsd, uiFromRaw } from "@/lib/locate/seed";
+import { catalogAsset, fmtToken, fmtUsd, uiFromRaw } from "@/lib/locate/seed";
 import { useLiveMarket } from "@/lib/locate/useLiveMarket";
 import { executionTrace } from "@/lib/locate/executionFacts";
 import { loanPhase, nextLoanAction } from "@/lib/locate/loanPhase";
@@ -92,7 +92,7 @@ export function OverviewView() {
         <p className="lc-label">LIVE MARKET CONTEXT · OPENAI</p>
         <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-3">Live Mainnet market data</p>
         <div className="mt-4 flex items-center gap-4">
-          <AssetLogo asset={{ id: "OPENAI", symbol: "OPENAI", name: "OpenAI PreStock", logo: "", refPrice: openai?.markPrice ?? null, marketPrice: openai?.tokenPrice ?? null, transferFeeBps: 100, standard: "TOKEN-2022", blurb: "" }} size={44} className="rounded-xl" />
+          <AssetLogo asset={catalogAsset("OPENAI")} size={44} className="rounded-xl" />
           <p className="font-sans text-[16px] font-semibold text-white">OpenAI PreStock</p>
         </div>
         <dl className="mt-5 grid gap-3 sm:grid-cols-5">

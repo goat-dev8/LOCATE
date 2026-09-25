@@ -97,7 +97,7 @@ export const OPENAI_MARK: Asset = {
   id: "OPENAI",
   symbol: "OPENAI",
   name: "OpenAI PreStock",
-  logo: "",
+  logo: "/prestocks/openai.png",
   refPrice: null,
   marketPrice: null,
   transferFeeBps: 100,
@@ -107,13 +107,31 @@ export const OPENAI_MARK: Asset = {
 
 export const ASSETS: Asset[] = [OPENAI_MARK];
 
+const PRESTOCK_LOGOS: Record<string, string> = {
+  OPENAI: "/prestocks/openai.png",
+  NEURALINK: "/prestocks/neuralink.png",
+  ANDURIL: "/prestocks/anduril.png",
+  ANTHROPIC: "/prestocks/anthropic.png",
+  FIGUREAI: "/prestocks/figureai.png",
+  KALSHI: "/prestocks/kalshi.png",
+  POLYMARKET: "/prestocks/polymarket.png",
+  SPACEX: "/prestocks/spacex.png",
+  XAI: "/prestocks/xai.png",
+};
+
+export function prestockLogo(symbol: string): string {
+  const key = symbol.replace(/^d/, "").toUpperCase();
+  return PRESTOCK_LOGOS[key] ?? `/logos/${key.toLowerCase()}.webp`;
+}
+
 export function catalogAsset(symbol: string): Asset {
+  const id = symbol.toUpperCase();
   return (
-    ASSETS.find((a) => a.id === symbol || a.symbol === symbol) ?? {
-      id: symbol,
-      symbol,
-      name: `${symbol} PreStock`,
-      logo: "",
+    ASSETS.find((a) => a.id === id || a.symbol === id) ?? {
+      id,
+      symbol: id,
+      name: `${id} PreStock`,
+      logo: prestockLogo(id),
       refPrice: null,
       marketPrice: null,
       transferFeeBps: 100,

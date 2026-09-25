@@ -9,6 +9,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import type { Asset } from "@/lib/locate/types";
+import { prestockLogo } from "@/lib/locate/seed";
 
 export const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -25,16 +26,18 @@ export function AssetLogo({
   size?: number;
   className?: string;
 }) {
+  const src = asset.logo || prestockLogo(asset.symbol || asset.id);
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 select-none items-center justify-center overflow-hidden rounded-xl bg-[#141416] font-mono font-bold uppercase tracking-[0.08em] text-white ring-1 ring-line/80",
+        "inline-flex shrink-0 select-none items-center justify-center overflow-hidden rounded-xl bg-[#141416] ring-1 ring-line/80",
         className,
       )}
-      style={{ width: size, height: size, fontSize: Math.max(9, size * 0.28) }}
+      style={{ width: size, height: size }}
       aria-hidden
     >
-      {asset.symbol.slice(0, 2)}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={src} alt="" width={size} height={size} className="h-full w-full object-cover" />
     </span>
   );
 }

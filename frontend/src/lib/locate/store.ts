@@ -5,7 +5,7 @@
  */
 
 import { create } from "zustand";
-import { ASSETS } from "./seed";
+import { ASSETS, prestockLogo } from "./seed";
 import type {
   Asset,
   CreateOfferInput,
@@ -110,7 +110,7 @@ export const locateAsset = (id: string) => ASSETS.find((a) => a.id === id) ?? {
   id,
   symbol: id,
   name: id,
-  logo: "",
+  logo: prestockLogo(id),
   refPrice: null,
   marketPrice: null,
   transferFeeBps: 100,

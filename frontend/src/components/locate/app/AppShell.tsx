@@ -17,9 +17,10 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 import { DEVNET_USDC, TOKEN, TOKEN_2022, ata } from "@locate/sdk";
 import { formatUnits } from "@/lib/locate/amounts";
+import { catalogAsset } from "@/lib/locate/seed";
 import { useLocate, type View } from "@/lib/locate/store";
 import { useLiveMarket } from "@/lib/locate/useLiveMarket";
-import { Wordmark } from "../landing/parts";
+import { Wordmark, AssetLogo } from "../landing/parts";
 import { BookView } from "./views/Book";
 import { CreateOfferView } from "./views/CreateOffer";
 import { LoanDetailView } from "./views/LoanDetail";
@@ -264,6 +265,11 @@ export function AppShell() {
               </span>
             </div>
             <div className="flex items-center gap-2.5">
+              <span className="hidden items-center gap-1.5 md:flex" aria-label="PreStock catalog">
+                {live.rows.map((row) => (
+                  <AssetLogo key={row.symbol} asset={catalogAsset(row.symbol)} size={22} className="rounded-md" />
+                ))}
+              </span>
               <span className="lc-chip">{premiumLabel}</span>
               <span className="hidden sm:inline-flex">
                 <span className="lc-chip-lime">

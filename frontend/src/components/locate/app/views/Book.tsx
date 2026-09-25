@@ -10,6 +10,7 @@ import { FadeContent } from "@/components/bits";
 import { useLocate } from "@/lib/locate/store";
 import {
   ASSETS,
+  catalogAsset,
   fmtUsd,
   fmtToken,
   formatDuration,
@@ -74,11 +75,14 @@ export function BookView() {
       <section className="mb-10">
         <p className="lc-label">Live PreStock</p>
         <div className="mt-4 flex items-end justify-between gap-6">
-          <div>
+          <div className="flex items-start gap-4">
+            <AssetLogo asset={catalogAsset("OPENAI")} size={52} className="rounded-2xl" />
+            <div>
             <p className="font-sans text-[32px] font-semibold tracking-[-0.03em] text-white">OpenAI</p>
             <p className="mt-2 max-w-md text-[15px] leading-[1.5] text-ink-2">
               Mainnet market context. Borrowable supply below is the Devnet replica, not this price.
             </p>
+            </div>
           </div>
           <div className="text-right">
             <p className="font-sans text-[40px] font-semibold leading-none tabular-nums text-white">{price}</p>
@@ -88,10 +92,13 @@ export function BookView() {
         {catalog.length > 0 && (
           <ul className="mt-6 divide-y divide-line/70 border-y border-line/70">
             {catalog.map((row) => (
-              <li key={row.symbol} className="flex items-baseline justify-between gap-4 py-2.5">
-                <span className="font-sans text-[14px] text-white">
+              <li key={row.symbol} className="flex items-center justify-between gap-4 py-2.5">
+                <span className="flex min-w-0 items-center gap-3">
+                  <AssetLogo asset={catalogAsset(row.symbol)} size={28} className="rounded-lg" />
+                  <span className="font-sans text-[14px] text-white">
                   {row.symbol}
                   {row.symbol === "SPACEX" ? <span className="ml-3 font-mono text-[12px] text-ink-3">converts by 12 Mar 2027</span> : null}
+                  </span>
                 </span>
                 <span className="font-mono text-[13px] tabular-nums text-ink-2">
                   {row.tokenPrice != null ? `$${Math.round(row.tokenPrice).toLocaleString("en-US")}` : "unavailable"}

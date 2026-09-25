@@ -1817,3 +1817,11 @@ Vercel dpl_3eotaHzTpskCCbSomTSZ3izrRvQC is READY for ad55723d59cead12a8298b1dc4b
 
 This commit records that check. The UI is unchanged.
 
+## 2026-09-25T16:41:03Z — PreStock marks on landing and in the app
+
+PHASE PRODUCT
+
+The landing marquee, opportunity list, problem card, market catalog, loan cards, and the app header now render the issuer marks from frontend/public/prestocks. AssetLogo no longer uses two-letter initials when a mark exists. xAI is stored and mapped but is not a product catalog row. Command: npx tsc --noEmit in frontend, exit 0.
+
+Files: frontend/public/prestocks/*.png, frontend/src/components/locate/landing/parts.tsx, frontend/src/lib/locate/seed.ts, frontend/src/components/locate/app/views/Book.tsx, frontend/src/components/locate/app/AppShell.tsx.
+
