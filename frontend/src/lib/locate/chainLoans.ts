@@ -104,6 +104,7 @@ export function settledLoansFromReceipts(
     if (!role) continue;
     const returned = terminal.kind === "loan_returned";
     const feeRaw = takeFields.feeUsdc ?? "";
+    const feeBpsRaw = fields.feeBps || takeFields.feeBps || "";
     const startTs = takeFields.startTs ?? "";
     const maturityTs = takeFields.maturityTs ?? "";
     const claimAfterTs = takeFields.claimAfterTs ?? "";
@@ -119,7 +120,7 @@ export function settledLoansFromReceipts(
       startTs,
       maturityTs,
       claimAfterTs,
-      feeBpsAtTake: fields.feeBps ?? takeFields.feeBps ?? "0",
+      feeBpsAtTake: feeBpsRaw,
       claimableNow: false,
       role,
       status: returned ? "RETURNED" : "CLAIMED",

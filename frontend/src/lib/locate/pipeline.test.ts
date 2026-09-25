@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { pairTokenDeltas, refusalIfStampMoved } from "./pipeline.ts";
+import { feeBpsAtTake, pairTokenDeltas, refusalIfStampMoved } from "./pipeline.ts";
 
 assert.equal(refusalIfStampMoved("aaa", "aaa"), null);
 assert.equal(refusalIfStampMoved("aaa", "bbb"), "TERMS_CHANGED");
@@ -20,4 +20,9 @@ const missing = pairTokenDeltas(
 assert.equal(missing[0].after, "0");
 assert.equal(missing[0].owner, "");
 
-console.log("pipeline 5/5");
+assert.equal(feeBpsAtTake(100), 100);
+assert.equal(feeBpsAtTake("100"), 100);
+assert.equal(feeBpsAtTake(undefined), null);
+assert.equal(feeBpsAtTake(""), null);
+assert.equal(feeBpsAtTake(10_001), null);
+console.log("pipeline 10/10");

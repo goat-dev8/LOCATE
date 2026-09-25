@@ -11,6 +11,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle2, Info, X } from "lucide-react";
 import { locateApi, DEVNET_MINT } from "@/lib/locate/env";
 import { closedOffersFromReceipts, loansFromChain, settledLoansFromReceipts } from "@/lib/locate/chainLoans";
+import { feeBpsAtTake } from "@/lib/locate/pipeline";
 import { useLocate } from "@/lib/locate/store";
 import { Landing } from "./landing/Landing";
 import { AppShell } from "./app/AppShell";
@@ -221,7 +222,7 @@ export default function LocateRoot() {
         feeRaw: String(loan.feeUsdc),
         lenderPubkey: String(loan.lender),
         borrowerPubkey: String(loan.borrower),
-        feeBps: Number(loan.feeBpsAtTake),
+        feeBps: feeBpsAtTake(loan.feeBpsAtTake) ?? undefined,
       })));
     };
     load().catch(() => undefined);

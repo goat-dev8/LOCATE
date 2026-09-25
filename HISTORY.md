@@ -1453,7 +1453,17 @@ The fork writer now drops compute-unit counts and fresh account ids from saved l
 
 Devnet DEX remains FAIL. Mainnet deployment remains false.
 
-Pushed as d99c3ed.
+Pushed as d99c3ed. The history line itself was recorded in b3612d1.
+
+## 2026-09-25T07:55:00Z — Loan fee uses the take record
+
+PHASE POSITIONS
+
+The gross to return and the transfer-fee line now use the fee in basis points stored on the loan at take. A missing receipt field stays blank. It is not filled from the asset card and it is not shown as zero. The upfront fee still comes from the take receipt. `pipeline 10/10`. Frontend `tsc --noEmit` passed.
+
+Devnet DEX remains FAIL. Mainnet deployment remains false. solana-verify was not run.
+
+Not pushed in this step.
 
 
 

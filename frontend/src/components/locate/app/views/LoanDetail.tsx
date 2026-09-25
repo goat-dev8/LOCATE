@@ -7,6 +7,7 @@
 import { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { formatUnits } from "@/lib/locate/amounts";
+import { feeBpsAtTake } from "@/lib/locate/pipeline";
 import { locateApi } from "@/lib/locate/env";
 import { dexEvidence } from "@/lib/locate/executionFacts";
 import { SettlementRail, type RailStep } from "../SettlementRail";
@@ -97,7 +98,8 @@ export function LoanDetailView() {
   }
 
   const asset = ASSETS.find((a) => a.id === loan.assetId) ?? ASSETS[0]!;
-  const gross = grossForNet(loan.netRequired, asset.transferFeeBps);
+  const feeBps = feeBpsAtTake(loan.feeBps);
+  const gross = feeBps == null ? null : grossForNet(loan.netRequired, feeBps);
   const span = loan.maturityAt - loan.startedAt || DAY;
   const progress = (Date.now() - loan.startedAt) / span;
 
@@ -180,14 +182,14 @@ export function LoanDetailView() {
             />
             <DataRow
               label="GROSS TO RETURN"
-              value={`${fmtToken(gross, 6)} ${asset.symbol}`}
+              value={gross == null ? "not on this loan" : `${fmtToken(gross, 6)} ${asset.symbol}`}
               tone="accent"
             />
             <DataRow label="COLLATERAL" value={`${fmtUsd(loan.collateralUsdc)} USDC`} />
             <DataRow label="UPFRONT FEE" value={loan.feeKnown === false ? "NOT IN THIS RECEIPT" : `${fmtUsd(loan.feeUsdc)} USDC`} />
             <DataRow
-              label="TRANSFER FEE"
-              value={`${asset.transferFeeBps / 100}% · TOKEN-2022`}
+              label="TRANSFER FEE AT TAKE"
+              value={feeBps == null ? "not on this loan" : `${feeBps / 100}% · TOKEN-2022`}
             />
             {advanced && (
               <>
