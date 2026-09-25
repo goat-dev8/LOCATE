@@ -97,7 +97,7 @@ export function MyOffersView() {
                   </div>
                   <div className="flex items-center gap-2 lg:justify-end">
                     <p className="font-mono text-[9px] uppercase tracking-[0.1em] text-ink-3">
-                      {o.status === "ACTIVE" ? "Next: cancel, or wait for a take" : o.status === "TAKEN" ? "Next: open the loan" : o.status}
+                      {o.status === "ACTIVE" ? "Next: cancel, or wait for a take" : o.status === "TAKEN" ? "Next: open the loan" : o.status === "CANCELLED" ? "Cancelled" : "Settled"}
                     </p>
                     {o.status === "ACTIVE" && (
                       <button

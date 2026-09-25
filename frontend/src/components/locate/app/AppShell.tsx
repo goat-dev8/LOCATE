@@ -223,7 +223,7 @@ export function AppShell() {
         </button>
         <p className="lc-label-dark mt-3">DEVNET</p>
         <p className="mt-2 font-mono text-[8.5px] uppercase leading-relaxed tracking-[0.1em] text-shell-ink-2">
-          devnet test mint mirroring OPENAI&apos;s extensions; not a PreStocks token
+          devnet test mint mirroring OPENAI&apos;s extensions; not a Mainnet PreStock
         </p>
 
         <SidebarNav view={view} navigate={navigate} counts={counts} />

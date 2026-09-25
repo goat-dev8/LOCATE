@@ -94,7 +94,7 @@ export function Footer() {
 
         <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-shell-line pt-6 sm:flex-row">
           <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-shell-ink-2">
-            devnet test mint mirroring OPENAI&apos;s extensions; not a PreStocks token
+            devnet test mint mirroring OPENAI&apos;s extensions; not a Mainnet PreStock
           </p>
           <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-shell-ink-2">
             © 2025 LOCATE

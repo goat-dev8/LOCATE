@@ -261,7 +261,7 @@ export function ExecutionLabView() {
         LOCATE borrow → external market → short → buy back → LOCATE return. LOCATE remains on Devnet and in cloned Mainnet state.
       </p>
       <div className="lc-card p-6">
-        <p className="lc-label">MAINNET EXECUTION</p>
+        <p className="lc-label">EXTERNAL MAINNET DEX</p>
         <dl className="mt-4 space-y-2 font-mono text-[12px] text-ink">
           <div className="flex justify-between gap-4"><dt className="text-ink-3">Asset</dt><dd>OpenAI PreStock</dd></div>
           <div className="flex justify-between gap-4"><dt className="text-ink-3">Network</dt><dd>Solana Mainnet</dd></div>

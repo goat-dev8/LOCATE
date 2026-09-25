@@ -158,7 +158,7 @@ function TakeOfferInner({
               <DataRow label="RETURN GROSS" value={economics?.returnGrossRaw ? String(economics.returnGrossRaw) : "unavailable"} />
               <DataRow label="BREAK-EVEN" value={breakEven} />
               <p className="mt-2 font-mono text-[9.5px] uppercase leading-relaxed tracking-[0.1em] text-ink-3">
-                {ILLUSTRATIVE} Jupiter quotes are not used on Devnet.
+                {ILLUSTRATIVE} External quotes are not used on Devnet.
               </p>
 
               <div className="mt-4 flex gap-2">

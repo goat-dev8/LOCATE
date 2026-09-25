@@ -129,3 +129,51 @@ export function settledLoansFromReceipts(
   }
   return settled;
 }
+
+/** Closed offers leave no account. Lender receipts are the record. */
+export function closedOffersFromReceipts(
+  receipts: Array<Record<string, unknown>>,
+  wallet: string,
+  openOffers: Set<string>,
+): Array<Record<string, string>> {
+  const byOffer = new Map<string, Array<Record<string, unknown>>>();
+  for (const row of receipts) {
+    const offer = String(row.offer ?? "");
+    if (!offer || openOffers.has(offer)) continue;
+    const list = byOffer.get(offer) ?? [];
+    list.push(row);
+    byOffer.set(offer, list);
+  }
+  const closed: Array<Record<string, string>> = [];
+  for (const [offer, rows] of byOffer) {
+    const created = rows.find((row) => row.kind === "offer_created");
+    const taken = rows.find((row) => row.kind === "loan_taken");
+    const settled = rows.find((row) => row.kind === "loan_returned" || row.kind === "loan_claimed");
+    const cancelled = rows.find((row) => row.kind === "offer_cancelled");
+    const createdFields = created ? receiptFields(created) : {};
+    const takenFields = taken ? receiptFields(taken) : {};
+    const lender = String(created?.lender ?? taken?.lender ?? cancelled?.lender ?? createdFields.lender ?? "");
+    if (lender !== wallet) continue;
+    const status = cancelled ? "CANCELLED" : settled ? "SETTLED" : taken ? "TAKEN" : "";
+    if (!status) continue;
+    const amountRaw = createdFields.amountRaw || takenFields.amountRaw;
+    const collateralUsdc = createdFields.collateralUsdc || takenFields.collateralUsdc;
+    const feeUsdc = createdFields.feeUsdc || takenFields.feeUsdc;
+    if (!amountRaw || !collateralUsdc || !feeUsdc) continue;
+    closed.push({
+      pubkey: offer,
+      lender,
+      mint: String(created?.mint ?? taken?.mint ?? createdFields.mint ?? ""),
+      amountRaw,
+      collateralUsdc,
+      feeUsdc,
+      termSecs: createdFields.termSecs || "0",
+      graceSecs: createdFields.graceSecs || "0",
+      expiresAt: createdFields.expiresAt || "0",
+      nonce: createdFields.nonce || "0",
+      createdAt: "0",
+      status,
+    });
+  }
+  return closed;
+}

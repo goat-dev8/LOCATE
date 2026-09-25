@@ -14,6 +14,11 @@ import { StatusChip, useCountdown, ViewHead } from "../parts";
 
 const REPLICA = new PublicKey("9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P");
 
+function missingAta(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error);
+  return /could not find|not found|does not exist|invalid param/i.test(message);
+}
+
 const FLOW = [
   { n: "01", title: "LEND", body: "Supply a PreStock", layer: "LOCATE PROTOCOL" },
   { n: "02", title: "BORROW", body: "Post USDC collateral", layer: "LOCATE PROTOCOL" },
@@ -38,10 +43,10 @@ export function OverviewView() {
     let alive = true;
     connection.getTokenAccountBalance(ata(publicKey, REPLICA, TOKEN_2022), "confirmed")
       .then((row) => { if (alive) setReplica(uiFromRaw(row.value.amount, row.value.decimals)); })
-      .catch(() => { if (alive) setReplica(0); });
+      .catch((error: unknown) => { if (alive && missingAta(error)) setReplica(0); });
     connection.getTokenAccountBalance(ata(publicKey, DEVNET_USDC, TOKEN), "confirmed")
       .then((row) => { if (alive) setUsdc(uiFromRaw(row.value.amount, row.value.decimals)); })
-      .catch(() => { if (alive) setUsdc(0); });
+      .catch((error: unknown) => { if (alive && missingAta(error)) setUsdc(0); });
     return () => { alive = false; };
   }, [connection, publicKey]);
 
@@ -126,29 +131,19 @@ export function OverviewView() {
         </p>
       </section>
 
-      <section className="mt-5 grid gap-5 lg:grid-cols-2">
-        <article className="lc-card p-6">
-          <p className="lc-label">HOW A LOAN COMPLETES</p>
-          <ol className="mt-4 space-y-2 font-mono text-[12px] uppercase tracking-[0.08em] text-ink-2">
-            <li>Lender supplies a PreStock → offer</li>
-            <li>Borrower posts USDC collateral → receives the PreStock</li>
-            <li>Borrower may sell through external market liquidity</li>
-            <li>Borrower buys back enough tokens</li>
-            <li>Return delivers the required amount to the lender</li>
-            <li>Borrower receives the USDC collateral</li>
-          </ol>
-        </article>
-        <article className="lc-card p-6">
-          <p className="lc-label">DEFAULT PATH</p>
-          <ol className="mt-4 space-y-2 font-mono text-[12px] uppercase tracking-[0.08em] text-ink-2">
-            <li>Offer</li>
-            <li>Take</li>
-            <li>Maturity</li>
-            <li>Grace</li>
-            <li>Token not returned</li>
-            <li>Lender claims USDC collateral</li>
-          </ol>
-        </article>
+      <section className="mt-5 lc-card p-6">
+        <p className="lc-label">HOW IT WORKS</p>
+        <ol className="mt-4 space-y-2 font-mono text-[12px] uppercase tracking-[0.08em] text-ink-2">
+          <li>Lender → PreStock → offer</li>
+          <li>Offer → USDC collateral → borrower</li>
+          <li>Borrower → borrowed PreStock → external market</li>
+          <li>External market → sell → short</li>
+          <li>Short → buy back → return</li>
+          <li>Return → lender receives the required token</li>
+          <li>Return → borrower receives the USDC collateral</li>
+        </ol>
+        <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-3">Default, if the token is not returned</p>
+        <p className="mt-2 font-mono text-[12px] uppercase tracking-[0.08em] text-ink-2">Offer → take → maturity → grace → claim → USDC collateral to the lender</p>
       </section>
 
       <section className="mt-5 grid gap-5 lg:grid-cols-3">

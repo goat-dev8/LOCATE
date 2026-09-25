@@ -1,4 +1,9 @@
 import protocol from "@/app/proof/data/devnet/protocol.json";
+import fork from "@/app/proof/data/mainnet-fork/manifest.json";
+import localSuite from "@/app/proof/data/local-validator/suite.json";
+import replay from "@/app/proof/data/replay/manifest.json";
+import security from "@/app/proof/data/security/suite.json";
+import status from "@/app/proof/data/EXECUTION_STATUS.json";
 import dexSell from "@/app/proof/data/mainnet-dex/sell.json";
 import dexSell2 from "@/app/proof/data/mainnet-dex/sell-2.json";
 import dexBuy from "@/app/proof/data/mainnet-dex/buyback.json";
@@ -85,6 +90,50 @@ export const executionTrace: TraceStep[] = [
       : "External Mainnet DEX buyback is not verified",
     href: dexBuy.result === "PASS" ? mainnetTx(dexBuy.signature) : null,
     confirmed: dexBuy.result === "PASS" && dexBuy.locateProtocol === false,
+  },
+];
+
+export const proofSections = [
+  {
+    title: "A. PROTOCOL EXECUTION",
+    lines: [
+      "Real Devnet. dOPENAI is a replica, not a Mainnet PreStock.",
+      "create " + returnCycle.create,
+      "take " + returnCycle.take,
+      "return " + returnCycle.return,
+      "claim " + claimCycle.claim,
+      "early claim refusal code " + String(claimCycle.earlyClaimSimulationCode),
+    ],
+  },
+  {
+    title: "B. CLONED MAINNET STATE",
+    lines: [
+      fork.label + ". Not a Mainnet transaction.",
+      fork.matrix.passed + "/" + fork.matrix.total + " passed",
+      "OpenAI " + fork.accounts.openai.pubkey,
+      "Neuralink " + fork.accounts.neuralink.pubkey,
+    ],
+  },
+  {
+    title: "C. MAINNET MARKET EXECUTION",
+    lines: [
+      "Real external Mainnet DEX. locateProtocol " + String(dexSell.locateProtocol) + ".",
+      "sell " + dexSell.result + " " + dexSell.signature,
+      "buyback " + dexBuy.result + " " + dexBuy.signature,
+      "Devnet DEX " + devnetDex.result,
+      "mainnetLocateDeployment " + String(status.mainnetLocateDeployment),
+      "mainnetLocateTransactions " + String(status.mainnetLocateTransactions),
+    ],
+  },
+  {
+    title: "D. SECURITY / CONSISTENCY",
+    lines: [
+      "Local validator " + localSuite.passed + "/" + localSuite.total,
+      "Functional " + security.functional.passed,
+      "Security " + security.security.passed,
+      "Mutation " + security.mutation.passed,
+      "Replay " + replay.total,
+    ],
   },
 ];
 

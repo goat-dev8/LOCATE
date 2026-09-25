@@ -10,7 +10,7 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle2, Info, X } from "lucide-react";
 import { locateApi, DEVNET_MINT } from "@/lib/locate/env";
-import { loansFromChain, settledLoansFromReceipts } from "@/lib/locate/chainLoans";
+import { closedOffersFromReceipts, loansFromChain, settledLoansFromReceipts } from "@/lib/locate/chainLoans";
 import { useLocate } from "@/lib/locate/store";
 import { Landing } from "./landing/Landing";
 import { AppShell } from "./app/AppShell";
@@ -107,10 +107,27 @@ export default function LocateRoot() {
       try {
         const data = await locateApi.offers();
         if (!alive) return;
+        const live = (data.offers ?? [])
+            .filter((row) => Boolean(row.funded) && String(row.mint) === DEVNET_MINT);
+        let closed: Array<Record<string, string>> = [];
+        if (publicKey) {
+          try {
+            const stored = await locateApi.receipts({ wallet: publicKey.toBase58(), limit: 50 });
+            closed = closedOffersFromReceipts(
+              stored.receipts ?? [],
+              publicKey.toBase58(),
+              new Set(live.map((row) => String(row.pubkey))),
+            );
+          } catch {
+            /* closed offers stay hidden when the receipt API is down */
+          }
+        }
+        const rows = [
+          ...live.map((row) => ({ ...row, status: "ACTIVE" })),
+          ...closed,
+        ];
         setOffers(
-          (data.offers ?? [])
-            .filter((row) => Boolean(row.funded) && String(row.mint) === DEVNET_MINT)
-            .map((row) => ({
+          rows.map((row) => ({
               id: String(row.pubkey),
               assetId: "OPENAI",
               amount: Number(row.amountRaw) / 1e9,
@@ -128,7 +145,7 @@ export default function LocateRoot() {
               graceSecs: String(row.graceSecs),
               expiresAtSec: String(row.expiresAt),
               isYours: publicKey ? String(row.lender) === publicKey.toBase58() : false,
-              status: "ACTIVE" as const,
+              status: (row.status === "TAKEN" || row.status === "SETTLED" || row.status === "CANCELLED" ? row.status : "ACTIVE") as "ACTIVE" | "TAKEN" | "CANCELLED" | "SETTLED",
               createdAt: Number(row.createdAt) * 1000,
             })),
         );

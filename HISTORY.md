@@ -1197,5 +1197,65 @@ Pushed main a8c81a3..cb0926e. The commit records the dashboard lifecycle, the re
 
 Git SHA: cb0926e
 
+## 2026-09-25T01:05:00Z — Proof page is four sections
+
+PHASE PROOF
+
+The public proof page repeated the same artifacts as Layer 2, Layer 3, a flat results list, and a second signature list. Those duplicates are gone. The page is now A Devnet protocol, B cloned Mainnet state, C external Mainnet DEX, D security and consistency. Devnet DEX stays the recorded failure. mainnetLocateDeployment and mainnetLocateTransactions stay false. `GET /proof` returned 200 and the HTML contains the four headings.
+
+A missing Devnet token account still counts as zero. An RPC error no longer counts as zero, so the overview does not pick LEND or BORROW from a failed read. The execution screen label is EXTERNAL MAINNET DEX.
+
+Not pushed in this step.
+
+Git SHA: e33133b
+
+## 2026-09-25T01:10:00Z — In-app proof shows the recorded artifacts
+
+PHASE PROOF
+
+The Verify view’s four cards were descriptions only. They now render the proof JSON: Devnet create/take/return/claim and early-claim code 6015, fork 24/24, OpenAI and Neuralink mints, external DEX sell and buyback with locateProtocol false, Devnet DEX FAIL, mainnetLocateDeployment false, mainnetLocateTransactions false, local validator 42/42, functional 17, security 14, mutation 10, replay 45000.
+
+Chrome on the borrower wallet showed those lines, plus the later wallet return and claim receipts. No new transaction.
+
+Not pushed in this step.
+
+Git SHA: e33133b
+
+## 2026-09-25T01:15:00Z — Closed offers come from lender receipts
+
+PHASE OFFERS
+
+Taken and cancelled offers leave no account, so My Offers only showed live listings. Closed offers for the connected lender now come from finalized receipts when the create or take receipt includes amount, collateral, and fee. Open offers stay ACTIVE and are not duplicated.
+
+Checked against lender Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC receipts: Gxs3bCKMnrB4RRxP8Kq4rH76TRxR7NVaKp5z143VKMHy SETTLED amount 5000000 collateral 12500000 fee 350000 term 604800; 96RP66nAg4E5uZYmZyMs2JCmEp5KgsTUbz1Suqq5RPC7 SETTLED amount 1000000 collateral 1000000 fee 50000 term 60; 8vGyHaW4gQciy2ZqYBktBRyW7vHfDmWAji57UUVCYZhJ CANCELLED from its own create receipt, same 5000000 / 12500000 / 350000.
+
+Chrome wallet is the borrower CpTxsgPjvaaPSaBKkijvB1h3hzgJmPiTsWNhuS7tRkgX. My Offers correctly says NO OFFERS HERE. Phantom was not switched to the lender. No new transaction. Devnet DEX remains FAIL.
+
+Not pushed in this step.
+
+Git SHA: e33133b
+
+## 2026-09-25T01:20:00Z — One lifecycle on Overview, lender offers visible
+
+PHASE UI
+
+Overview now has one HOW IT WORKS chain: lender to offer, collateral to borrower, external sell, buy back, return, then collateral back. The default path is offer, take, maturity, grace, claim, USDC to the lender.
+
+Phantom is the lender Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC. Sidebar dOPENAI 0.998899494 and Devnet USDC 11.35, matching the post-return balances. Primary action is LEND THIS PRESTOCK. Short supply says NO OPEN OFFERS. My Offers shows Gxs3 SETTLED 0.005 / $12.50 / $0.35, 96RP SETTLED 0.001 / $1.00 / $0.05 / 60S, and 8vGy CANCELLED. My Loans shows 4HfF as YOU LENT RETURNED and FU7w as YOU LENT CLAIMED. No new transaction.
+
+Not pushed in this step.
+
+Git SHA: e33133b
+
+## 2026-09-25T01:25:00Z — Book is empty, issuer brand removed from the shell
+
+PHASE UI
+
+Lender Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC on the Book sees “No open offers on Devnet right now.” No sample rows. Sidebar now says the replica is not a Mainnet PreStock. The proof page names the failed Devnet venue as an execution benchmark and a pool venue, not by product name. No new transaction. Devnet DEX remains FAIL.
+
+Not pushed in this step.
+
+Git SHA: e33133b
+
 
 

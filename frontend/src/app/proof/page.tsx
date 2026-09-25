@@ -76,19 +76,6 @@ export default function ProofPage() {
     balances: Record<string, string | number | boolean>;
   }>("mainnet-fork/openai-full-lifecycle.json");
 
-  const rows = [
-    ["Cloned mainnet fork", `${fork.matrix.passed}/${fork.matrix.total} passed, ${fork.matrix.failed} failed`, fork.label],
-    ["Jupiter sell simulation", sell.result, sell.mainnetTransaction ? "mainnet transaction" : "Not a mainnet transaction"],
-    ["Jupiter buyback simulation", buy.result, buy.mainnetTransaction ? "mainnet transaction" : "Not a mainnet transaction"],
-    ["Local validator", `${local.passed}/${local.total} passed, ${local.failed} failed`, local.label],
-    ["Devnet create/take/return", cycle.returnCycle.return, cycle.label],
-    ["Devnet short loop", devnet.result, `${devnet.label}. Signed transactions: ${devnet.signedTransactions.length}. Jupiter ${devnet.jupiter.errorCode}. DLMM ${devnet.dlmm.error} ${devnet.dlmm.errorNumber}.`],
-    ["Cross-runtime replay", `${replay.total} vectors`, `seed ${replay.seed}`],
-    ["Security / functional / mutation", `${sec.functional.passed}/${sec.functional.passed} functional, ${sec.security.passed} security, ${sec.mutation.passed} mutation, backend ${sec.backendVitest.passed}`, sec.label],
-    ["Source/build correspondence", source.verified ? "verified" : "not verified", source.claim],
-    ["Mainnet execution", gate.signed || gate.sent ? "signed" : "not signed", gate.blocker],
-  ];
-
   const status = load<{
     mainnetLocateDeployment: boolean;
     mainnetLocateTransactions: boolean;
@@ -149,68 +136,17 @@ export default function ProofPage() {
       </section>
       <section className="mt-10">
         <h2 className="font-display text-2xl">B. Cloned Mainnet state — local execution</h2>
-        <p className="mt-2 text-sm text-zinc-500">{fork.label}. Not a Mainnet transaction. OpenAI and Neuralink mint bytes, Token-2022, lifecycle, adversarial cases.</p>
-        <p className="mt-3 font-mono text-sm">{fork.matrix.passed}/{fork.matrix.total} passed</p>
-      </section>
-      <section className="mt-10">
-        <h2 className="font-display text-2xl">C. Mainnet market execution — real external DEX</h2>
-        <p className="mt-2 text-sm text-zinc-500">Real Mainnet DEX transaction. Not a LOCATE Mainnet transaction. locateProtocol {String(dexSell.locateProtocol)}.</p>
-        <p className="mt-3 font-mono text-xs text-zinc-400">Sell {dexSell.result} {dexSell.signature} slot {dexSell.slot}. In {dexSell.amountRaw} out {dexSell.actualOutRaw} min {dexSell.minOutRaw} route {dexSell.route.join(" > ")}.</p>
-        <p className="mt-2 font-mono text-xs text-zinc-400">Buyback {dexBuy.result} {dexBuy.signature} slot {dexBuy.slot}. USDC in {dexBuy.inAmountUsdcRaw} quoted {dexBuy.quoteOutRaw} min {dexBuy.minOutRaw} OpenAI delta {dexBuy.openaiDeltaFromPreBuyback}.</p>
-        <p className="mt-2 font-mono text-xs text-zinc-400">Before SOL {before.solLamports} OpenAI {before.openaiRaw} USDC {before.usdcRaw}. After SOL {after.solLamports} OpenAI {after.openaiRaw} USDC {after.usdcRaw}.</p>
-        <p className="mt-2 text-sm text-zinc-500">Devnet DEX remains {devnet.result}. Quote simulations are not Mainnet transactions: sell {sell.result}, buyback {buy.result}.</p>
-      </section>
-      <section className="mt-10">
-        <h2 className="font-display text-2xl">D. Security and consistency</h2>
-        <p className="mt-2 text-sm text-zinc-500">Local validator {local.passed}/{local.total}. Functional {sec.functional.passed}. Security {sec.security.passed}. Mutation {sec.mutation.passed}. Replay {replay.total}.</p>
-      </section>
-
-      <section className="mt-10">
-        <h2 className="font-display text-2xl">Layer 2 — Mainnet fork (local LOCATE)</h2>
-        <p className="mt-2 text-sm text-zinc-500">{fork.label}. Not a Mainnet transaction.</p>
+        <p className="mt-2 text-sm text-zinc-500">{fork.label}. Real Mainnet account state. Local LOCATE execution. Not a Mainnet transaction.</p>
         <p className="mt-3 font-mono text-sm">{fork.matrix.passed}/{fork.matrix.total} passed, {fork.matrix.failed} failed</p>
-        <p className="mt-2 font-mono text-xs text-zinc-500">Program {fork.programId} sha256 {fork.programSha256}</p>
-      </section>
-
-      <section className="mt-10">
-        <h2 className="font-display text-2xl">Layer 3 — Devnet LOCATE</h2>
-        <p className="mt-2 text-sm text-zinc-500">{cycle.label}. Network {proto.network}.</p>
-        <ul className="mt-4 space-y-2 font-mono text-xs text-zinc-400">
-          <li>create {proto.returnCycle.create}</li>
-          <li>take {proto.returnCycle.take}</li>
-          <li>return {proto.returnCycle.return}</li>
-          <li>claim {cycle.claimCycle.claim}</li>
-          <li>Devnet DEX {devnet.result} — Jupiter {devnet.jupiter.errorCode}, DLMM {devnet.dlmm.error} {devnet.dlmm.errorNumber}</li>
+        <p className="mt-2 font-mono text-xs text-zinc-500">Program {fork.programId} sha256 {fork.programSha256}. Fee epoch {fork.epochUsedForActiveFee}.</p>
+        <p className="mt-2 font-mono text-xs text-zinc-400">OpenAI {fork.accounts.openai.pubkey} slot {fork.accounts.openai.slot}. Neuralink {fork.accounts.neuralink.pubkey} slot {fork.accounts.neuralink.slot}. USDC {fork.accounts.usdc.pubkey} slot {fork.accounts.usdc.slot}.</p>
+        <p className="mt-2 text-sm text-zinc-500">{life.label}. Mint {life.mint}. Passed {String(life.passed)}. {fork.balances}</p>
+        <ul className="mt-3 space-y-1 font-mono text-xs text-zinc-400">
+          {Object.entries(life.balances).map(([key, value]) => (
+            <li key={key}>{key} {String(value)}</li>
+          ))}
         </ul>
-      </section>
-
-      <dl className="mt-10 divide-y divide-[#242427] border-y border-[#242427]">
-        {rows.map(([name, value, note]) => (
-          <div key={name} className="py-4">
-            <dt className="text-sm text-zinc-400">{name}</dt>
-            <dd className="mt-1 font-mono text-lg">{value}</dd>
-            <dd className="mt-1 text-sm text-zinc-500">{note}</dd>
-          </div>
-        ))}
-      </dl>
-      <section className="mt-10 space-y-2 font-mono text-xs text-zinc-400">
-        <p>Program {fork.programId}</p>
-        <p>Fork binary sha256 {fork.programSha256}</p>
-        <p>Local binary sha256 {local.programSha256}</p>
-        <p>Fee epoch {fork.epochUsedForActiveFee}</p>
-        <p>OpenAI {fork.accounts.openai.pubkey} slot {fork.accounts.openai.slot}</p>
-        <p>Neuralink {fork.accounts.neuralink.pubkey} slot {fork.accounts.neuralink.slot}</p>
-        <p>USDC {fork.accounts.usdc.pubkey} slot {fork.accounts.usdc.slot}</p>
-        <p>{fork.balances}</p>
-        <p>{local.usdcNote}</p>
-        <p>Replay families {JSON.stringify(replay.families)}</p>
-        <p>Mainnet flag enabled {String(gate.enabled)}. Missing {gate.prerequisitesMissing.join(", ") || "none"}.</p>
-        <p>Devnet ELF {source.devnet.elfSha256}. Matches local mainnet binary {String(source.devnet.matchesLocalMainnetBinary)}. Matches local devnet binary {String(source.devnet.matchesLocalDevnetBinary)}.</p>
-        <p>Mainnet program account exists {String(source.mainnet.programAccountExists)} at slot {source.mainnet.slot}. HEAD {source.head}.</p>
-      </section>
-      <section className="mt-10">
-        <h2 className="font-display text-2xl">Token-2022</h2>
-        <ul className="mt-4 space-y-3 text-sm">
+        <ul className="mt-4 space-y-2 text-sm">
           {token2022.exercised.map((row) => (
             <li key={row.extension}>
               <span className="font-mono text-[#4D7CFF]">{row.extension}</span>
@@ -218,32 +154,22 @@ export default function ProofPage() {
             </li>
           ))}
         </ul>
-        <p className="mt-4 text-sm text-zinc-500">Not exercised: {token2022.notExercised.join(", ")}.</p>
+        <p className="mt-3 text-sm text-zinc-500">Not exercised: {token2022.notExercised.join(", ")}.</p>
       </section>
       <section className="mt-10">
-        <h2 className="font-display text-2xl">Devnet signatures</h2>
-        <p className="mt-2 text-sm text-zinc-500">{cycle.label}</p>
-        <ul className="mt-4 space-y-2 font-mono text-xs text-zinc-400">
-          <li>create {cycle.returnCycle.create}</li>
-          <li>take {cycle.returnCycle.take}</li>
-          <li>return {cycle.returnCycle.return}</li>
-          <li>claim create {cycle.claimCycle.create}</li>
-          <li>claim take {cycle.claimCycle.take}</li>
-          <li>claim {cycle.claimCycle.claim}</li>
-          <li>early claim simulation code {cycle.claimCycle.earlyClaimSimulationCode}</li>
-        </ul>
+        <h2 className="font-display text-2xl">C. Mainnet market execution — real external DEX</h2>
+        <p className="mt-2 text-sm text-zinc-500">Real Mainnet DEX transaction. Not a LOCATE Mainnet transaction. locateProtocol {String(dexSell.locateProtocol)}.</p>
+        <p className="mt-3 font-mono text-xs text-zinc-400">Sell {dexSell.result} {dexSell.signature} slot {dexSell.slot}. In {dexSell.amountRaw} out {dexSell.actualOutRaw} min {dexSell.minOutRaw} route {dexSell.route.join(" > ")}.</p>
+        <p className="mt-2 font-mono text-xs text-zinc-400">Buyback {dexBuy.result} {dexBuy.signature} slot {dexBuy.slot}. USDC in {dexBuy.inAmountUsdcRaw} quoted {dexBuy.quoteOutRaw} min {dexBuy.minOutRaw} OpenAI delta {dexBuy.openaiDeltaFromPreBuyback}.</p>
+        <p className="mt-2 font-mono text-xs text-zinc-400">Before SOL {before.solLamports} OpenAI {before.openaiRaw} USDC {before.usdcRaw}. After SOL {after.solLamports} OpenAI {after.openaiRaw} USDC {after.usdcRaw}.</p>
+        <p className="mt-2 text-sm text-zinc-500">Devnet DEX remains {devnet.result}. Execution benchmark {devnet.jupiter.errorCode}. Pool venue {devnet.dlmm.error} {devnet.dlmm.errorNumber}. Signed Devnet DEX transactions: {devnet.signedTransactions.length}.</p>
+        <p className="mt-2 text-sm text-zinc-500">Quote simulations are not Mainnet transactions: sell {sell.result}, buyback {buy.result}. LOCATE Mainnet gate enabled {String(gate.enabled)}, signed {String(gate.signed)}, sent {String(gate.sent)}. {gate.blocker}</p>
       </section>
       <section className="mt-10">
-        <h2 className="font-display text-2xl">OpenAI fork settlement</h2>
-        <p className="mt-2 text-sm text-zinc-500">{life.label}. Mint {life.mint}. Passed {String(life.passed)}.</p>
-        <dl className="mt-4 divide-y divide-[#242427] border-y border-[#242427] font-mono text-sm">
-          {Object.entries(life.balances).map(([key, value]) => (
-            <div key={key} className="flex justify-between gap-6 py-2">
-              <dt className="text-zinc-400">{key}</dt>
-              <dd>{String(value)}</dd>
-            </div>
-          ))}
-        </dl>
+        <h2 className="font-display text-2xl">D. Security and consistency</h2>
+        <p className="mt-2 text-sm text-zinc-500">Local validator {local.passed}/{local.total}, {local.failed} failed. {local.usdcNote} Local binary sha256 {local.programSha256}.</p>
+        <p className="mt-2 text-sm text-zinc-500">Functional {sec.functional.passed}. Security {sec.security.passed}. Mutation {sec.mutation.passed}. Backend {sec.backendVitest.passed}. Replay {replay.total} vectors, seed {replay.seed}. Families {JSON.stringify(replay.families)}.</p>
+        <p className="mt-2 text-sm text-zinc-500">Source correspondence {source.verified ? "verified" : "not verified"}. {source.claim} Devnet ELF {source.devnet.elfSha256}. Matches local mainnet binary {String(source.devnet.matchesLocalMainnetBinary)}. Matches local devnet binary {String(source.devnet.matchesLocalDevnetBinary)}. Mainnet program account exists {String(source.mainnet.programAccountExists)} at slot {source.mainnet.slot}. HEAD {source.head}.</p>
       </section>
     </main>
   );
