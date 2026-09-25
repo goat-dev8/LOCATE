@@ -15,9 +15,10 @@ export function loanPhase(loan: Loan, now = Date.now()): LoanPhase {
 export function nextLoanAction(loan: Loan, now = Date.now()): string {
   const phase = loanPhase(loan, now);
   if (phase === "SETTLED") return "Settled";
-  if (phase === "CLAIMABLE" && loan.direction === "LENT") return "CLAIM COLLATERAL";
-  if (phase === "CLAIMABLE") return "Await lender claim";
-  if (loan.direction === "BORROWED") return "RETURN LOAN";
+  if (phase === "CLAIMABLE" && loan.direction === "LENT") return "Claim";
+  if (phase === "CLAIMABLE") return "Lender can claim";
+  if (phase === "GRACE" && loan.direction === "LENT") return "Claim opens after grace";
+  if (loan.direction === "BORROWED") return "Return";
   if (phase === "GRACE") return "Grace running";
-  return "Wait for maturity or a return";
+  return "Wait for return";
 }

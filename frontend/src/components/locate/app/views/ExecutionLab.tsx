@@ -161,7 +161,7 @@ export function ExecutionLabView() {
           outAmount: BigInt(quoteBody.quote.outAmount),
           otherAmountThreshold: BigInt(quoteBody.quote.otherAmountThreshold ?? quoteBody.quote.outAmount),
           slippageBps: 100,
-          fetchedAt: Date.now(),
+          fetchedAt: quoteBody.fetchedAt,
           routeLabels,
           swapMode: side === "buyback" && quoteBody.quote.inAmount === usdcRaw.toString() ? "ExactIn" : side === "buyback" ? "ExactOut" : "ExactIn",
         },
@@ -209,6 +209,39 @@ export function ExecutionLabView() {
       if (!sign) {
         setPhase("READY");
         setError("Phantom did not expose a signer.");
+        return;
+      }
+      const beforeSign = evaluateDexQuote({
+        now: Date.now(),
+        wallet: publicKey.toBase58(),
+        expectedWallet: publicKey.toBase58(),
+        side,
+        quote: {
+          inputMint: quoteBody.quote.inputMint,
+          outputMint: quoteBody.quote.outputMint,
+          inAmount: BigInt(quoteBody.quote.inAmount),
+          outAmount: BigInt(quoteBody.quote.outAmount),
+          otherAmountThreshold: BigInt(quoteBody.quote.otherAmountThreshold ?? quoteBody.quote.outAmount),
+          slippageBps: 100,
+          fetchedAt: quoteBody.fetchedAt,
+          routeLabels,
+          swapMode: side === "buyback" && quoteBody.quote.inAmount === usdcRaw.toString() ? "ExactIn" : side === "buyback" ? "ExactOut" : "ExactIn",
+        },
+        mint: OPENAI_MAINNET_MINT,
+        tokenProgram: TOKEN_2022.toBase58(),
+        decimals: 9,
+        feeBps: 100,
+        expectedFeeBps: 100,
+        balances: {
+          solLamports: BigInt(bal.solLamports),
+          openaiRaw,
+          usdcRaw,
+        },
+        minOut: side === "buyback" ? 1000n : 1n,
+      });
+      if (!beforeSign.ok) {
+        setPhase("READY");
+        setError(beforeSign.code);
         return;
       }
       setPhase("WAITING FOR WALLET");

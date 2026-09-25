@@ -1525,5 +1525,13 @@ PHASE VALIDATION
 
 Pushed as 4a09721.
 
+## 2026-09-25T04:35:00Z — Quote age is checked before the wallet
+
+PHASE EXECUTION
+
+The external-market quote gate was stamping the quote as fresh at the moment of the check, so an old quote could not expire. It now uses the quote response time, and the same check runs again immediately before the wallet is asked to sign. A quote older than 20 seconds returns STALE_QUOTE and is not signed. Position cards now lead with the next action (Return, Claim, or Claim opens after grace) instead of a raw fee sentence. No new protocol instruction. No Mainnet LOCATE deployment. Devnet DEX remains FAIL.
+
+Files: frontend/src/components/locate/app/views/ExecutionLab.tsx, frontend/src/components/locate/app/views/MyLoans.tsx, frontend/src/lib/locate/loanPhase.ts.
+
 
 

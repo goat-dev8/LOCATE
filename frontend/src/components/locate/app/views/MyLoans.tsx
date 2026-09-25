@@ -8,7 +8,7 @@ import { useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { FadeContent } from "@/components/bits";
 import { useLocate } from "@/lib/locate/store";
-import { ASSETS, fmtToken, formatDuration, grossForNet, netFromGross } from "@/lib/locate/seed";
+import { ASSETS, fmtToken, formatDuration } from "@/lib/locate/seed";
 import { loanPhase, nextLoanAction } from "@/lib/locate/loanPhase";
 import { AssetLogo } from "../../landing/parts";
 import { EmptyState, Segmented, StatusChip, useCountdown, ViewHead } from "../parts";
@@ -73,9 +73,6 @@ function LoanRow({
   const asset = ASSETS.find((a) => a.id === loan.assetId)!;
   const cd = useCountdown(loan.maturityAt);
   const borrowed = loan.direction === "BORROWED";
-  const feeBps = loan.feeBps ?? asset.transferFeeBps;
-  const received = netFromGross(loan.amount, feeBps);
-  const requiredGross = grossForNet(loan.netRequired, feeBps);
   const phase = loanPhase(loan);
 
   return (
@@ -109,10 +106,11 @@ function LoanRow({
           </div>
         </div>
 
-        <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-3">
-          Borrowed gross {fmtToken(loan.amount, 6)} → fee {feeBps} bps → received net {fmtToken(received, 6)} → required return gross {fmtToken(requiredGross, 6)} → lender receives required net {fmtToken(loan.netRequired, 6)}
+        <p className="font-sans text-[18px] font-semibold text-white">{nextLoanAction(loan)}</p>
+        <p className="text-[13px] text-ink-2">
+          {fmtToken(loan.amount, 4)} borrowed · ${loan.collateralUsdc.toFixed(2)} collateral
+          {loan.termsKnown === false ? "" : ` · grace ${formatDuration(loan.graceHours * 3600)}`}
         </p>
-        <p className="font-mono text-[10px] uppercase tracking-[0.1em] text-ink-2">{nextLoanAction(loan)}{loan.termsKnown === false ? "" : ` · grace ${formatDuration(loan.graceHours * 3600)}`} · collateral ${loan.collateralUsdc.toFixed(2)}</p>
         <div className="flex items-center justify-between border-t border-line/70 pt-4">
           {loan.status === "CLAIMABLE" ? (
             <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.12em] text-ember">CLAIMABLE</p>
