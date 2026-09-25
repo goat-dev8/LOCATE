@@ -1,0 +1,41 @@
+{
+  "atomic": false,
+  "dexProgram": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+  "label": "Cloned Mainnet State — Local Execution",
+  "limitation": "Ordered local execution in one cloned Mainnet environment. Not one chain transaction. Not a Mainnet transaction.",
+  "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+  "notAMainnetTransaction": true,
+  "passed": true,
+  "sameEnvironment": true,
+  "stages": {
+    "buyback": {
+      "borrowerTokenRaw": "1000001998436",
+      "borrowerUsdcRaw": "999998950000",
+      "error": "",
+      "ok": true,
+      "tokenBoughtRaw": "963",
+      "usdcInRaw": "2013"
+    },
+    "return": {
+      "borrowerUsdcRaw": "999999950000",
+      "lenderTokenRaw": "1000000000000",
+      "lenderUsdcRaw": "1000000050000",
+      "loanClosed": true
+    },
+    "sell": {
+      "borrowerUsdcRaw": "999998952013",
+      "error": "",
+      "inputRaw": "1000",
+      "ok": true,
+      "tokenDebitedRaw": "1000",
+      "usdcProceedsRaw": "2013"
+    },
+    "take": {
+      "borrowerTokenRaw": "1000001998473",
+      "borrowerUsdcRaw": "999998950000",
+      "deliveredRaw": "1998473",
+      "ok": true
+    }
+  },
+  "usdcMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+}

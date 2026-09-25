@@ -11,7 +11,7 @@ import { verifyReceiptInBrowser } from "@locate/sdk";
 import { FadeContent } from "@/components/bits";
 import type { Receipt } from "@/lib/locate/types";
 import { locateApi, SOLANA_RPC_URL, LOCATE_PROGRAM_ID_TEXT } from "@/lib/locate/env";
-import { proofSections } from "@/lib/locate/executionFacts";
+import { productTrace, proofSections } from "@/lib/locate/executionFacts";
 import { Segmented, ViewHead } from "../parts";
 import { cn } from "@/lib/utils";
 
@@ -72,6 +72,17 @@ export function VerifyView() {
 
   return (
     <div>
+      <ol className="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-3">
+        {productTrace.map((step) => (
+          <li key={step.label} className="lc-card px-4 py-3">
+            <a href={step.href} target="_blank" rel="noreferrer" className="block">
+              <p className="font-mono text-[12px] text-[#7D9BFF]">{step.mark} {step.label}</p>
+              <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-3">{step.layer}</p>
+            </a>
+          </li>
+        ))}
+      </ol>
+      <p className="mb-6 font-mono text-[11px] text-ink-3">Separate transactions. Cloned Mainnet state is local execution, not a Mainnet transaction.</p>
       <div className="mb-6 flex flex-col gap-3">
         {proofSections.map((section) => (
           <details key={section.title} className="lc-card p-5">

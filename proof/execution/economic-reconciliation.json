@@ -1,0 +1,23 @@
+{
+  "borrowedGrossRaw": "2018660",
+  "collateralRaw": "1000000",
+  "collateralReleasedToBorrowerRaw": "950000",
+  "deliveredRaw": "1998473",
+  "externalBuybackTokenOutRaw": "963",
+  "externalBuybackUsdcInRaw": "2013",
+  "externalSellInputRaw": "1000",
+  "externalSellUsdcProceedsRaw": "2013",
+  "feeBps": 100,
+  "integerOnly": true,
+  "label": "Cloned Mainnet State — Local Execution",
+  "lenderRequiredNetRaw": "2018660",
+  "lenderUsdcDeltaRaw": "50000",
+  "notAMainnetTransaction": true,
+  "passed": true,
+  "receivedNetRaw": "1998473",
+  "requiredReturnGrossRaw": "2039051",
+  "statement": "External market execution in the cloned environment; LOCATE protocol remains Devnet/fork-only. Not a Mainnet transaction.",
+  "transferFeeOnBorrowRaw": "20187",
+  "transferFeeOnReturnRaw": "20391",
+  "upfrontFeeRaw": "50000"
+}

@@ -7,7 +7,7 @@ use std::fs;
 use std::path::PathBuf;
 
 use common::*;
-use locate::token2022::{gross_for_net, read_mint_flags};
+use locate::token2022::{epoch_fee, gross_for_net, read_mint_flags};
 use serde_json::{json, Value};
 use sha2::{Digest, Sha256};
 use solana_address::{address, Address};
@@ -776,6 +776,155 @@ fn cloned_pool_swap_attempt() {
     });
     fs::write(proof_dir().join("dex-buyback.json"), serde_json::to_string_pretty(&buyback).unwrap()).unwrap();
     assert!(bought, "{}", back.detail);
+}
+
+#[test]
+fn composed_cloned_lifecycle() {
+    let mut w = World::fork(1041);
+    w.load_cloned_dex();
+    let borrower_token = w.borrower_ata();
+    let borrower_usdc = w.borrower_usdc();
+    let lender_token = w.lender_ata();
+    let lender_usdc = w.lender_usdc();
+    let (bps, max_fee) = w.live_fee();
+    let borrow_fee = epoch_fee(bps, max_fee, N).expect("borrow fee");
+    let net = N - borrow_fee;
+    let gross = gross_for_net(bps, max_fee, N).expect("return gross");
+    let return_fee = gross - N;
+
+    let token_before = w.amount(&borrower_token);
+    let usdc_before = w.amount(&borrower_usdc);
+    let lender_token_before = w.amount(&lender_token);
+    let lender_usdc_before = w.amount(&lender_usdc);
+
+    w.create(1);
+    let take = w.take(1);
+    let token_after_take = w.amount(&borrower_token);
+    let usdc_after_take = w.amount(&borrower_usdc);
+    let delivered = token_after_take.saturating_sub(token_before);
+
+    let sell_in = 1_000u64;
+    let sell = local_swap(&mut w, sell_in, borrower_token, borrower_usdc);
+    let token_after_sell = w.amount(&borrower_token);
+    let usdc_after_sell = w.amount(&borrower_usdc);
+    let usdc_proceeds = usdc_after_sell.saturating_sub(usdc_after_take);
+    let token_debited = token_after_take.saturating_sub(token_after_sell);
+
+    let buy = if sell.ok && usdc_proceeds > 0 {
+        local_swap(&mut w, usdc_proceeds, borrower_usdc, borrower_token)
+    } else {
+        IxResult { ok: false, code: None, cu: 0, detail: "sell produced no USDC".into(), logs: vec![] }
+    };
+    let token_after_buy = w.amount(&borrower_token);
+    let usdc_after_buy = w.amount(&borrower_usdc);
+    let token_bought = token_after_buy.saturating_sub(token_after_sell);
+
+    let returned = sell.ok && buy.ok;
+    if returned {
+        return_live(&mut w, 1);
+    }
+    let (offer, _) = w.offer_pda(1);
+    let (loan, _) = w.loan_pda(&offer);
+    let loan_closed = !w.exists(&loan);
+    let lender_token_after = w.amount(&lender_token);
+    let lender_usdc_after = w.amount(&lender_usdc);
+    let borrower_usdc_after = w.amount(&borrower_usdc);
+    let passed = take.ok
+        && delivered == net
+        && sell.ok
+        && token_debited == sell_in
+        && usdc_proceeds > 0
+        && buy.ok
+        && token_bought > 0
+        && loan_closed
+        && lender_token_after >= lender_token_before
+        && lender_usdc_after == lender_usdc_before + FEE
+        && borrower_usdc_after == usdc_before - FEE;
+
+    let limitation = if passed {
+        "Ordered local execution in one cloned Mainnet environment. Not one chain transaction. Not a Mainnet transaction."
+    } else if !sell.ok {
+        "DEX sell did not execute in this cloned environment."
+    } else if !buy.ok {
+        "DEX buyback did not execute after the local sell."
+    } else {
+        "A later stage did not match the raw-integer checks."
+    };
+
+    let trace = json!({
+        "label": "Cloned Mainnet State — Local Execution",
+        "notAMainnetTransaction": true,
+        "sameEnvironment": true,
+        "atomic": false,
+        "passed": passed,
+        "limitation": limitation,
+        "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+        "usdcMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "dexProgram": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+        "stages": {
+            "take": {
+                "ok": take.ok,
+                "borrowerTokenRaw": token_after_take.to_string(),
+                "deliveredRaw": delivered.to_string(),
+                "borrowerUsdcRaw": usdc_after_take.to_string()
+            },
+            "sell": {
+                "ok": sell.ok,
+                "inputRaw": sell_in.to_string(),
+                "tokenDebitedRaw": token_debited.to_string(),
+                "usdcProceedsRaw": usdc_proceeds.to_string(),
+                "borrowerUsdcRaw": usdc_after_sell.to_string(),
+                "error": sell.detail
+            },
+            "buyback": {
+                "ok": buy.ok,
+                "usdcInRaw": usdc_proceeds.to_string(),
+                "tokenBoughtRaw": token_bought.to_string(),
+                "borrowerTokenRaw": token_after_buy.to_string(),
+                "borrowerUsdcRaw": usdc_after_buy.to_string(),
+                "error": buy.detail
+            },
+            "return": {
+                "loanClosed": loan_closed,
+                "lenderTokenRaw": lender_token_after.to_string(),
+                "lenderUsdcRaw": lender_usdc_after.to_string(),
+                "borrowerUsdcRaw": borrower_usdc_after.to_string()
+            }
+        }
+    });
+    fs::write(
+        proof_dir().join("composed-lifecycle.json"),
+        serde_json::to_string_pretty(&trace).unwrap(),
+    )
+    .unwrap();
+
+    let economics = json!({
+        "label": "Cloned Mainnet State — Local Execution",
+        "notAMainnetTransaction": true,
+        "integerOnly": true,
+        "passed": passed,
+        "feeBps": bps,
+        "borrowedGrossRaw": N.to_string(),
+        "transferFeeOnBorrowRaw": borrow_fee.to_string(),
+        "receivedNetRaw": net.to_string(),
+        "deliveredRaw": delivered.to_string(),
+        "externalSellInputRaw": sell_in.to_string(),
+        "externalSellUsdcProceedsRaw": usdc_proceeds.to_string(),
+        "externalBuybackUsdcInRaw": usdc_proceeds.to_string(),
+        "externalBuybackTokenOutRaw": token_bought.to_string(),
+        "requiredReturnGrossRaw": gross.to_string(),
+        "transferFeeOnReturnRaw": return_fee.to_string(),
+        "lenderRequiredNetRaw": N.to_string(),
+        "collateralRaw": K.to_string(),
+        "upfrontFeeRaw": FEE.to_string(),
+        "collateralReleasedToBorrowerRaw": (K - FEE).to_string(),
+        "lenderUsdcDeltaRaw": FEE.to_string(),
+        "statement": "External market execution in the cloned environment; LOCATE protocol remains Devnet/fork-only. Not a Mainnet transaction."
+    });
+    let exec_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../proof/execution");
+    fs::create_dir_all(&exec_dir).unwrap();
+    fs::write(exec_dir.join("economic-reconciliation.json"), serde_json::to_string_pretty(&economics).unwrap()).unwrap();
+    assert!(passed, "{}", limitation);
 }
 
 #[test]

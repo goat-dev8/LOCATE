@@ -1,0 +1,76 @@
+{
+  "network": "mainnet",
+  "locateProtocol": false,
+  "statement": "External market execution; LOCATE protocol remains Devnet/fork-only.",
+  "wallet": "Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC",
+  "inputMint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+  "usdcMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "finalized": true,
+  "error": null,
+  "token2022": {
+    "feeBpsOnClonedMintAtEpoch1041": 100,
+    "sellInputRaw": "1000",
+    "scheduleFeeRaw": "10",
+    "walletDebitRaw": "-1000",
+    "note": "Wallet delta is the gross debit recorded on the sell. The 10-raw fee is 100 bps of 1000 from the cloned mint schedule, not a second on-chain measurement."
+  },
+  "sell": {
+    "signature": "2C4CND6FqBiTgPzgNQojHKa6KzL221gd2Zm4BiyP7WCRnmichUF3m9ptF9xs7pDgTVaa9GMm6eYtqmUnQMbqmuzr",
+    "slot": 450171723,
+    "inputRaw": "1000",
+    "outputRaw": "1982",
+    "minOutRaw": "1963",
+    "quoteOutRaw": "1982",
+    "quoteTimestamp": "2026-09-24T23:04:50.267Z",
+    "route": [
+      "Meteora DLMM",
+      "Meteora DLMM"
+    ],
+    "err": null
+  },
+  "fundingSell": {
+    "signature": "4FmrxJKrUUaauhd7tksKFZK1xhJTFB7C6AjYq8dcVv7tnArQZY5woCEBzTeKCuKH1AbzRs3mQcwaGTKD6pVPcKSw",
+    "slot": 450174357,
+    "inputRaw": "1000",
+    "quoteOutRaw": "1982",
+    "err": null,
+    "note": "Second sell. Buyback input equals the two recorded 1982 USDC quotes."
+  },
+  "buyback": {
+    "signature": "5cHQQxCByufmPazGRqKPgfdPDVJHMvCVFkz3NdutoPjrjc1p6RhboJXcjzMmQRgcQ8KoqkQNH8NJSGnpPRQZgR6F",
+    "slot": 450174446,
+    "inputRaw": "3964",
+    "outputRaw": "1956",
+    "minOutRaw": "1938",
+    "quoteOutRaw": "1957",
+    "quoteTimestamp": "2026-09-24T23:16:16.966Z",
+    "route": [
+      "Meteora DLMM",
+      "Meteora DLMM"
+    ],
+    "err": null
+  },
+  "before": {
+    "solLamports": "10293479",
+    "openaiRaw": "943162",
+    "usdcRaw": "0",
+    "slot": 450170159
+  },
+  "afterFirstSell": {
+    "openaiRaw": "942162",
+    "usdcRaw": "1982",
+    "slot": 450171723
+  },
+  "after": {
+    "solLamports": "6666532",
+    "openaiRaw": "943118",
+    "usdcRaw": "0"
+  },
+  "deltas": {
+    "openaiRaw": "-44",
+    "usdcRaw": "0",
+    "openaiRawBeforeBuyback": "941162",
+    "sellUsdcRaw": "1982",
+    "buybackOpenAiRaw": "1956"
+  }
+}

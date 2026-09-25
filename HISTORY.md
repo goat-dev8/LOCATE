@@ -1796,3 +1796,16 @@ Chrome on https://locate-blue.vercel.app deployment dpl_AcG9A7mfmo7y9JrVuzJeKktv
 Files: proof/FINAL_STATUS.json, evidence/qa/vercel-deploy.json, evidence/backend/render-create.json.
 Network: Devnet wallet already connected. Signature: none.
 
+## 2026-09-25T16:14:05Z — One Mainnet case and one cloned lifecycle
+
+PHASE EXECUTION
+
+The existing Mainnet sell 2C4CND6FqBiTgPzgNQojHKa6KzL221gd2Zm4BiyP7WCRnmichUF3m9ptF9xs7pDgTVaa9GMm6eYtqmUnQMbqmuzr slot 450171723 and buyback 5cHQQxCByufmPazGRqKPgfdPDVJHMvCVFkz3NdutoPjrjc1p6RhboJXcjzMmQRgcQ8KoqkQNH8NJSGnpPRQZgR6F slot 450174446 are one case in proof/mainnet-dex/execution-case.json. OpenAI delta raw -44. USDC delta raw 0. locateProtocol false. No new Mainnet spend.
+
+cargo test --manifest-path programs/locate/Cargo.toml --test fork_proof composed_cloned_lifecycle -- --exact passed. Same cloned environment: take delivered 1998473, local DLMM sell 1000 to 2013 USDC, buyback returned 963, return closed the loan. Not a Mainnet transaction. proof/execution/economic-reconciliation.json uses those raw integers.
+
+Jupiter quote for 9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P returned HTTP 400 TOKEN_NOT_TRADABLE. Devnet DEX stays BLOCKED_EXTERNAL. No further venue search. Mainnet LOCATE deployment stays NOT_APPLICABLE_BY_DESIGN.
+
+Files: proof/mainnet-dex/execution-case.json, proof/mainnet-fork/composed-lifecycle.json, proof/execution/economic-reconciliation.json, proof/devnet/venue-final.json, programs/locate/tests/fork_proof.rs, frontend proof trace.
+Network: Devnet quote only. Wallet: none. Signature: none.
+

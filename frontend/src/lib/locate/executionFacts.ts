@@ -100,6 +100,15 @@ export const executionTrace: TraceStep[] = [
   },
 ];
 
+export const productTrace = [
+  { label: "LEND", mark: "✓", layer: "DEVNET PROTOCOL", href: devnetTx(returnCycle.create) },
+  { label: "BORROW", mark: "✓", layer: "DEVNET PROTOCOL", href: devnetTx(returnCycle.take) },
+  { label: "SHORT", mark: "✓", layer: "EXTERNAL MAINNET MARKET", href: mainnetTx(dexSell.signature) },
+  { label: "BUY BACK", mark: "✓", layer: "EXTERNAL MAINNET MARKET", href: mainnetTx(dexBuy.signature) },
+  { label: "RETURN", mark: "✓", layer: "DEVNET PROTOCOL", href: devnetTx(returnCycle.return) },
+  { label: "SETTLE", mark: "✓", layer: "DEVNET PROTOCOL", href: devnetTx(claimCycle.claim) },
+];
+
 export const proofSections = [
   {
     headline: "Real Devnet protocol.",

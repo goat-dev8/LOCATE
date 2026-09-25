@@ -330,7 +330,7 @@ export function ExecutionLabView() {
           <p>Sell {dexEvidence.sell.signature} slot {dexEvidence.sell.slot} in {dexEvidence.sell.amountRaw} out {dexEvidence.sell.actualOutRaw} min {dexEvidence.sell.minOutRaw}</p>
           <p className="mt-2">Buyback {dexEvidence.buyback.signature} slot {dexEvidence.buyback.slot} USDC {dexEvidence.buyback.inAmountUsdcRaw} OpenAI delta {dexEvidence.buyback.openaiDeltaFromPreBuyback}</p>
           <p className="mt-2">Before OpenAI {dexEvidence.before.openaiRaw} USDC {dexEvidence.before.usdcRaw}. After OpenAI {dexEvidence.after.openaiRaw} USDC {dexEvidence.after.usdcRaw}.</p>
-          <p className="mt-2">Devnet venue for the replica mint: {dexEvidence.devnetDexResult}.</p>
+          <p className="mt-2">Devnet DEX: BLOCKED_EXTERNAL. No permissionless route for the replica.</p>
         </div>
         <div className="mt-6 flex gap-3">
           <button onClick={() => run("sell")} className="lc-btn lc-btn-ink lc-btn-sm" disabled={phase !== "READY" && phase !== "VERIFIED"}>

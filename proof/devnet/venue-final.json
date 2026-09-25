@@ -1,0 +1,15 @@
+{
+  "network": "devnet",
+  "mint": "9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P",
+  "usdcMint": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
+  "classification": "BLOCKED_EXTERNAL",
+  "permissionlessRoute": false,
+  "signedTransactions": [],
+  "jupiter": {
+    "status": 400,
+    "body": "{\"error\":\"The token 9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P is not tradable\",\"errorCode\":\"TOKEN_NOT_TRADABLE\"}"
+  },
+  "statement": "DEVNET DEX EXTERNAL VENUE LIMITATION. NO VALID PERMISSIONLESS ROUTE.",
+  "priorEvidence": "proof/devnet/dex.json result FAIL. Jupiter TOKEN_NOT_TRADABLE, DLMM 6073, Phoenix absent, Whirlpool and Pump executable with no replica pool. Raydium program accounts were not executable.",
+  "timestamp": "2026-09-25T16:11:43.823Z"
+}

@@ -23,7 +23,17 @@
   "productionDeployment": true,
   "designImplemented": false,
   "proofCenterImplemented": false,
-  "updatedAt": "2026-09-25T15:00:49Z",
+  "classification": {
+    "reproducibleBuild": "PASS",
+    "devnetDeployedBinaryCorrespondence": "PASS",
+    "mainnetLocateDeployment": "NOT_APPLICABLE_BY_DESIGN",
+    "mainnetLocateTransactions": "NOT_APPLICABLE_BY_DESIGN",
+    "mainnetExternalDexSell": "PASS",
+    "mainnetExternalDexBuyback": "PASS",
+    "devnetLocateLifecycle": "PASS",
+    "devnetDex": "BLOCKED_EXTERNAL"
+  },
+  "updatedAt": "2026-09-25T16:12:30Z",
   "evidence": {
     "fork": "proof/mainnet-fork/manifest.json 24/24 local execution, not a Mainnet transaction",
     "localValidator": "proof/local-validator/suite.json 42/42",

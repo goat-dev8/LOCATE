@@ -105,6 +105,12 @@ export default function ProofPage() {
     <main className="mx-auto max-w-3xl px-6 py-16 text-white">
       <h1 className="font-sans text-4xl font-semibold tracking-tight">Proof</h1>
       <p className="mt-3 text-[15px] text-zinc-400">Devnet protocol, cloned Mainnet state, and the external market stay separate.</p>
+      <div className="mt-8 grid gap-3 sm:grid-cols-3">
+        <p className="rounded-2xl border border-zinc-800 p-4"><span className="block font-mono text-xs text-zinc-500">DEVNET PROTOCOL</span><span className="mt-2 block font-sans text-2xl">{devnetCount} signatures</span></p>
+        <p className="rounded-2xl border border-zinc-800 p-4"><span className="block font-mono text-xs text-zinc-500">MAINNET EXTERNAL MARKET</span><span className="mt-2 block font-sans text-2xl">SELL {dexSell.result} · BUYBACK {dexBuy.result}</span></p>
+        <p className="rounded-2xl border border-zinc-800 p-4"><span className="block font-mono text-xs text-zinc-500">CLONED MAINNET STATE</span><span className="mt-2 block font-sans text-2xl">{fork.matrix.passed}/{fork.matrix.total}</span></p>
+      </div>
+      <p className="mt-4 font-mono text-xs text-zinc-500">Local validator {local.passed}/{local.total}. Replay {replay.total}. Mainnet LOCATE deployment: NOT_APPLICABLE_BY_DESIGN. Devnet DEX: BLOCKED_EXTERNAL.</p>
 
       <details className="mt-10 rounded-2xl border border-zinc-800 p-6">
         <summary className="cursor-pointer">

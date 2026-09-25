@@ -28,6 +28,10 @@ const files = [
   "mainnet-dex/sell-2.json",
   "mainnet-dex/buyback.json",
   "mainnet-fork/lifecycle.json",
+  "mainnet-fork/composed-lifecycle.json",
+  "mainnet-dex/execution-case.json",
+  "execution/economic-reconciliation.json",
+  "devnet/venue-final.json",
 ];
 
 for (const rel of files) {
