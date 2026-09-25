@@ -1279,5 +1279,17 @@ Not pushed in this step.
 
 Git SHA: 7a0b8ba
 
+## 2026-09-25T01:40:00Z — Functional, security, and mutation re-run
+
+PHASE REGRESSION
+
+`cargo test -p locate --test functional --test security --test mutation` exited 0. functional 17 passed, 0 failed, 0.79s. security 14 passed, 0 failed, 0.59s. mutation 10 passed, 0 failed, 0.48s. Compile finished in 1m 16s. These are local LiteSVM runs, not Mainnet transactions.
+
+The fork matrix and the local-validator suite were not re-executed. The five LOCATE instructions were not changed. Devnet DEX remains FAIL.
+
+Not pushed in this step.
+
+Git SHA: eb1f4ea
+
 
 
