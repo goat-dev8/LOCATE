@@ -55,6 +55,7 @@ await api("/v9/projects/" + project.id, {
   method: "PATCH",
   body: JSON.stringify({
     rootDirectory: "frontend",
+    buildCommand: "npm install --prefix ../sdk && npm run build --prefix ../sdk && npm run build",
     ssoProtection: null,
   }),
 });
