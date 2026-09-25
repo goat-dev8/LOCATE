@@ -537,6 +537,81 @@ fn neuralink() -> Value {
     })
 }
 
+fn stable_text(text: &str) -> String {
+    let mut s = text.to_string();
+    let mut from = 0;
+    while let Some(rel) = s[from..].find("consumed ") {
+        let start = from + rel;
+        let rest_start = start + "consumed ".len();
+        let rest = &s[rest_start..];
+        let digits = |part: &str| !part.is_empty() && part.bytes().all(|b| b.is_ascii_digit());
+        let Some(of_at) = rest.find(" of ") else { break };
+        let after = &rest[of_at + 4..];
+        let Some(unit_at) = after.find(" compute units") else { break };
+        let span = &rest[..of_at + 4 + unit_at];
+        if digits(&rest[..of_at]) && digits(&after[..unit_at]) && !span.contains('|') {
+            let end = rest_start + of_at + 4 + unit_at + " compute units".len();
+            s.replace_range(start..end, "consumed compute units");
+            from = start + "consumed compute units".len();
+        } else {
+            from = rest_start;
+        }
+    }
+    loop {
+        let Some(start) = s.find("unknown account ") else { break };
+        let from = start + "unknown account ".len();
+        let len = s[from..].bytes().take_while(|b| b.is_ascii_alphanumeric()).count();
+        if len < 32 {
+            break;
+        }
+        s.replace_range(from..from + len, "");
+    }
+    let mut out = String::new();
+    let mut token = String::new();
+    let flush = |token: &mut String, out: &mut String| {
+        if is_ephemeral_key(token) {
+            out.push_str("account");
+        } else {
+            out.push_str(token);
+        }
+        token.clear();
+    };
+    for ch in s.chars() {
+        if is_base58(ch) {
+            token.push(ch);
+        } else {
+            flush(&mut token, &mut out);
+            out.push(ch);
+        }
+    }
+    flush(&mut token, &mut out);
+    out
+}
+
+fn is_base58(ch: char) -> bool {
+    matches!(ch, '1'..='9' | 'A'..='H' | 'J'..='N' | 'P'..='Z' | 'a'..='k' | 'm'..='z')
+}
+
+fn is_ephemeral_key(token: &str) -> bool {
+    if token.len() < 32 || token.len() > 44 {
+        return false;
+    }
+    !matches!(
+        token,
+        "11111111111111111111111111111111"
+            | "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+            | "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+            | "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+            | "ComputeBudget111111111111111111111111111111"
+            | "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"
+            | "F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6"
+            | "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo"
+            | "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF"
+            | "PrekqLJvJ3qVdXmBGDiexvwUTF4rLFDa6HWS4HJbw9S"
+            | "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+    )
+}
+
 fn dex_flag(file: &str, key: &str) -> bool {
     let path = proof_dir().join(file);
     let text = fs::read_to_string(&path).unwrap_or_default();
@@ -560,7 +635,7 @@ fn write_proof(rows: &[Row], lifecycle: &Value, claim: &Value, neural: &Value) {
                 "expected": r.expected,
                 "result": if r.ok { "PASS" } else { "FAIL" },
                 "errorCode": r.code,
-                "detail": r.detail,
+                "detail": stable_text(&r.detail),
                 "evidence": r.evidence,
             })
         })
@@ -676,7 +751,7 @@ fn cloned_pool_swap_attempt() {
         "ok": result.ok,
         "errorCode": result.code,
         "detail": result.detail,
-        "logs": result.logs,
+        "logs": result.logs.iter().map(|line| stable_text(line)).collect::<Vec<_>>(),
     });
     let path = proof_dir().join("dex-attempt.json");
     fs::write(&path, serde_json::to_string_pretty(&body).unwrap()).unwrap();
@@ -697,7 +772,7 @@ fn cloned_pool_swap_attempt() {
         "ok": back.ok,
         "errorCode": back.code,
         "detail": back.detail,
-        "logs": back.logs,
+        "logs": back.logs.iter().map(|line| stable_text(line)).collect::<Vec<_>>(),
     });
     fs::write(proof_dir().join("dex-buyback.json"), serde_json::to_string_pretty(&buyback).unwrap()).unwrap();
     assert!(bought, "{}", back.detail);

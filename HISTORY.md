@@ -1441,7 +1441,19 @@ After the local sell of 1000 raw OpenAI for 2013 raw USDC, the same test swapped
 
 Devnet DEX remains FAIL. Mainnet deployment remains false.
 
-Pushed as 57c9f1b.
+Pushed as 57c9f1b. The history line itself was recorded in 02f2dce.
+
+## 2026-09-25T07:45:00Z — Stable fork logs and pipeline checks
+
+PHASE PROOF
+
+The fork writer now drops compute-unit counts and fresh account ids from saved logs. Two consecutive runs of `p0_cloned_mainnet_fork_proof` wrote the same `failure-matrix.json`. Pass count is unchanged.
+
+`pipeline.ts` checks the pre-sign account stamp and pairs token balances. A moved stamp is `TERMS_CHANGED`. A missing post balance is recorded as 0. `node --experimental-strip-types src/lib/locate/pipeline.test.ts` printed `pipeline 5/5`. Frontend `tsc --noEmit` passed.
+
+Devnet DEX remains FAIL. Mainnet deployment remains false.
+
+Not pushed in this step.
 
 
 

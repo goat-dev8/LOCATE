@@ -4,13 +4,15 @@ import { Connection, PublicKey, TransactionMessage, VersionedTransaction, type T
 import { DEVNET_USDC, LOCATE_PROGRAM_ID, buildCancelTx, buildClaimTx, buildListTx, buildReturnTx, buildTakeTx, grossForNet, simulateAndDecode, type OfferTerms } from "@locate/sdk";
 import type { Loan, Offer } from "./types";
 import { DEVNET_MINT, locateApi } from "./env";
+import { pairTokenDeltas, refusalIfStampMoved, type BalanceDelta } from "./pipeline";
 import { typedRefusal } from "./refusals";
 
 export type TxResult =
   | { ok: true; signature: string; verified: boolean; deltas: BalanceDelta[] }
   | { ok: false; error: string; simulated: boolean };
 
-export type BalanceDelta = { mint: string; owner: string; before: string; after: string };
+export type { BalanceDelta } from "./pipeline";
+export { pairTokenDeltas, refusalIfStampMoved } from "./pipeline";
 
 export type PreparedTx = {
   tx: VersionedTransaction;
@@ -164,8 +166,9 @@ export async function approvePrepared(
   onSent?: (signature: string) => void,
 ): Promise<TxResult> {
   const stamp = await accountStamp(connection, prepared.watched);
-  if (stamp !== prepared.stamp) {
-    return { ok: false, simulated: true, error: "TERMS_CHANGED" };
+  const moved = refusalIfStampMoved(prepared.stamp, stamp);
+  if (moved) {
+    return { ok: false, simulated: true, error: moved };
   }
   const again = await simulateAndDecode(connection, prepared.payer, prepared.instructions);
   if (again.err) {
@@ -215,15 +218,20 @@ async function tokenDeltas(connection: Connection, signature: string): Promise<B
   const tx = await connection.getTransaction(signature, { commitment: "confirmed", maxSupportedTransactionVersion: 0 });
   const pre = tx?.meta?.preTokenBalances ?? [];
   const post = tx?.meta?.postTokenBalances ?? [];
-  return pre.map((row) => {
-    const after = post.find((item) => item.accountIndex === row.accountIndex);
-    return {
+  return pairTokenDeltas(
+    pre.map((row) => ({
+      accountIndex: row.accountIndex,
       mint: row.mint,
-      owner: row.owner ?? "",
-      before: row.uiTokenAmount.amount,
-      after: after?.uiTokenAmount.amount ?? "0",
-    };
-  });
+      owner: row.owner,
+      amount: row.uiTokenAmount.amount,
+    })),
+    post.map((row) => ({
+      accountIndex: row.accountIndex,
+      mint: row.mint,
+      owner: row.owner,
+      amount: row.uiTokenAmount.amount,
+    })),
+  );
 }
 
 function termsFromRow(row: {
