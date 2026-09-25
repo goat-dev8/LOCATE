@@ -44,10 +44,21 @@ export function LoanDetailView() {
   useEffect(() => {
     if (!loan) return;
     let alive = true;
-    const wallet = loan.borrowerPubkey || loan.lenderPubkey || "";
-    locateApi.receipts({ wallet, limit: 50 }).then((stored) => {
+    const offer = loan.offerPubkey || loan.offerId || "";
+    const empty = Promise.resolve({ receipts: [] as Array<Record<string, unknown>> });
+    const safe = (query: { loan?: string; offer?: string }) => locateApi.receipts({ ...query, limit: 50 }).catch(() => empty);
+    Promise.all([
+      safe({ loan: loan.id }),
+      offer ? safe({ offer }) : empty,
+    ]).then(([byLoan, byOffer]) => {
       if (!alive) return;
-      const rows = (stored.receipts ?? []).filter((row) => String(row.loan ?? row.offer ?? "") === loan.id || String(row.offer ?? "") === loan.offerId);
+      const seen = new Set<string>();
+      const rows = [...(byLoan.receipts ?? []), ...(byOffer.receipts ?? [])].filter((row) => {
+        const key = String(row.signature) + ":" + String(row.kind);
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
       const sig = (kind: string) => {
         const row = rows.find((item) => String(item.kind) === kind);
         return row ? String(row.signature) : "";

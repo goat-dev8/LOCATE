@@ -1720,3 +1720,11 @@ Chrome on localhost:3010 showed the landing after the sample receipts were remov
 
 Files: frontend/src/components/locate/landing/Proof.tsx, frontend/src/components/locate/landing/UIPreviews.tsx, frontend/src/components/locate/landing/Token2022.tsx, frontend/src/components/locate/landing/Mechanism.tsx, frontend/src/components/locate/landing/Lifecycle.tsx, frontend/src/components/locate/app/views/CreateOffer.tsx, frontend/src/lib/locate/executionFacts.ts, scripts/audit-proof-chain.mjs, proof/verification/chain-audit.json, proof/FINAL_STATUS.json.
 
+## 2026-09-25T14:52:56Z — Listing receipt shows on the active loan
+
+PHASE EXECUTION
+
+The settlement rail asked for receipts by the borrower wallet, so the lender's create receipt was missing and Listed stayed Not verified. The loan screen now loads receipts by loan and by offer. Chrome on localhost:3010, lender Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC, loan 4U3UUMfK9QdJt2tm2S2NtTvFrBxX15L9JVvVgb2JDqnF. Listed shows 2PgsmjwxPmVTAPktsNhFp13xZr2kdFPDdDFzVs7WGahU6KwejfkGftCuqeKxN6J5BXBrgG7Xz2UPyknNKjRp7eGB. Taken shows 4vtXFRpvbLBeneBSHf5LzsKP9FvGim2DkGfkaZHLPAPDJ7RUnNRuq4c9Q8ub6vM6AUtRLt86FzZHsnzb1re6iV5W. Returned and collateral released stay Not verified. Short and buy back stay blocked: Devnet venue FAIL, not this loan. About 6d 15h remaining. No new signature. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
+
+Files: frontend/src/components/locate/app/views/LoanDetail.tsx.
+
