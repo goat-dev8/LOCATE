@@ -11,6 +11,7 @@ import { TOKEN_2022, ata } from "@locate/sdk";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { listInstructions } from "@/lib/locate/tx";
 import { phaseCopy, usePreparedTx } from "@/lib/locate/usePreparedTx";
+import { TxSteps } from "../TxSteps";
 import { useLocate } from "@/lib/locate/store";
 import { ASSETS, fmtUsd, fmtToken, formatDuration, uiFromRaw } from "@/lib/locate/seed";
 import type { CreateOfferInput } from "@/lib/locate/types";
@@ -409,6 +410,7 @@ function ConfirmOfferInner({
 
           {(tx.phase === "simulating" || tx.phase === "signing" || tx.phase === "confirming") && (
             <div className="py-6">
+              <TxSteps phase={tx.phase} />
               <p className="mb-5 font-mono text-[10.5px] uppercase tracking-[0.14em] text-ink-3">
                 {phaseCopy(tx.phase)}
                 {tx.phase === "confirming" && tx.signature ? ` ${tx.signature}` : ""}
@@ -420,7 +422,7 @@ function ConfirmOfferInner({
           {tx.phase === "done" && (
             <DoneState
               title={tx.verified ? "Verified on-chain" : "Confirmed"}
-              body={tx.signature ? `Devnet signature ${tx.signature}. Receipt verification is separate from confirmation.` : "The listing transaction was confirmed."}
+              body={tx.signature ? `Devnet signature ${tx.signature}. ${tx.deltas.length} token balance changes read from the transaction.` : "The listing transaction was confirmed."}
             >
               <button onClick={onListed} className="lc-btn lc-btn-ink lc-btn-sm">
                 VIEW MY OFFERS

@@ -1361,6 +1361,16 @@ The local validator writer now records a localnet label, a relative program path
 
 The short leg on cloned Mainnet state is still not executed. Devnet DEX remains FAIL. Mainnet deployment remains false.
 
+Pushed as 9e4d5d2.
+
+## 2026-09-25T05:40:00Z — Listing uses the same six steps
+
+PHASE EXECUTION
+
+Create offer now shows Prepare, Review, Simulate, Approve, Confirm, and Verify, the same sequence as take, return, claim, and cancel. The account re-check and the post-confirmation token deltas apply here too, because listing goes through the same prepared transaction. There is no cloned pool fixture, so the short leg on cloned Mainnet state was not executed and is not marked passed.
+
+Devnet DEX remains FAIL. Mainnet deployment remains false. The five instructions were not changed.
+
 Not pushed in this step.
 
 
