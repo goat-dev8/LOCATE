@@ -1809,3 +1809,11 @@ Jupiter quote for 9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P returned HTTP 400
 Files: proof/mainnet-dex/execution-case.json, proof/mainnet-fork/composed-lifecycle.json, proof/execution/economic-reconciliation.json, proof/devnet/venue-final.json, programs/locate/tests/fork_proof.rs, frontend proof trace.
 Network: Devnet quote only. Wallet: none. Signature: none.
 
+## 2026-09-25T16:18:07Z — Production shows the execution trace
+
+PHASE PRODUCT
+
+Vercel dpl_3eotaHzTpskCCbSomTSZ3izrRvQC is READY for ad55723d59cead12a8298b1dc4bce1961d93b57d and aliased to https://locate-blue.vercel.app. API health gitSha matches. Chrome on /proof showed Devnet protocol 4 signatures, Mainnet external market SELL PASS · BUYBACK PASS, cloned Mainnet 24/24, local validator 42/42, replay 45000, Mainnet LOCATE deployment NOT_APPLICABLE_BY_DESIGN, Devnet DEX BLOCKED_EXTERNAL. The app trace shows LEND, BORROW, SHORT, BUY BACK, RETURN, SETTLE as separate transactions. Receipts loaded 39. No new signature.
+
+This commit records that check. The UI is unchanged.
+
