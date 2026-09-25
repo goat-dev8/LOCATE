@@ -1657,3 +1657,9 @@ PHASE EXECUTION
 The live OpenAI mint at epoch 1042 has an active transfer fee of 100 bps. The same account schedules 300 bps at epoch 1043. The external-market balance read now parses that config. A missing fee is not treated as 100 bps, and a fee that changes before signing is refused. A return with no fee stored on the loan is refused. The SpaceX catalog row notes the issuer conversion date 12 Mar 2027. Mint fee tests 2/2. Frontend tsc passed. No new signature. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
 
 Files: frontend/src/lib/locate/mintFee.ts, frontend/src/lib/locate/mintFee.test.ts, frontend/src/app/api/dex/balances/route.ts, frontend/src/components/locate/app/views/ExecutionLab.tsx, frontend/src/lib/locate/tx.ts, frontend/src/components/locate/app/views/Book.tsx, frontend/src/components/locate/app/views/Overview.tsx.
+
+## 2026-09-25T06:32:00Z — Short offer listed for early claim
+
+PHASE EXECUTION
+
+Chrome on localhost:3010, lender Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC. Amount 0.001 chain units, collateral 1.00 Devnet USDC, fee 0.10, term 60 seconds, grace 30 seconds. Simulation passed. Phantom approved. Signature 65P8SnZezfKhuP5fhJb5zpAckHmye9tHorCdBbJxRcZ36TJVfNFzLPwxakBshDeJmLLKmvX6AkWttfCLbXTgE5Z7, slot 503858589, finalized, err null. Instructions ApproveChecked and CreateOffer. Mint 9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P. Lender dOPENAI stayed 997899494. Lender USDC stayed 12550000. Early claim still needs the borrower to take this offer before maturity. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
