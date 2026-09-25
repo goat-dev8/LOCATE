@@ -1663,3 +1663,9 @@ Files: frontend/src/lib/locate/mintFee.ts, frontend/src/lib/locate/mintFee.test.
 PHASE EXECUTION
 
 Chrome on localhost:3010, lender Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC. Amount 0.001 chain units, collateral 1.00 Devnet USDC, fee 0.10, term 60 seconds, grace 30 seconds. Simulation passed. Phantom approved. Signature 65P8SnZezfKhuP5fhJb5zpAckHmye9tHorCdBbJxRcZ36TJVfNFzLPwxakBshDeJmLLKmvX6AkWttfCLbXTgE5Z7, slot 503858589, finalized, err null. Instructions ApproveChecked and CreateOffer. Mint 9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P. Lender dOPENAI stayed 997899494. Lender USDC stayed 12550000. Early claim still needs the borrower to take this offer before maturity. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
+
+## 2026-09-25T06:36:00Z — Borrower took the short offer
+
+PHASE EXECUTION
+
+Borrower CpTxsgPjvaaPSaBKkijvB1h3hzgJmPiTsWNhuS7tRkgX took the 60-second offer. Simulation passed. Phantom approved. Signature 3NxZ3QXQk1gbCiRppmW66S94pASM9MTyKJZvTYq2gTLPaiNdcFJGNnkor4jVBPsJf67Y7JrXnRveL5nAeEpG5Q1M, slot 503859363, finalized, err null. Instruction TakeOffer. Loan 9zDhiTn7u6xh2eYrUNDvvQtNuYBwVmDJKLfHxtXdHhb6. Mint 9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P. Lender dOPENAI 997899494 to 996899494. Borrower dOPENAI 1859392 to 2849392, net 990000. Borrower USDC 17400000 to 16300000. Lender USDC 12550000 to 12650000, the 100000 fee. Vault USDC 1000000. The borrower stayed connected, so early claim was not sent. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
