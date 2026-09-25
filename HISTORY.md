@@ -1515,5 +1515,7 @@ The market page now keeps the live Mainnet OpenAI price in its own card. Devnet 
 
 SDK 31/31. Backend 21/21, then receipt checks 5/5. Pipeline 11/11. Refusals 9/9. Program suites: fork 2/2, functional 17/17, security 14/14, mutation 10/10, replay writer passed. Devnet DEX remains FAIL. Mainnet deployment remains false.
 
+Pushed as 75a6866.
+
 
 
