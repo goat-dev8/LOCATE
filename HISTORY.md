@@ -1483,7 +1483,17 @@ PHASE PROOF
 
 Devnet DEX remains FAIL. Mainnet deployment remains false.
 
-Pushed as b25d449.
+Pushed as b25d449. The history line itself was recorded in e8fca59.
+
+## 2026-09-25T09:25:00Z — Verifier image set to the installed Solana CLI
+
+PHASE PROOF
+
+`solana-verify` 0.5.2 is the current crates.io release. Its image map includes Solana 4.1.2 at digest `sha256:2e0b78f44ee76612e9260c7c988570c5e14de6fbd93e0ab07115ec7054473b4f`. Cargo on that image PATH is 1.95.0. The installed CLI is `solana-cli 4.1.2`. The workspace metadata now selects that image instead of the lockfile crate 3.0.1, whose image Cargo is 1.84.0. Dependencies were not changed. `verified` stays false until two builds produce the same executable hash.
+
+Devnet DEX remains FAIL. Mainnet deployment remains false.
+
+Not pushed in this step.
 
 
 
