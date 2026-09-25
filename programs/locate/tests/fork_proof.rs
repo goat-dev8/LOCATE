@@ -537,12 +537,12 @@ fn neuralink() -> Value {
     })
 }
 
-fn dex_attempt_flag() -> bool {
-    let path = proof_dir().join("dex-attempt.json");
+fn dex_flag(file: &str, key: &str) -> bool {
+    let path = proof_dir().join(file);
     let text = fs::read_to_string(&path).unwrap_or_default();
     serde_json::from_str::<Value>(&text)
         .ok()
-        .and_then(|v| v["dexSellExecution"].as_bool())
+        .and_then(|v| v[key].as_bool())
         .unwrap_or(false)
 }
 
@@ -585,9 +585,9 @@ fn write_proof(rows: &[Row], lifecycle: &Value, claim: &Value, neural: &Value) {
         "openai": lifecycle,
         "claim": claim,
         "neuralink": neural,
-        "dexSellExecution": dex_attempt_flag(),
-        "dexBuybackExecution": false,
-        "dexNote": "dex-attempt.json records a local swap2 against the cloned pool. Buyback was not executed in that run. External Mainnet DEX remains a separate layer.",
+        "dexSellExecution": dex_flag("dex-attempt.json", "dexSellExecution"),
+        "dexBuybackExecution": dex_flag("dex-buyback.json", "dexBuybackExecution"),
+        "dexNote": "dex-attempt.json records a local sell and dex-buyback.json records the reverse swap on the cloned pool. External Mainnet DEX remains a separate layer.",
     });
     fs::write(dir.join("lifecycle.json"), serde_json::to_string_pretty(&life).unwrap()).unwrap();
     let manifest = json!({
@@ -613,10 +613,7 @@ fn write_proof(rows: &[Row], lifecycle: &Value, claim: &Value, neural: &Value) {
     .unwrap();
 }
 
-#[test]
-fn cloned_pool_swap_attempt() {
-    let mut w = World::fork(1041);
-    w.load_cloned_dex();
+fn local_swap(w: &mut World, amount_in: u64, user_in: Address, user_out: Address) -> IxResult {
     let dlmm: Address = "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo".parse().unwrap();
     let pool: Address = "4HTy7aTjPm5PTSEws2yWRDPX6gjWM6sC2dV5mv9u8JsH".parse().unwrap();
     let reserve_x: Address = "CiGhjdnp4ARJt79ZRzCW72AQuQRMteKymCR4D6wsTFdB".parse().unwrap();
@@ -626,12 +623,9 @@ fn cloned_pool_swap_attempt() {
     let openai: Address = "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF".parse().unwrap();
     let usdc: Address = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v".parse().unwrap();
     let event = Address::find_program_address(&[b"__event_authority"], &dlmm).0;
-    let user_in = w.borrower_ata();
-    let user_out = w.borrower_usdc();
-    let before_out = w.amount(&user_out);
     let memo: Address = address!("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr");
     let mut data = disc("swap2").to_vec();
-    data.extend_from_slice(&1_000u64.to_le_bytes());
+    data.extend_from_slice(&amount_in.to_le_bytes());
     data.extend_from_slice(&0u64.to_le_bytes());
     data.extend_from_slice(&0u32.to_le_bytes());
     let metas = [
@@ -659,8 +653,18 @@ fn cloned_pool_swap_attempt() {
     };
     let ix = Instruction { program_id: dlmm, accounts, data };
     let borrower = w.borrower.insecure_clone();
-    let result = w.send_signers(&[borrower], vec![budget, ix]);
-    let after_out = w.amount(&user_out);
+    w.send_signers(&[borrower], vec![budget, ix])
+}
+
+#[test]
+fn cloned_pool_swap_attempt() {
+    let mut w = World::fork(1041);
+    w.load_cloned_dex();
+    let user_openai = w.borrower_ata();
+    let user_usdc = w.borrower_usdc();
+    let before_out = w.amount(&user_usdc);
+    let result = local_swap(&mut w, 1_000, user_openai, user_usdc);
+    let after_out = w.amount(&user_usdc);
     let executed = result.ok && after_out > before_out;
     let body = json!({
         "label": "Cloned Mainnet State — Local Execution",
@@ -678,6 +682,25 @@ fn cloned_pool_swap_attempt() {
     fs::write(&path, serde_json::to_string_pretty(&body).unwrap()).unwrap();
     assert!(executed, "{}", result.detail);
     assert!(after_out > before_out);
+    let gained = after_out - before_out;
+    let before_openai = w.amount(&user_openai);
+    let back = local_swap(&mut w, gained, user_usdc, user_openai);
+    let after_openai = w.amount(&user_openai);
+    let bought = back.ok && after_openai > before_openai;
+    let buyback = json!({
+        "label": "Cloned Mainnet State — Local Execution",
+        "notAMainnetTransaction": true,
+        "dexBuybackExecution": bought,
+        "amountInRaw": gained.to_string(),
+        "openaiBefore": before_openai.to_string(),
+        "openaiAfter": after_openai.to_string(),
+        "ok": back.ok,
+        "errorCode": back.code,
+        "detail": back.detail,
+        "logs": back.logs,
+    });
+    fs::write(proof_dir().join("dex-buyback.json"), serde_json::to_string_pretty(&buyback).unwrap()).unwrap();
+    assert!(bought, "{}", back.detail);
 }
 
 #[test]

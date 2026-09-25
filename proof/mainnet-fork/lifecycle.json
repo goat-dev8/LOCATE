@@ -15,8 +15,8 @@
     "secondClaimCode": 3012,
     "secondClaimRefused": true
   },
-  "dexBuybackExecution": false,
-  "dexNote": "dex-attempt.json records a local swap2 against the cloned pool. Buyback was not executed in that run. External Mainnet DEX remains a separate layer.",
+  "dexBuybackExecution": true,
+  "dexNote": "dex-attempt.json records a local sell and dex-buyback.json records the reverse swap on the cloned pool. External Mainnet DEX remains a separate layer.",
   "dexSellExecution": true,
   "label": "Cloned Mainnet State — Local Execution",
   "network": "mainnet-fork",

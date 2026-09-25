@@ -1431,7 +1431,17 @@ PHASE FORK
 
 Devnet DEX remains FAIL. Mainnet deployment remains false.
 
-Pushed as 4574c0e.
+Pushed as 4574c0e. The history line itself was recorded in b0bf04e.
+
+## 2026-09-25T07:30:00Z — Local buyback on the cloned pool
+
+PHASE FORK
+
+After the local sell of 1000 raw OpenAI for 2013 raw USDC, the same test swapped those 2013 raw USDC back. The OpenAI balance moved from 999999999000 to 999999999963. `dexBuybackExecution` is true in `proof/mainnet-fork/dex-buyback.json`. This was not a mainnet transaction.
+
+Devnet DEX remains FAIL. Mainnet deployment remains false.
+
+Not pushed in this step.
 
 
 
