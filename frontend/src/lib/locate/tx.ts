@@ -6,8 +6,10 @@ import type { Loan, Offer } from "./types";
 import { DEVNET_MINT, locateApi } from "./env";
 
 export type TxResult =
-  | { ok: true; signature: string; verified: boolean }
+  | { ok: true; signature: string; verified: boolean; deltas: BalanceDelta[] }
   | { ok: false; error: string; simulated: boolean };
+
+export type BalanceDelta = { mint: string; owner: string; before: string; after: string };
 
 export type PreparedTx = {
   tx: VersionedTransaction;
@@ -15,6 +17,8 @@ export type PreparedTx = {
   payer: PublicKey;
   blockhash: string;
   lastValidBlockHeight: number;
+  watched: PublicKey[];
+  stamp: string;
 };
 
 export type SignTx = (tx: VersionedTransaction) => Promise<VersionedTransaction>;
@@ -84,6 +88,47 @@ async function confirmByPolling(
   return { confirmed: false, error: `Devnet has not confirmed yet. Signature ${signature}` };
 }
 
+const SKIP_ACCOUNTS = new Set([
+  "11111111111111111111111111111111",
+  "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+  "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+  "ComputeBudget111111111111111111111111111111",
+]);
+
+export function typedRefusal(name: string | null, code: number | null, fallback: string): string {
+  const text = `${name ?? ""} ${fallback}`.toLowerCase();
+  if (code === 6015 || text.includes("not claimable")) return "NOT_CLAIMABLE_YET";
+  if (text.includes("offer changed")) return "TERMS_CHANGED";
+  if (text.includes("paused")) return "MINT_PAUSED";
+  if (text.includes("fee rose") || text.includes("fee change")) return "FEE_CHANGED";
+  if (text.includes("not enough tokens")) return "INSUFFICIENT_GROSS";
+  if (text.includes("429")) return "RPC_RATE_LIMITED";
+  if (text.includes("blockhash")) return "BLOCKHASH_EXPIRED";
+  if (text.includes("not your offer") || text.includes("can't take your own")) return "WRONG_WALLET";
+  return fallback;
+}
+
+function watchedAccounts(instructions: TransactionInstruction[]): PublicKey[] {
+  const seen = new Set<string>();
+  const keys: PublicKey[] = [];
+  for (const ix of instructions) {
+    for (const key of [ix.programId, ...ix.keys.map((meta) => meta.pubkey)]) {
+      const text = key.toBase58();
+      if (seen.has(text) || SKIP_ACCOUNTS.has(text)) continue;
+      seen.add(text);
+      keys.push(key);
+    }
+  }
+  return keys.slice(0, 12);
+}
+
+async function accountStamp(connection: Connection, keys: PublicKey[]): Promise<string> {
+  if (keys.length === 0) return "";
+  const infos = await connection.getMultipleAccountsInfo(keys, "confirmed");
+  return infos.map((info) => (info ? Buffer.from(info.data).toString("base64") : "missing")).join("|");
+}
+
 function compile(payer: PublicKey, instructions: TransactionInstruction[], blockhash: string): VersionedTransaction {
   return new VersionedTransaction(
     new TransactionMessage({
@@ -103,8 +148,10 @@ export async function prepareInstructions(
   if (preview.err) {
     const named = preview.name ?? (preview.code != null ? `Custom ${preview.code}` : JSON.stringify(preview.err));
     const log = preview.logs?.find((line) => /insufficient|error|failed/i.test(line));
-    return { ok: false, simulated: true, error: log ? `${named} — ${log}` : named };
+    const fallback = log ? `${named} — ${log}` : named;
+    return { ok: false, simulated: true, error: typedRefusal(preview.name ?? null, preview.code ?? null, fallback) };
   }
+  const watched = watchedAccounts(instructions);
   const latest = await connection.getLatestBlockhash("confirmed");
   return {
     ok: true,
@@ -114,6 +161,8 @@ export async function prepareInstructions(
       payer,
       blockhash: latest.blockhash,
       lastValidBlockHeight: latest.lastValidBlockHeight,
+      watched,
+      stamp: await accountStamp(connection, watched),
     },
   };
 }
@@ -124,6 +173,15 @@ export async function approvePrepared(
   prepared: PreparedTx,
   onSent?: (signature: string) => void,
 ): Promise<TxResult> {
+  const stamp = await accountStamp(connection, prepared.watched);
+  if (stamp !== prepared.stamp) {
+    return { ok: false, simulated: true, error: "TERMS_CHANGED" };
+  }
+  const again = await simulateAndDecode(connection, prepared.payer, prepared.instructions);
+  if (again.err) {
+    const named = again.name ?? (again.code != null ? `Custom ${again.code}` : "Simulation failed");
+    return { ok: false, simulated: true, error: typedRefusal(again.name ?? null, again.code ?? null, named) };
+  }
   let latest = await connection.getLatestBlockhash("confirmed").catch(async (error: unknown) => {
     const messageText = error instanceof Error ? error.message : String(error);
     if (!messageText.includes("429")) throw error;
@@ -159,7 +217,23 @@ export async function approvePrepared(
   } catch {
     verified = false;
   }
-  return { ok: true, signature, verified };
+  const deltas = await tokenDeltas(connection, signature);
+  return { ok: true, signature, verified, deltas };
+}
+
+async function tokenDeltas(connection: Connection, signature: string): Promise<BalanceDelta[]> {
+  const tx = await connection.getTransaction(signature, { commitment: "confirmed", maxSupportedTransactionVersion: 0 });
+  const pre = tx?.meta?.preTokenBalances ?? [];
+  const post = tx?.meta?.postTokenBalances ?? [];
+  return pre.map((row) => {
+    const after = post.find((item) => item.accountIndex === row.accountIndex);
+    return {
+      mint: row.mint,
+      owner: row.owner ?? "",
+      before: row.uiTokenAmount.amount,
+      after: after?.uiTokenAmount.amount ?? "0",
+    };
+  });
 }
 
 function termsFromRow(row: {

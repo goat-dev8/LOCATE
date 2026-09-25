@@ -11,8 +11,7 @@ import { verifyReceiptInBrowser } from "@locate/sdk";
 import { DecryptionText, FadeContent } from "@/components/bits";
 import type { Receipt } from "@/lib/locate/types";
 import { locateApi, SOLANA_RPC_URL, LOCATE_PROGRAM_ID_TEXT } from "@/lib/locate/env";
-import { executionTrace, proofSections } from "@/lib/locate/executionFacts";
-import { useLocate } from "@/lib/locate/store";
+import { proofSections } from "@/lib/locate/executionFacts";
 import { Segmented, ViewHead } from "../parts";
 import { cn } from "@/lib/utils";
 
@@ -71,42 +70,22 @@ export function VerifyView() {
 
   const list = receipts.filter((r) => filter === "ALL" || r.status === filter);
 
-  const navigate = useLocate((s) => s.navigate);
   return (
     <div>
-      <div className="lc-card mb-6 p-5">
-        <div className="flex items-center justify-between gap-3">
-          <p className="lc-label">EXECUTION TRACE</p>
-          <button onClick={() => navigate("execute")} className="lc-btn lc-btn-ghost lc-btn-sm">MARKET EXECUTION</button>
-        </div>
-        <ul className="mt-3 space-y-2">
-          {executionTrace.map((step) => (
-            <li key={step.label} className="font-mono text-[11px] text-ink-2">
-              {step.confirmed ? "✓" : "·"} {step.label} · {step.layer}
-              {step.href ? <> · <a className="underline" href={step.href} target="_blank" rel="noreferrer">evidence</a></> : null}
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="mb-6 grid gap-3 md:grid-cols-2">
+      <div className="mb-6 flex flex-col gap-3">
         {proofSections.map((section) => (
-          <article key={section.title} className="lc-card p-4">
-            <p className="font-mono text-[11px] font-semibold text-white">{section.title}</p>
-            <ul className="mt-2 space-y-1">
+          <details key={section.title} className="lc-card p-5">
+            <summary className="cursor-pointer list-none">
+              <p className="font-sans text-lg font-semibold tracking-tight text-white">{section.headline}</p>
+              <p className="mt-1 font-mono text-[13px] tabular-nums text-[#7D9BFF]">{section.metric}</p>
+            </summary>
+            <ul className="mt-4 space-y-1">
               {section.lines.map((line) => (
-                <li key={line} className="break-all font-mono text-[11px] text-ink-2">{line}</li>
+                <li key={line} className="break-all font-mono text-[12px] text-ink-2">{line}</li>
               ))}
             </ul>
-          </article>
+          </details>
         ))}
-      </div>
-      <div className="lc-card mb-6 p-5">
-        <p className="lc-label">SEPARATE EXECUTION LAYERS</p>
-        <ul className="mt-3 space-y-2 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-2">
-          <li>Devnet — real LOCATE transactions</li>
-          <li>Mainnet fork — real Mainnet state + local LOCATE execution</li>
-          <li>Mainnet DEX — real external DEX transactions. Not LOCATE protocol.</li>
-        </ul>
       </div>
       <ViewHead
         label="EVERY LOAN ENDS IN A RECEIPT"

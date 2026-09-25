@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import type { TransactionInstruction } from "@solana/web3.js";
-import { approvePrepared, canApprove, prepareInstructions, resolveSign, type PreparedTx } from "./tx";
+import { approvePrepared, canApprove, prepareInstructions, resolveSign, type BalanceDelta, type PreparedTx } from "./tx";
 
 export type TxPhase = "review" | "simulating" | "ready" | "signing" | "confirming" | "done";
 
@@ -22,6 +22,7 @@ export function usePreparedTx() {
   const [prepared, setPrepared] = useState<PreparedTx | null>(null);
   const [signature, setSignature] = useState<string | null>(null);
   const [verified, setVerified] = useState(false);
+  const [deltas, setDeltas] = useState<BalanceDelta[]>([]);
 
   const simulate = useCallback(
     async (instructions: TransactionInstruction[] | string) => {
@@ -82,6 +83,7 @@ export function usePreparedTx() {
       }
       setSignature(result.signature);
       setVerified(result.verified);
+      setDeltas(result.deltas);
       setPhase("done");
     } catch (thrown) {
       setError(thrown instanceof Error ? thrown.message : "The wallet did not finish the transaction.");
@@ -90,5 +92,5 @@ export function usePreparedTx() {
     }
   }, [connection, prepared, signTransaction]);
 
-  return { phase, error, signature, verified, publicKey, simulate, approve };
+  return { phase, error, signature, verified, deltas, publicKey, simulate, approve };
 }

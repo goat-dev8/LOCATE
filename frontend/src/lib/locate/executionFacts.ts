@@ -95,6 +95,8 @@ export const executionTrace: TraceStep[] = [
 
 export const proofSections = [
   {
+    headline: "The full lifecycle ran on Devnet.",
+    metric: [returnCycle.create, returnCycle.take, returnCycle.return, claimCycle.claim].filter((sig) => sig.length > 0).length + " signatures",
     title: "A. PROTOCOL EXECUTION",
     lines: [
       "Real Devnet. dOPENAI is a replica, not a Mainnet PreStock.",
@@ -106,6 +108,8 @@ export const proofSections = [
     ],
   },
   {
+    headline: "Same program, real OpenAI mint state.",
+    metric: fork.matrix.passed + "/" + fork.matrix.total,
     title: "B. CLONED MAINNET STATE",
     lines: [
       fork.label + ". Not a Mainnet transaction.",
@@ -115,6 +119,8 @@ export const proofSections = [
     ],
   },
   {
+    headline: "The short leg runs on the real market.",
+    metric: dexSell.result + " / " + dexBuy.result,
     title: "C. MAINNET MARKET EXECUTION",
     lines: [
       "Real external Mainnet DEX. locateProtocol " + String(dexSell.locateProtocol) + ".",
@@ -126,6 +132,8 @@ export const proofSections = [
     ],
   },
   {
+    headline: "Math and adversarial coverage.",
+    metric: String(replay.total) + " replay vectors",
     title: "D. SECURITY / CONSISTENCY",
     lines: [
       "Local validator " + localSuite.passed + "/" + localSuite.total,

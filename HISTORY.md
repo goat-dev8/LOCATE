@@ -1333,6 +1333,16 @@ Navigation is Market, Positions, and Proof. Market is the Devnet book. Positions
 
 Not a new instruction. Devnet DEX remains FAIL. Mainnet deployment remains false. Fork short-leg, source verification, and pipeline tests are still open.
 
+Pushed as 3a0c397.
+
+## 2026-09-25T05:10:00Z — Wallet re-check and four proof layers
+
+PHASE EXECUTION
+
+Before Phantom is asked to sign, the client re-reads the accounts in the instruction and simulates again. If the accounts changed, the refusal is TERMS_CHANGED and no signature is requested. Program errors map to typed refusals, including NOT_CLAIMABLE_YET for code 6015. After confirmation, token balance deltas are read from the transaction. Return, claim, cancel, and take all show the same six steps. Proof opens as four layers, each with a headline, one metric from the proof files, and expandable lines.
+
+Devnet DEX remains FAIL. Mainnet deployment remains false. The five instructions were not changed.
+
 Not pushed in this step.
 
 

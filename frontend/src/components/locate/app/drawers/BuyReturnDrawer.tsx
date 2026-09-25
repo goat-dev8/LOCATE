@@ -11,6 +11,7 @@ import { PublicKey } from "@solana/web3.js";
 import { TOKEN_2022, ata } from "@locate/sdk";
 import { returnInstructions } from "@/lib/locate/tx";
 import { phaseCopy, usePreparedTx } from "@/lib/locate/usePreparedTx";
+import { TxSteps } from "../TxSteps";
 import { useLocate, locateAsset } from "@/lib/locate/store";
 import { fmtToken, fmtUsd, grossForNet, uiFromRaw } from "@/lib/locate/seed";
 import { DEVNET_MINT } from "@/lib/locate/env";
@@ -171,6 +172,7 @@ function Body({ loanId, onClose }: { loanId: string; onClose: () => void }) {
 
       {(tx.phase === "simulating" || tx.phase === "signing" || tx.phase === "confirming") && (
         <div className="pt-4">
+          <TxSteps phase={tx.phase} />
           <p className="lc-label mb-5">{phaseCopy(tx.phase).toUpperCase()}{tx.phase === "confirming" && tx.signature ? ` ${tx.signature}` : ""}</p>
           <StagedProgress steps={steps} activeIndex={tx.phase === "simulating" ? 0 : 1} />
         </div>
@@ -181,7 +183,7 @@ function Body({ loanId, onClose }: { loanId: string; onClose: () => void }) {
           title={tx.verified ? "Verified on-chain" : "Confirmed"}
           body={`Net delivery of ${fmtToken(loan.netRequired)} ${asset.symbol} confirmed. ${fmtUsd(
             loan.collateralUsdc,
-          )} USDC collateral release depends on verification. Signature ${tx.signature ?? ""}.`}
+          )} USDC collateral release depends on verification. ${tx.deltas.length} token balance changes read from the transaction. Signature ${tx.signature ?? ""}.`}
         >
           <ClickSpark sparkColor="#46600A">
             <button
