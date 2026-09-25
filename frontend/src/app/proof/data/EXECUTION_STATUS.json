@@ -19,9 +19,11 @@
   "frontendExecutionWiring": true,
   "receiptVerification": true,
   "chromeRealWalletVerification": false,
+  "proofCenterIntegrity": false,
+  "productionDeployment": false,
   "designImplemented": false,
   "proofCenterImplemented": false,
-  "updatedAt": "2026-09-25T03:38:00Z",
+  "updatedAt": "2026-09-25T04:40:00Z",
   "evidence": {
     "fork": "proof/mainnet-fork/manifest.json 24/24 local execution, not a Mainnet transaction",
     "localValidator": "proof/local-validator/suite.json 42/42",

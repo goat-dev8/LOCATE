@@ -57,21 +57,28 @@ export function LoanDetailView() {
       const returned = sig("loan_returned");
       const claimed = sig("loan_claimed");
       const listed = sig("offer_created");
-      const returnedPath = loan.status === "RETURNED" || returned.length > 0;
-      const claimedPath = loan.status === "CLAIMED" || claimed.length > 0;
+      const now = Date.now();
+      const pastMaturity = now >= loan.maturityAt;
+      const pastGrace = now >= loan.maturityAt + loan.graceHours * 3_600_000;
+      const defaultPath = claimed.length > 0 || (loan.status === "CLAIMED") || (pastGrace && returned.length === 0 && loan.status !== "RETURNED");
       const devnetDex = dexEvidence.devnetDexResult;
-      const next: RailStep[] = claimedPath
+      const verified = (signature: string, missing: string): { state: RailStep["state"]; detail: string } =>
+        signature ? { state: "done", detail: signature } : { state: "waiting", detail: missing };
+      const next: RailStep[] = defaultPath
         ? [
-            { id: "maturity", label: "Maturity", state: "done", detail: "The term ended.", href: link(taken) },
-            { id: "grace", label: "Grace", state: "done", detail: "Grace elapsed without a return.", href: null },
-            { id: "claimed", label: "Claimed", state: claimed ? "done" : "current", detail: claimed ? claimed : "Claim receipt is not loaded yet.", href: link(claimed) },
+            { id: "taken", label: "Taken", ...verified(taken, "Not verified"), href: link(taken) },
+            { id: "maturity", label: "Maturity", state: pastMaturity || claimed.length > 0 ? "done" : "waiting", detail: pastMaturity || claimed.length > 0 ? "The term ended." : "Waiting", href: null },
+            { id: "grace", label: "Grace", state: pastGrace || claimed.length > 0 ? "done" : "current", detail: pastGrace || claimed.length > 0 ? "Grace elapsed without a return." : "Grace is running.", href: null },
+            { id: "claimable", label: "Claimable", state: pastGrace || claimed.length > 0 ? "done" : "waiting", detail: pastGrace ? "The lender can claim." : "Not yet", href: null },
+            { id: "claimed", label: "Claimed", ...verified(claimed, "Not verified"), href: link(claimed) },
           ]
         : [
-            { id: "listed", label: "Listed", state: listed ? "done" : "waiting", detail: listed || "Create receipt is not in this wallet’s latest receipts.", href: link(listed) },
-            { id: "taken", label: "Taken", state: taken || loan.status !== "ACTIVE" ? "done" : "current", detail: taken || loan.id, href: link(taken) },
-            { id: "short", label: "Short", state: "blocked", detail: `Devnet venue ${devnetDex}. This step is not this loan.`, href: null },
-            { id: "buyback", label: "Buy back", state: "blocked", detail: "External buyback is Mainnet evidence, not this Devnet loan.", href: null },
-            { id: "returned", label: "Returned", state: returned ? "done" : returnedPath ? "current" : "waiting", detail: returned || "Return delivers the required gross.", href: link(returned) },
+            { id: "listed", label: "Listed", ...verified(listed, "Not verified"), href: link(listed) },
+            { id: "taken", label: "Taken", ...verified(taken, "Not verified"), href: link(taken) },
+            { id: "short", label: "Short", state: "blocked", detail: `External market. Devnet venue ${devnetDex}. Not this loan.`, href: null },
+            { id: "buyback", label: "Buy back", state: "blocked", detail: "External market. Not this Devnet loan.", href: null },
+            { id: "returned", label: "Returned", ...verified(returned, "Not verified"), href: link(returned) },
+            { id: "released", label: "Collateral released", ...verified(returned, "Not verified"), href: link(returned) },
           ];
       setSteps(next);
     }).catch(() => {

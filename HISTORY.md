@@ -1535,5 +1535,13 @@ Files: frontend/src/components/locate/app/views/ExecutionLab.tsx, frontend/src/c
 
 Pushed as c690a88.
 
+## 2026-09-25T04:40:00Z — Settlement rail uses receipt evidence
+
+PHASE POSITIONS
+
+A loan step is marked done only when its receipt signature is present. A missing receipt says Not verified and has no transaction link. Maturity and grace follow the clock and do not reuse the take signature. The default path is Taken, Maturity, Grace, Claimable, Claimed. The return path adds Collateral released only when the return receipt exists. Short and buyback stay blocked on a Devnet loan. `node sdk/tools/check-frontend.mjs frontend` printed frontend check passed. proofCenterIntegrity and productionDeployment stay false. Devnet DEX remains FAIL. Mainnet deployment remains false.
+
+Files: frontend/src/components/locate/app/views/LoanDetail.tsx, proof/EXECUTION_STATUS.json.
+
 
 
