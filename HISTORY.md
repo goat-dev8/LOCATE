@@ -1291,5 +1291,17 @@ Not pushed in this step.
 
 Git SHA: eb1f4ea
 
+## 2026-09-25T01:45:00Z — Cloned Mainnet fork proof re-run
+
+PHASE REGRESSION
+
+`cargo test -p locate --test fork_proof -- --nocapture` exited 0. `p0_cloned_mainnet_fork_proof` passed in 5.45s. The manifest still reads 24 passed, 0 failed, 24 total. Program sha256 prefix ade3240160bfb905. This is local execution against cloned Mainnet account bytes, not a Mainnet transaction.
+
+The test rewrote failure-matrix logs with different compute units and a new missing-account address. Those files were restored. The pass/fail result did not change. The local-validator suite was not re-executed. Devnet DEX remains FAIL.
+
+Not pushed in this step.
+
+Git SHA: 9ced578
+
 
 
