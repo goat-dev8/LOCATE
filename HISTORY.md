@@ -1603,5 +1603,11 @@ PHASE VALIDATION
 
 `node scripts/local-validator.mjs` exited 0 and printed `{"passed":42,"failed":0,"total":42}`. `cargo test --test replay_gen` passed. `proof/replay/manifest.json` total remains 45000. The validator rewrote `tests/fixtures/local/usdc.json`; those bytes were restored and not committed. No new signature. Devnet DEX remains FAIL. Mainnet deployment remains false.
 
+## 2026-09-25T05:14:00Z — Production build
+
+PHASE BUILD
+
+`npm run build` in `frontend` exited 0. Routes include `/` and `/proof`. The local app at localhost:3010 still rendered after the build. productionDeployment stays false. The connected wallet is still the borrower, so early claim and claim have not started. Devnet DEX remains FAIL. Mainnet deployment remains false.
+
 
 
