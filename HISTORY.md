@@ -1381,6 +1381,16 @@ The Devnet wallet panel uses the shared amount formatter. When the RPC scaled am
 
 Devnet DEX remains FAIL. Mainnet deployment remains false. The short leg on cloned Mainnet state is still not executed.
 
+Pushed as 3de36f3.
+
+## 2026-09-25T06:05:00Z — OpenAI USDC pool account cloned
+
+PHASE FORK
+
+The Mainnet pool account `4HTy7aTjPm5PTSEws2yWRDPX6gjWM6sC2dV5mv9u8JsH` was read at slot 450211911 and saved as `tests/fixtures/mainnet/openai_usdc_pool.json`. It is 904 bytes, owned by the DLMM program, sha256 `34b099babce812026d0cae72f11150a074e9034854d11e2fab8b1bf8bb2b553b`. The swap program and bin arrays are not in the fixture, so no CPI was sent and the short leg is not passed. The fork note says that explicitly.
+
+Devnet DEX remains FAIL. Mainnet deployment remains false. The five instructions were not changed.
+
 Not pushed in this step.
 
 

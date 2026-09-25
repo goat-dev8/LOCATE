@@ -21,6 +21,14 @@
       "bytes": 82,
       "slot": 449882177
     },
+    "openai_usdc_pool.json": {
+      "pubkey": "4HTy7aTjPm5PTSEws2yWRDPX6gjWM6sC2dV5mv9u8JsH",
+      "sha256": "34b099babce812026d0cae72f11150a074e9034854d11e2fab8b1bf8bb2b553b",
+      "bytes": 904,
+      "slot": 450211911,
+      "owner": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+      "disclosure": "Pool account only. Swap program and bin arrays are not cloned. No swap was executed."
+    },
     "neuralink_mint.json": {
       "pubkey": "PrekqLJvJ3qVdXmBGDiexvwUTF4rLFDa6HWS4HJbw9S",
       "sha256": "1c1da951f8f9d5c349a8684ff6cee7a83db9accb8646e96e651faedf07d4b22f",
