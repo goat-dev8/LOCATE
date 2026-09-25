@@ -1523,5 +1523,7 @@ PHASE VALIDATION
 
 `node scripts/local-validator.mjs` exited 0. The suite printed `{"passed":42,"failed":0,"total":42}`. Saved logs now drop the compute-unit counts that still differed between runs. Devnet DEX remains FAIL. Mainnet deployment remains false.
 
+Pushed as 4a09721.
+
 
 
