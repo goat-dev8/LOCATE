@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-09-25T15:01:03.277Z",
+  "problems": [],
+  "forkPass": 24,
+  "localPass": 42,
+  "expectedRefusals": 34,
+  "refusalMiss": [],
+  "replayFamilySum": 45000,
+  "chainChecked": 22,
+  "chainFailed": 0,
+  "copiesMismatch": 0,
+  "clonedExecution": "local manifest, no cluster signature",
+  "devnetDex": "FAIL",
+  "mainnetLocateDeployment": false,
+  "mainnetLocateTransactions": false,
+  "proofCenterIntegrity": true
+}

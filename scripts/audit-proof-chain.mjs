@@ -115,7 +115,7 @@ const report = {
   checked: results.length,
   failed: failed.length,
   results,
-  note: "Chain signatures only. Cloned-state execution has no cluster signature. proofCenterIntegrity stays false until every proof artifact is checked.",
+  note: "Chain signatures only. Cloned-state execution has no cluster signature. Artifact counts are in proof/verification/artifact-audit.json.",
 };
 writeFileSync(new URL("../proof/verification/chain-audit.json", import.meta.url), JSON.stringify(report, null, 2) + "\n");
 console.log(JSON.stringify({ checked: report.checked, failed: report.failed, problems: failed }));

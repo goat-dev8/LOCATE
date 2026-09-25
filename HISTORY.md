@@ -1736,3 +1736,11 @@ Vercel deployment dpl_J8bnSAYmLBXTgHmf2g8YegX6Lwet is READY. Alias https://locat
 
 Files: evidence/qa/vercel-deploy.json, proof/FINAL_STATUS.json.
 
+## 2026-09-25T15:01:26Z — Proof artifacts match the headline counts
+
+PHASE PROOF
+
+The artifact audit found no problems. Cloned Mainnet matrix 24/24 PASS. Local validator 42/42 result PASS, including 34 expected refusals where the instruction failed and the case still passed. Replay families sum to 45000. Security, functional, and mutation failed counts are 0. Chain audit 22 signatures, failed 0. The 24 frontend proof copies match the proof directory. Reproducible build equality is true and it is not a Mainnet verified program. Devnet DEX result remains FAIL with no signed transactions. Cloned execution remains a local manifest with no cluster signature. proofCenterIntegrity is true on that basis. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
+
+Files: scripts/audit-proof-artifacts.mjs, scripts/audit-proof-chain.mjs, proof/verification/artifact-audit.json, proof/EXECUTION_STATUS.json, frontend/src/app/proof/data/EXECUTION_STATUS.json.
+
