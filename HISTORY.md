@@ -1351,6 +1351,16 @@ PHASE PROOF
 
 The public proof page now opens as the same four layers as the app: Devnet lifecycle, cloned Mainnet state, external market, and replay coverage. Each layer shows one metric from the artifact files, and the signatures, slots, and hashes stay behind the disclosure. The open items still say the source build is not verified, Devnet DEX is FAIL, and Mainnet deployment is false. Refusal mapping has a 6-case check. A loan’s advanced details show the upfront fee from the receipt in USDC units.
 
+Pushed as dc2bbea.
+
+## 2026-09-25T05:30:00Z — Local validator proof no longer rewrites itself
+
+PHASE PROOF
+
+The local validator writer now records a localnet label, a relative program path, and an ephemeral mint marker instead of the validator address and a fresh mint pubkey. Refusal logs drop compute-unit counts, and the grace-wait duration is not stored. The committed suite was normalized the same way. Pass count stays 42/42. A later run will not dirty the artifact when only those fields change.
+
+The short leg on cloned Mainnet state is still not executed. Devnet DEX remains FAIL. Mainnet deployment remains false.
+
 Not pushed in this step.
 
 

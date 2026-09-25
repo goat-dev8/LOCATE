@@ -698,21 +698,26 @@ async function main() {
   record("13-changed-fee", "old max gross is refused", shortReturn, raised.ok && !shortReturn.ok);
 
   const passed = rows.filter((row) => row.result === "PASS").length;
+  const stableDetail = (text) => String(text ?? "").replace(/consumed \d+ of \d+ compute units/g, "consumed compute units");
   const body = {
     label: "Local validator execution. Not a mainnet transaction.",
     cluster: "localnet",
-    rpc: RPC,
+    rpc: "localnet",
     programId: PROGRAM_ID.toBase58(),
-    programBinary: SO,
+    programBinary: "target/deploy/devnet-feature/locate.so",
     programBytes: readFileSync(join(root, "target/deploy/devnet-feature/locate.so")).length,
     programSha256: createHash("sha256").update(readFileSync(join(root, "target/deploy/devnet-feature/locate.so"))).digest("hex"),
     usdcMint: USDC.toBase58(),
     usdcNote: "Local mint installed at the pinned devnet USDC address. Not mainnet circulation.",
-    mint: MINT.toBase58(),
+    mint: "ephemeral-local",
     passed,
     failed: rows.length - passed,
     total: rows.length,
-    cases: rows,
+    cases: rows.map((row) => {
+      const evidence = { ...(row.evidence ?? {}) };
+      delete evidence.waitedMs;
+      return { ...row, detail: stableDetail(row.detail), evidence };
+    }),
   };
   const out = join(root, "proof", "local-validator");
   mkdirSync(out, { recursive: true });

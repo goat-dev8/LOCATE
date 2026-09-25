@@ -1,14 +1,14 @@
 {
   "label": "Local validator execution. Not a mainnet transaction.",
   "cluster": "localnet",
-  "rpc": "http://172.21.142.55:18999",
+  "rpc": "localnet",
   "programId": "F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6",
-  "programBinary": "/mnt/d/route/sol/LOCATE/target/deploy/devnet-feature/locate.so",
+  "programBinary": "target/deploy/devnet-feature/locate.so",
   "programBytes": 359712,
   "programSha256": "698862354901ab1a262c378fcac6c424ee349bf8fa229e496e4ff933db56abc2",
   "usdcMint": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
   "usdcNote": "Local mint installed at the pinned devnet USDC address. Not mainnet circulation.",
-  "mint": "8RNZQ5ZoYdMKNaHyQAams2DoDcWnkN5f8EjA9vXXBdBD",
+  "mint": "ephemeral-local",
   "passed": 42,
   "failed": 0,
   "total": 42,
@@ -95,9 +95,7 @@
       "ok": true,
       "code": null,
       "detail": "",
-      "evidence": {
-        "waitedMs": 95849
-      }
+      "evidence": {}
     },
     {
       "id": "10-repeated-claim",
