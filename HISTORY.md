@@ -1609,5 +1609,11 @@ PHASE BUILD
 
 `npm run build` in `frontend` exited 0. Routes include `/` and `/proof`. The local app at localhost:3010 still rendered after the build. productionDeployment stays false. The connected wallet is still the borrower, so early claim and claim have not started. Devnet DEX remains FAIL. Mainnet deployment remains false.
 
+## 2026-09-25T05:16:00Z — Short offer listed for the claim path
+
+PHASE EXECUTION
+
+Lender Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC listed a 60-second offer. Signature x5xL7wjduwWhZtkbe9uvV1j1kBf1kzW5Z13o1w4yxvDonWW5aiYC9gz5z1MvvBkJzzp9qWNTwuMyDt8r8rRV8QU, slot 503831696, finalized, err null. Offer 4igJGLucK9F7yLqjvrENp8pfxQ47Z4QJY1Q1jV9sM3Pf. Chain amount stayed 998899494. Delegate holds 1000000 raw. Collateral 1000000, fee 100000, grace 30. Receipt offer_created verified. Take, early claim, and claim still need the borrower to take this offer. Devnet DEX remains FAIL. Mainnet deployment remains false.
+
 
 
