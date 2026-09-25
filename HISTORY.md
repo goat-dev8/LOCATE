@@ -1627,5 +1627,11 @@ PHASE EXECUTION
 
 Lender Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC claimed loan AaTkPse9CNP2uk75sXzHbfAMhi4Wa59HQQ6RRmTncwn3 after grace. Signature 4TbTczrhivm4Gq9eFA9i8s9B1E4o4Yqr4cnyzgp2HEK5zqF4iUtXszEsRhvYxxmTWBvCxqMKQFaC5hABoobFhA9G, slot 503834342, finalized, err null. Instruction ClaimCollateral. Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6. USDC vault 1000000 to 0. Lender USDC 11550000 to 12550000. Delta 1000000. Receipt loan_claimed verified. The loan page shows CLAIMED with that signature and no second claim action. Early claim was not sent on this loan. Devnet DEX remains FAIL. Mainnet deployment remains false.
 
+## 2026-09-25T05:40:00Z — Production deploy
+
+PHASE PRODUCTION
+
+The first frontend deploy failed because the local validator suite was ignored, then because the SDK declarations are not in git. The suite is tracked, and the production build now builds the SDK first. Vercel deployment dpl_9f7kBecEFWisTMgJRcmCeo2AHNfN is READY and aliased to https://locate-blue.vercel.app. Chrome on that origin connected Hbkp…TvaC, showed chain dOPENAI 0.997899494 and USDC 12.55, and 0 borrowable. /proof returned 200. API health gitSha ecb27482b7b8abf906b6344249d5300d80aa85a1. CORS allows https://locate-blue.vercel.app. A follow-up deploy records productionDeployment true. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
+
 
 
