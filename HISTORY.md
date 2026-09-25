@@ -1669,3 +1669,9 @@ Chrome on localhost:3010, lender Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC. A
 PHASE EXECUTION
 
 Borrower CpTxsgPjvaaPSaBKkijvB1h3hzgJmPiTsWNhuS7tRkgX took the 60-second offer. Simulation passed. Phantom approved. Signature 3NxZ3QXQk1gbCiRppmW66S94pASM9MTyKJZvTYq2gTLPaiNdcFJGNnkor4jVBPsJf67Y7JrXnRveL5nAeEpG5Q1M, slot 503859363, finalized, err null. Instruction TakeOffer. Loan 9zDhiTn7u6xh2eYrUNDvvQtNuYBwVmDJKLfHxtXdHhb6. Mint 9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P. Lender dOPENAI 997899494 to 996899494. Borrower dOPENAI 1859392 to 2849392, net 990000. Borrower USDC 17400000 to 16300000. Lender USDC 12550000 to 12650000, the 100000 fee. Vault USDC 1000000. The borrower stayed connected, so early claim was not sent. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
+
+## 2026-09-25T06:40:00Z — Lender claimed after grace
+
+PHASE EXECUTION
+
+Lender Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC claimed loan 9zDhiTn7u6xh2eYrUNDvvQtNuYBwVmDJKLfHxtXdHhb6 after grace. The screen showed CLAIMABLE and Claimed as Not verified before the signature. Simulation passed. Phantom approved. Signature 4WXs3ooiToSrL5KFGJ58413ga2WhzVjaMoUM5wpmnqY1AHMwe361FZkPhfauHgqsqn6mZqGBskZ4MmqHritaS3cw, slot 503860398, finalized, err null. Instruction ClaimCollateral. Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6. Vault USDC 1000000 to 0. Lender USDC 12650000 to 13650000. Delta 1000000. The wallet then showed USDC 13.65. Early claim was not sent on this loan because the lender was not connected before maturity. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
