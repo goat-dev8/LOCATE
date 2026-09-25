@@ -1768,3 +1768,13 @@ Production dpl_8HWNUCy3GXgU9PQdKWgg958XdApS is READY for 9938e59 and aliased to 
 
 Files: frontend/src/components/locate/app/views/LoanDetail.tsx.
 
+## 2026-09-25T15:36:24Z — Proof headlines name the four evidence layers
+
+PHASE PRODUCT
+
+Chrome on production c98f772 at https://locate-blue.vercel.app confirmed the loan card and amounts say dOPENAI, the settlement rail lists 2Pgsmjwx and 4vtXFRpv, and the short step says the Devnet venue is unavailable. The collapsed proof cards still used older headlines. This commit changes those headlines to real Devnet protocol, cloned Mainnet local execution, real Mainnet external market execution, and local validator 42/42 with cross-runtime replay. No new signature. Devnet DEX remains an external venue blocker. Mainnet LOCATE deployment remains false.
+
+Files: frontend/src/lib/locate/executionFacts.ts, frontend/src/app/proof/page.tsx.
+Command: npx tsc --noEmit in frontend. Result: exit 0.
+Network: none. Signature: none.
+

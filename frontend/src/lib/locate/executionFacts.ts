@@ -102,7 +102,7 @@ export const executionTrace: TraceStep[] = [
 
 export const proofSections = [
   {
-    headline: "The full lifecycle ran on Devnet.",
+    headline: "Real Devnet protocol.",
     metric: [returnCycle.create, returnCycle.take, returnCycle.return, claimCycle.claim].filter((sig) => sig.length > 0).length + " signatures",
     title: "A. PROTOCOL EXECUTION",
     lines: [
@@ -115,7 +115,7 @@ export const proofSections = [
     ],
   },
   {
-    headline: "Same program, real OpenAI mint state.",
+    headline: "Cloned Mainnet state. Local execution. Not a Mainnet transaction.",
     metric: fork.matrix.passed + "/" + fork.matrix.total,
     title: "B. CLONED MAINNET STATE",
     lines: [
@@ -128,8 +128,8 @@ export const proofSections = [
     ],
   },
   {
-    headline: "The short leg runs on the real market.",
-    metric: dexSell.result + " / " + dexBuy.result,
+    headline: "Real Mainnet external market execution.",
+    metric: "SELL " + dexSell.result + " · BUYBACK " + dexBuy.result,
     title: "C. MAINNET MARKET EXECUTION",
     lines: [
       "Real external Mainnet DEX. locateProtocol " + String(dexSell.locateProtocol) + ".",
@@ -141,8 +141,8 @@ export const proofSections = [
     ],
   },
   {
-    headline: "Math and adversarial coverage.",
-    metric: String(replay.total) + " replay vectors",
+    headline: "Local validator and cross-runtime replay.",
+    metric: localSuite.passed + "/" + localSuite.total + " · " + String(replay.total),
     title: "D. SECURITY / CONSISTENCY",
     lines: [
       "Local validator " + localSuite.passed + "/" + localSuite.total,
@@ -150,6 +150,7 @@ export const proofSections = [
       "Security " + security.security.passed,
       "Mutation " + security.mutation.passed,
       "Replay " + replay.total,
+      "Reproducible LOCATE build PASS. Devnet deployed binary correspondence PASS.",
     ],
   },
 ];

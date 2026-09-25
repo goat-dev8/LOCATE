@@ -108,7 +108,7 @@ export default function ProofPage() {
 
       <details className="mt-10 rounded-2xl border border-zinc-800 p-6">
         <summary className="cursor-pointer">
-          <h2 className="font-sans text-2xl font-semibold">The full lifecycle ran on Devnet.</h2>
+          <h2 className="font-sans text-2xl font-semibold">Real Devnet protocol.</h2>
           <p className="mt-2 font-mono text-sm text-[#7D9BFF]">{devnetCount} signatures</p>
         </summary>
         <p className="mt-4 text-sm text-zinc-500">{cycle.label}. dOPENAI is a Devnet replica, not a Mainnet PreStock.</p>
@@ -123,7 +123,7 @@ export default function ProofPage() {
 
       <details className="mt-4 rounded-2xl border border-zinc-800 p-6">
         <summary className="cursor-pointer">
-          <h2 className="font-sans text-2xl font-semibold">Same program, real OpenAI mint state.</h2>
+          <h2 className="font-sans text-2xl font-semibold">Cloned Mainnet state. Local execution. Not a Mainnet transaction.</h2>
           <p className="mt-2 font-mono text-sm text-[#7D9BFF]">{fork.matrix.passed}/{fork.matrix.total}</p>
         </summary>
         <p className="mt-4 text-sm text-zinc-500">{fork.label}. Real Mainnet account state. Local LOCATE execution. Not a Mainnet transaction.</p>
@@ -150,8 +150,8 @@ export default function ProofPage() {
 
       <details className="mt-4 rounded-2xl border border-zinc-800 p-6">
         <summary className="cursor-pointer">
-          <h2 className="font-sans text-2xl font-semibold">The short leg runs on the real market.</h2>
-          <p className="mt-2 font-mono text-sm text-[#7D9BFF]">{dexSell.result} / {dexBuy.result}</p>
+          <h2 className="font-sans text-2xl font-semibold">Real Mainnet external market execution.</h2>
+          <p className="mt-2 font-mono text-sm text-[#7D9BFF]">SELL {dexSell.result} · BUYBACK {dexBuy.result}</p>
         </summary>
         <p className="mt-4 text-sm text-zinc-500">Real Mainnet external market execution. The LOCATE program is not in this transaction.</p>
         <p className="mt-3 font-mono text-xs text-zinc-400">Sell {dexSell.result} {dexSell.signature} slot {dexSell.slot}. In {dexSell.amountRaw} out {dexSell.actualOutRaw} min {dexSell.minOutRaw} route {dexSell.route.join(" > ")}.</p>
@@ -163,8 +163,8 @@ export default function ProofPage() {
 
       <details className="mt-4 rounded-2xl border border-zinc-800 p-6">
         <summary className="cursor-pointer">
-          <h2 className="font-sans text-2xl font-semibold">Math and adversarial coverage.</h2>
-          <p className="mt-2 font-mono text-sm text-[#7D9BFF]">{replay.total} replay vectors</p>
+          <h2 className="font-sans text-2xl font-semibold">Local validator and cross-runtime replay.</h2>
+          <p className="mt-2 font-mono text-sm text-[#7D9BFF]">{local.passed}/{local.total} · {replay.total}</p>
         </summary>
         <p className="mt-4 text-sm text-zinc-500">Local validator {local.passed}/{local.total}, {local.failed} failed. {local.usdcNote} Local binary sha256 {local.programSha256}.</p>
         <p className="mt-2 text-sm text-zinc-500">Functional {sec.functional.passed}. Security {sec.security.passed}. Mutation {sec.mutation.passed}. Backend {sec.backendVitest.passed}. Replay {replay.total} vectors, seed {replay.seed}. Families {JSON.stringify(replay.families)}.</p>
