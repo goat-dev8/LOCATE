@@ -1728,3 +1728,11 @@ The settlement rail asked for receipts by the borrower wallet, so the lender's c
 
 Files: frontend/src/components/locate/app/views/LoanDetail.tsx.
 
+## 2026-09-25T14:56:45Z — Production serves the current tree
+
+PHASE PRODUCTION
+
+Vercel deployment dpl_J8bnSAYmLBXTgHmf2g8YegX6Lwet is READY. Alias https://locate-blue.vercel.app. gitSha db8540ba30f0d2a8a5a17e1944ae3aae896026a2. /proof returned the flags source build verified false, Devnet DEX FAIL, mainnetLocateDeployment false, and mainnetLocateTransactions false. The 24 proof JSON files copied into the frontend match the proof directory. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
+
+Files: evidence/qa/vercel-deploy.json, proof/FINAL_STATUS.json.
+
