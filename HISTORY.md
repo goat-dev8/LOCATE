@@ -1545,5 +1545,13 @@ Files: frontend/src/components/locate/app/views/LoanDetail.tsx, proof/EXECUTION_
 
 Pushed as 352ddbc.
 
+## 2026-09-25T04:42:00Z — Production build passes on Windows
+
+PHASE BUILD
+
+`npm run build` compiled, then failed because the script called `cp`, which this shell does not provide. The copy of the standalone static files and public folder now uses Node. A second `npm run build` exited 0. Routes include `/` and `/proof`. The recorded Devnet return-cycle and claim-cycle signatures were re-read as finalized with `err` null, and the return transaction includes the LOCATE program. productionDeployment stays false. Devnet DEX remains FAIL. Mainnet deployment remains false.
+
+Files: frontend/package.json.
+
 
 
