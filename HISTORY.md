@@ -1591,5 +1591,11 @@ Files: scripts/audit-proof-chain.mjs, proof/verification/chain-audit.json.
 
 Pushed as 6eea78c.
 
+## 2026-09-25T05:09:00Z — Program suites rerun
+
+PHASE VALIDATION
+
+SDK 31/31. Backend 23/23. Frontend `tsc --noEmit` exited 0. Pipeline 11/11. Refusals 9/9. `node sdk/tools/check-frontend.mjs frontend` printed frontend check passed. `cargo test` functional 17/17, security 14/14, mutation 10/10, fork_proof 2/2, fee_prop 5/5, exit 0. No new signature. Borrower wallet was still connected, so early claim and claim were not started. Local validator and the 45000 replay were not part of this run. Devnet DEX remains FAIL. Mainnet deployment remains false.
+
 
 
