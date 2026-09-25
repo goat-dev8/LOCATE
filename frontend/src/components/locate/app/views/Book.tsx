@@ -27,6 +27,8 @@ export function BookView() {
   const [termFilter, setTermFilter] = useState("ALL");
   const [taking, setTaking] = useState<Offer | null>(null);
 
+  const market = useLiveMarket();
+  const openai = market.bySymbol("OPENAI");
   const live = useMemo(
     () =>
       offers.filter(
@@ -39,22 +41,43 @@ export function BookView() {
   );
 
   const totalSupply = live.reduce((a, o) => a + o.amount, 0);
+  const price = openai?.tokenPrice != null ? `$${Math.round(openai.tokenPrice).toLocaleString("en-US")}` : "unavailable";
+  const move = openai?.premiumPct != null ? `${openai.premiumPct >= 0 ? "+" : ""}${openai.premiumPct.toFixed(1)}%` : "unavailable";
 
   return (
     <div>
       <ViewHead
-        label="DEVNET BOOK"
-        title="Lend, borrow, short, buy back, return."
-        serif="Or the lender claims."
+        label="MARKET"
+        title="Lend the PreStock."
+        serif="Let someone short it."
         actions={
-          live.length > 0 ? (
-            <span className="lc-chip-lime">
-              {live.length} LIVE · {fmtToken(totalSupply)} UNITS
-            </span>
-          ) : null
+          <span className="font-mono text-[12px] text-ink-2">
+            {live.length === 0 ? "0 borrowable" : `${fmtToken(totalSupply)} borrowable`}
+          </span>
         }
       />
+      <p className="mb-6 max-w-2xl text-[15px] leading-[1.6] text-ink-2">
+        LOCATE turns idle PreStocks into borrowable short supply, secured by USDC collateral and settled by delivery.
+      </p>
+      <p className="mb-8 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-3">
+        Live market → borrowable supply → lend / borrow → short → return → settle
+      </p>
 
+      <section className="lc-card mb-8 p-6">
+        <p className="lc-label">Mainnet market context</p>
+        <div className="mt-4 flex items-end justify-between gap-4">
+          <div>
+            <p className="font-sans text-[18px] font-semibold text-white">OPENAI</p>
+            <p className="mt-1 text-[13px] text-ink-2">Live Mainnet price. Not borrowable supply.</p>
+          </div>
+          <div className="text-right">
+            <p className="font-sans text-[28px] font-semibold tabular-nums text-white">{price}</p>
+            <p className="mt-1 font-mono text-[12px] text-ink-2">{move}</p>
+          </div>
+        </div>
+      </section>
+
+      <p className="lc-label mb-3">Devnet short supply</p>
       <FadeContent distance={16}>
         <div className="mb-6 flex flex-wrap items-center gap-2.5">
           <Segmented
@@ -74,8 +97,8 @@ export function BookView() {
 
       {live.length === 0 ? (
         <EmptyState
-          title="No open offers on Devnet right now."
-          body="The book shows funded offers from the chain, including your own listings. It does not invent supply."
+          title="0 borrowable"
+          body="No funded Devnet offer is open. Listing dOPENAI, the Devnet replica, creates supply. This page does not invent it."
         />
       ) : (
         <div className="grid gap-4 xl:grid-cols-2">
@@ -100,9 +123,6 @@ function OfferCard({
   onTake: () => void;
 }) {
   const asset = ASSETS.find((a) => a.id === offer.assetId)!;
-  const live = useLiveMarket();
-  const row = live.bySymbol(offer.assetId);
-  const pct = row && row.markPrice != null && row.markPrice > 0 ? row.premiumPct : null;
   const net = netFromGross(offer.amount, asset.transferFeeBps);
   const cd = useCountdown(offer.expiryAt);
 
@@ -114,16 +134,15 @@ function OfferCard({
             <AssetLogo asset={asset} size={44} className="rounded-xl" />
             <div>
               <p className="font-sans text-[15.5px] font-semibold tracking-[-0.01em] text-white">
-                {asset.symbol} · <span className="tabular-nums">{fmtToken(offer.amount)}</span>
+                dOPENAI · <span className="tabular-nums">{fmtToken(offer.amount)}</span>
               </p>
               <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-3">
-                LENDER {offer.lender}
+                Devnet replica · lender {offer.lender.slice(0, 4)}…{offer.lender.slice(-4)}
               </p>
             </div>
           </div>
           <div className="flex flex-col items-end gap-1.5">
             <StatusChip status={offer.status} />
-            <span className="lc-chip-ember">{pct === null ? "Premium unavailable" : `+${pct.toFixed(1)}%`}</span>
           </div>
         </div>
 

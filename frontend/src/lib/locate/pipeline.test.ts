@@ -25,4 +25,5 @@ assert.equal(feeBpsAtTake("100"), 100);
 assert.equal(feeBpsAtTake(undefined), null);
 assert.equal(feeBpsAtTake(""), null);
 assert.equal(feeBpsAtTake(10_001), null);
-console.log("pipeline 10/10");
+assert.equal(feeBpsAtTake(0), 0);
+console.log("pipeline 11/11");

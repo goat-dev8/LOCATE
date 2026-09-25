@@ -57,8 +57,8 @@ export default function ProofPage() {
     verified: boolean;
     claim: string;
     head: string;
-    devnet: { elfSha256: string; matchesLocalMainnetBinary: boolean; matchesLocalDevnetBinary: boolean };
-    mainnet: { programAccountExists: boolean; slot: number };
+    devnet: { payloadSha256: string; elfRegionSha256: string; matchesLocalMainnetBinary: boolean; matchesLocalDevnetBinary: boolean };
+    mainnet: { programAccountExists: boolean };
   }>("verification/source-build.json");
   const token2022 = load<{
     exercised: { extension: string; evidence: string }[];
@@ -124,7 +124,7 @@ export default function ProofPage() {
       <h1 className="font-sans text-4xl font-semibold tracking-tight">Proof</h1>
       <p className="mt-3 text-[15px] text-zinc-400">Devnet protocol, cloned Mainnet state, and the external market stay separate.</p>
 
-      <details className="mt-10 rounded-2xl border border-zinc-800 p-6" open>
+      <details className="mt-10 rounded-2xl border border-zinc-800 p-6">
         <summary className="cursor-pointer">
           <h2 className="font-sans text-2xl font-semibold">The full lifecycle ran on Devnet.</h2>
           <p className="mt-2 font-mono text-sm text-[#7D9BFF]">{devnetCount} signatures</p>
@@ -186,7 +186,7 @@ export default function ProofPage() {
         </summary>
         <p className="mt-4 text-sm text-zinc-500">Local validator {local.passed}/{local.total}, {local.failed} failed. {local.usdcNote} Local binary sha256 {local.programSha256}.</p>
         <p className="mt-2 text-sm text-zinc-500">Functional {sec.functional.passed}. Security {sec.security.passed}. Mutation {sec.mutation.passed}. Backend {sec.backendVitest.passed}. Replay {replay.total} vectors, seed {replay.seed}. Families {JSON.stringify(replay.families)}.</p>
-        <p className="mt-2 text-sm text-zinc-500">Source correspondence {source.verified ? "verified" : "not verified"}. {source.claim} Devnet ELF {source.devnet.elfSha256}. Matches local mainnet binary {String(source.devnet.matchesLocalMainnetBinary)}. Matches local devnet binary {String(source.devnet.matchesLocalDevnetBinary)}. Mainnet program account exists {String(source.mainnet.programAccountExists)} at slot {source.mainnet.slot}. HEAD {source.head}.</p>
+        <p className="mt-2 text-sm text-zinc-500">Reproducible LOCATE build. Not a Mainnet verified program. {source.claim} Devnet ELF {source.devnet.payloadSha256}. Padded region {source.devnet.elfRegionSha256}. Matches local devnet binary {String(source.devnet.matchesLocalDevnetBinary)}. Mainnet program account exists {String(source.mainnet.programAccountExists)}. HEAD {source.head}.</p>
       </details>
 
       <p className="mt-8 font-mono text-xs text-zinc-500">

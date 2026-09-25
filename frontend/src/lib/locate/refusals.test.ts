@@ -6,5 +6,8 @@ assert.equal(typedRefusal("OfferChanged", null, "Offer changed — refresh"), "T
 assert.equal(typedRefusal(null, null, "Token transfers are paused by the issuer"), "MINT_PAUSED");
 assert.equal(typedRefusal(null, null, "Not enough tokens delivered"), "INSUFFICIENT_GROSS");
 assert.equal(typedRefusal(null, null, "429 Too Many Requests"), "RPC_RATE_LIMITED");
+assert.equal(typedRefusal(null, null, "fee rose before signing"), "FEE_CHANGED");
+assert.equal(typedRefusal(null, null, "not your offer"), "WRONG_WALLET");
+assert.equal(typedRefusal(null, null, "blockhash expired"), "BLOCKHASH_EXPIRED");
 assert.equal(typedRefusal(null, null, "unrelated"), "unrelated");
-console.log("refusals 6/6");
+console.log("refusals 9/9");

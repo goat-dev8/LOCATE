@@ -42,4 +42,15 @@ describe("recorded devnet fixtures", () => {
     foreign.transaction.message.accountKeys[11] = "11111111111111111111111111111111";
     expect(verifyLoaded(foreign, programId, usdc, "finalized")).toMatchObject({ status: "rejected", reason: "NO_LOCATE_EVENT" });
   });
+
+  it("keeps a confirmed transaction pending until it is finalized", () => {
+    const returned = verifyLoaded(load("./fixtures/devnet/loan-returned-2of8HQPV.json"), programId, usdc, "confirmed");
+    expect(returned).toMatchObject({ status: "pending", commitment: "confirmed" });
+  });
+
+  it("rejects a claim whose collateral delta does not match the event", () => {
+    const claimed = load("./fixtures/devnet/loan-claimed-653KdWNM.json");
+    claimed.meta.postTokenBalances.forEach((row: { uiTokenAmount: { amount: string } }) => { row.uiTokenAmount.amount = "1"; });
+    expect(verifyLoaded(claimed, programId, usdc, "finalized")).toMatchObject({ status: "rejected", reason: "BALANCE_MISMATCH" });
+  });
 });

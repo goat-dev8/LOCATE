@@ -1507,5 +1507,13 @@ The same image built `--features devnet` to `target/devnet-feature-verify/locate
 
 Pushed as 5a1e1b8.
 
+## 2026-09-25T03:51:00Z — Market split and suite rerun
+
+PHASE MARKET
+
+The market page now keeps the live Mainnet OpenAI price in its own card. Devnet offers sit under a separate short-supply heading and are labeled as the dOPENAI replica. An empty book says 0 borrowable. The public proof page reads the Devnet ELF payload hash and no longer treats a missing field as the executable hash. Confirmed receipts stay pending until finalized. A claim whose collateral delta does not match is rejected.
+
+SDK 31/31. Backend 21/21, then receipt checks 5/5. Pipeline 11/11. Refusals 9/9. Program suites: fork 2/2, functional 17/17, security 14/14, mutation 10/10, replay writer passed. Devnet DEX remains FAIL. Mainnet deployment remains false.
+
 
 
