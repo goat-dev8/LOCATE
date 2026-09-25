@@ -1371,6 +1371,16 @@ Create offer now shows Prepare, Review, Simulate, Approve, Confirm, and Verify, 
 
 Devnet DEX remains FAIL. Mainnet deployment remains false. The five instructions were not changed.
 
+Pushed as 3c13093.
+
+## 2026-09-25T05:50:00Z — Wallet amounts label scaled balances
+
+PHASE PRODUCT
+
+The Devnet wallet panel uses the shared amount formatter. When the RPC scaled amount differs from the raw integer divided by decimals, the panel shows the scaled figure and labels it. A failed balance read says unavailable instead of a number. solana-verify is not installed on this machine, so source correspondence stays unverified.
+
+Devnet DEX remains FAIL. Mainnet deployment remains false. The short leg on cloned Mainnet state is still not executed.
+
 Not pushed in this step.
 
 

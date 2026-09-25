@@ -16,6 +16,7 @@ import { DecryptionText } from "@/components/bits";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 import { DEVNET_USDC, TOKEN, TOKEN_2022, ata } from "@locate/sdk";
+import { formatUnits } from "@/lib/locate/amounts";
 import { useLocate, type View } from "@/lib/locate/store";
 import { useLiveMarket } from "@/lib/locate/useLiveMarket";
 import { Wordmark } from "../landing/parts";
@@ -75,20 +76,18 @@ function Wallet() {
       return;
     }
     const mint = new PublicKey("9S2Lb7Yf8pfDKccVgwsMHXQbngGVyfUn5N1FJYQUwE4P");
-    const shown = (amount: string, decimals: number) => {
-      const negative = amount.startsWith("-");
-      const digits = (negative ? amount.slice(1) : amount).padStart(decimals + 1, "0");
-      const cut = digits.length - decimals;
-      const text = `${digits.slice(0, cut)}.${digits.slice(cut)}`.replace(/0+$/, "").replace(/\.$/, "");
-      return `${negative ? "-" : ""}${text}`;
+    const shown = (amount: string, decimals: number, ui?: string | null) => {
+      const raw = formatUnits(amount, decimals);
+      if (ui && ui !== raw) return `${ui} scaled`;
+      return raw;
     };
     const read = () => {
       connection.getTokenAccountBalance(ata(publicKey, DEVNET_USDC, TOKEN), "confirmed")
-        .then((result) => setUsdc(shown(result.value.amount, result.value.decimals)))
-        .catch(() => setUsdc(null));
+        .then((result) => setUsdc(shown(result.value.amount, result.value.decimals, result.value.uiAmountString)))
+        .catch(() => setUsdc("unavailable"));
       connection.getTokenAccountBalance(ata(publicKey, mint, TOKEN_2022), "confirmed")
-        .then((result) => setToken(shown(result.value.amount, result.value.decimals)))
-        .catch(() => setToken(null));
+        .then((result) => setToken(shown(result.value.amount, result.value.decimals, result.value.uiAmountString)))
+        .catch(() => setToken("unavailable"));
     };
     read();
     const timer = setInterval(read, 15_000);
