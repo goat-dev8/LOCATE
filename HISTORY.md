@@ -1303,5 +1303,17 @@ Not pushed in this step.
 
 Git SHA: 9ced578
 
+## 2026-09-25T01:55:00Z — Local validator suite re-run
+
+PHASE REGRESSION
+
+`node scripts/local-validator.mjs` exited 0. Validator `http://172.21.142.55:18999`. Result `{"passed":42,"failed":0,"total":42}`. Local mint at the pinned Devnet USDC address. Not Mainnet USDC and not a Mainnet transaction. Program sha256 stayed `698862354901ab1a262c378fcac6c424ee349bf8fa229e496e4ff933db56abc2`.
+
+The script rewrote `proof/local-validator/suite.json` with a new ephemeral mint and different compute units. That file was restored. The pass count did not change. Devnet DEX remains FAIL. The five LOCATE instructions were not changed.
+
+Not pushed in this step.
+
+Git SHA: f36b557
+
 
 
