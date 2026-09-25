@@ -1257,5 +1257,13 @@ Not pushed in this step.
 
 Git SHA: e33133b
 
+## 2026-09-25T01:30:00Z — Pushed the receipt-backed lifecycle
+
+PHASE GIT
+
+Pushed main e33133b..d350504. The commit includes the four-section proof page, receipt-backed closed loans and offers, the single how-it-works chain, and the lender Chrome check. Devnet DEX remains FAIL. mainnetLocateDeployment and mainnetLocateTransactions stay false. The local-validator, fork, replay, functional, security, and mutation suites were not re-run; the program instructions were not changed.
+
+Git SHA: d350504
+
 
 
