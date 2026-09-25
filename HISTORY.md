@@ -1675,3 +1675,9 @@ Borrower CpTxsgPjvaaPSaBKkijvB1h3hzgJmPiTsWNhuS7tRkgX took the 60-second offer. 
 PHASE EXECUTION
 
 Lender Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC claimed loan 9zDhiTn7u6xh2eYrUNDvvQtNuYBwVmDJKLfHxtXdHhb6 after grace. The screen showed CLAIMABLE and Claimed as Not verified before the signature. Simulation passed. Phantom approved. Signature 4WXs3ooiToSrL5KFGJ58413ga2WhzVjaMoUM5wpmnqY1AHMwe361FZkPhfauHgqsqn6mZqGBskZ4MmqHritaS3cw, slot 503860398, finalized, err null. Instruction ClaimCollateral. Program F1CiKj7c91ptZsLseX49JTsXtAKykkXSV7Ri468RhqS6. Vault USDC 1000000 to 0. Lender USDC 12650000 to 13650000. Delta 1000000. The wallet then showed USDC 13.65. Early claim was not sent on this loan because the lender was not connected before maturity. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
+
+## 2026-09-25T06:42:00Z — Production matches the claimed tree
+
+PHASE PRODUCTION
+
+Vercel deployment dpl_4wc97ckG4fUcUhcQSHgh3TW9SfaX is READY. API health gitSha ca94d688095cb38e061b7b0036261ced0ae521c0. CORS allows https://locate-blue.vercel.app. /proof returned 200 and shows Devnet, cloned Mainnet state, external market, and 45000 replay, with source build verified false, Devnet DEX FAIL, and both Mainnet LOCATE flags false. The live catalog returned eight PreStocks and did not include xAI. Chrome on that proof URL showed the same lines. Early claim was not sent. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
