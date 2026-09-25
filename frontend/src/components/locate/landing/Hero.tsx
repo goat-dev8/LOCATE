@@ -1,10 +1,10 @@
 "use client";
 
 /**
- * LOCATE hero — Dovetail-style editorial composition over a living ground.
+ * LOCATE hero — editorial composition over a living ground.
  *
- * Huge centered typography on a WebGL silk field — slow ink-blue fabric
- * folds that breathe and lean toward the cursor — framed by DISTRIBUTED
+ * Centered typography on a WebGL silk field — slow ink-blue fabric
+ * folds that breathe and lean toward the cursor — framed by distributed
  * geometry: small outlined squares, corner brackets, hairlines and quiet
  * technical labels floating around the headline, some partially entering
  * or leaving the viewport, drifting with gentle parallax. No giant frame.
@@ -20,14 +20,12 @@ import {
 import { useRef } from "react";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import {
-  BlurText,
   ClickSpark,
   DecryptionText,
   FadeContent,
   Magnet,
   ShinyText,
   Silk,
-  SplitText,
 } from "@/components/bits";
 import { useLocate } from "@/lib/locate/store";
 import { cn } from "@/lib/utils";
@@ -130,7 +128,7 @@ export function Hero() {
     <section
       id="top"
       ref={heroRef}
-      className="relative flex min-h-[92svh] flex-col overflow-hidden pt-36 sm:pt-40"
+      className="relative flex min-h-[78svh] flex-col overflow-hidden pt-24 sm:pt-28"
     >
       {/* living ground — ink-blue silk field, mouse-reactive WebGL.
           It arrives with the type: a slow fade-up so the ground and the
@@ -363,9 +361,9 @@ export function Hero() {
       {/* ============ the headline block — pure editorial ============ */}
 
       <div className="lc-container relative z-10 flex flex-1 flex-col">
-        <div className="mx-auto my-auto flex w-full max-w-4xl flex-col items-center px-5 pb-24 pt-14 text-center sm:pb-28 sm:pt-16">
+        <div className="mx-auto my-auto flex w-full max-w-5xl flex-col items-center px-5 pb-10 pt-4 text-center sm:pb-12 sm:pt-6">
           <FadeContent delay={0.05} duration={0.7}>
-            <div className="mb-9 inline-flex flex-wrap items-center justify-center gap-2.5">
+            <div className="mb-6 inline-flex items-center justify-center">
               <span className="lc-chip-lime">
                 <DecryptionText
                   text="PRESTOCK LENDING & SHORT-SUPPLY RAIL"
@@ -376,96 +374,69 @@ export function Hero() {
             </div>
           </FadeContent>
 
-          <h1 className="lc-display text-[clamp(2.85rem,7.4vw,5.75rem)] leading-[1.0]">
-            <SplitText
-              text="LEND THE PRESTOCK."
-              as="span"
-              className="block"
-              animationStyle="up"
-              by="word"
-              delay={0.15}
-              stagger={0.08}
-              threshold={0}
-            />
-            <span className="mt-3 block">
-              <SplitText
-                text="LET SOMEONE SHORT THEM."
-                as="span"
-                className="inline-block"
-                animationStyle="up"
-                by="word"
-                delay={0.55}
-                stagger={0.08}
-                threshold={0}
-              />
-            </span>
+          <h1 className="lc-display bg-[linear-gradient(180deg,#ffffff_0%,#f4f7ff_42%,#c9d6ff_160%)] bg-clip-text text-[clamp(1.85rem,4.8vw,3.85rem)] font-bold leading-[1.08] tracking-[-0.048em] text-transparent [text-shadow:none] drop-shadow-[0_18px_40px_rgba(12,24,72,0.35)]">
+            <span className="block">Lend the PreStock.</span>
+            <span className="mt-1 block">Let someone short them.</span>
           </h1>
 
-          <BlurText
-            className="mx-auto mt-9 max-w-2xl text-balance font-sans text-[16.5px] leading-[1.65] text-ink-2 sm:text-[17.5px]"
-            text="Turn idle PreStocks into borrowable short supply — secured by USDC, settled by delivery."
-            delay={0.95}
-            by="word"
-          />
+          <p className="mx-auto mt-6 max-w-xl text-pretty font-sans text-[15.5px] leading-[1.55] text-ink-2 sm:text-[16.5px]">
+            Turn idle PreStocks into borrowable short supply — secured by USDC, settled by delivery.
+          </p>
 
-          <FadeContent delay={1.1} direction="up" distance={18} duration={0.7}>
-            <p className="mt-9 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 font-mono text-[10.5px] font-medium uppercase tracking-[0.2em]">
-              <span className="text-ink-2">SETTLED BY TIME</span>
-              <span className="text-lime" aria-hidden>
-                ·
-              </span>
-              <span className="text-ink-2">DELIVERY</span>
-              <span className="text-lime" aria-hidden>
-                ·
-              </span>
-              <span className="text-ink-2">USDC COLLATERAL</span>
-              <span
-                className="mx-1 hidden h-3.5 w-px bg-line-2 sm:block"
+          <div className="mt-7 grid w-full max-w-xl grid-cols-3 gap-3 text-center">
+            {[
+              ["LEND", "Borrowable supply"],
+              ["BORROW", "USDC-secured access"],
+              ["SETTLE", "Return or claim"],
+            ].map(([k, v]) => (
+              <div key={k} className="rounded-2xl border border-white/10 bg-white/[0.03] px-2 py-3">
+                <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#9BB6FF]">{k}</p>
+                <p className="mt-1 font-sans text-[12.5px] leading-snug text-ink-2">{v}</p>
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-6 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 font-mono text-[10.5px] font-medium uppercase tracking-[0.2em]">
+            <span className="text-ink-2">SETTLED BY TIME</span>
+            <span className="text-lime" aria-hidden>·</span>
+            <span className="text-ink-2">DELIVERY</span>
+            <span className="text-lime" aria-hidden>·</span>
+            <span className="text-ink-2">USDC COLLATERAL</span>
+          </p>
+
+          <div className="relative z-20 mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Magnet padding={18} magnetStrength={0.28}>
+              <ClickSpark sparkColor="#7D9BFF" sparkCount={9} sparkDuration={0.55}>
+                <button
+                  onClick={() => {
+                    openApp();
+                    navigate("create");
+                  }}
+                  className="lc-btn lc-btn-ink group h-12 px-7 text-[14.5px] shadow-[0_12px_40px_-12px_rgba(255,255,255,0.45)]"
+                >
+                  <ShinyText
+                    text="LEND A PRESTOCK"
+                    className="font-sans font-semibold tracking-[-0.01em]"
+                    speed={3.6}
+                  />
+                  <ArrowUpRight
+                    className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    aria-hidden
+                  />
+                </button>
+              </ClickSpark>
+            </Magnet>
+            <a
+              href="#proof"
+              className="lc-btn lc-btn-ghost group h-12 px-7 text-[14.5px] backdrop-blur-sm"
+            >
+              VIEW PROOF
+              <ArrowDown
+                className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5"
                 aria-hidden
               />
-              <span className="text-ink-3">NO ORACLE</span>
-              <span className="text-ink-3" aria-hidden>
-                ·
-              </span>
-              <span className="text-ink-3">NO LIQUIDATION</span>
-            </p>
-          </FadeContent>
-
-          <FadeContent delay={1.2} direction="up" distance={18} duration={0.7}>
-            <div className="mt-11 flex flex-col items-center justify-center gap-3.5 sm:flex-row">
-              <Magnet padding={30} magnetStrength={0.32}>
-                <ClickSpark sparkColor="#7D9BFF" sparkCount={9} sparkDuration={0.55}>
-                  <button
-                    onClick={() => {
-                      openApp();
-                      navigate("create");
-                    }}
-                    className="lc-btn lc-btn-ink group h-[52px] px-8 text-[15px]"
-                  >
-                    <ShinyText
-                      text="LEND A PRESTOCK"
-                      className="font-sans font-semibold tracking-[-0.01em]"
-                      speed={3.6}
-                    />
-                    <ArrowUpRight
-                      className="h-[18px] w-[18px] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                      aria-hidden
-                    />
-                  </button>
-                </ClickSpark>
-              </Magnet>
-              <a
-                href="#proof"
-                className="lc-btn lc-btn-ghost h-[52px] px-8 text-[15px] group"
-              >
-                VIEW PROOF
-                <ArrowDown
-                  className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5"
-                  aria-hidden
-                />
-              </a>
-            </div>
-          </FadeContent>
+            </a>
+          </div>
         </div>
       </div>
     </section>

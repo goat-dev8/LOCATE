@@ -4,7 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ============================================================
-   LOCATE — Dovetail-grade dark design system
+   LOCATE — dark design system
    canvas #0A0A0A · surfaces #141414/#1E1E1E · ink #FFFFFF
    zinc type · hairlines #242427 · electric blue #0044FF
    ============================================================ */
@@ -52,7 +52,7 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 8px);
 
-  /* LOCATE palette — dark Dovetail language */
+  /* LOCATE palette */
   --color-paper: #0A0A0A;
   --color-paper-2: #101012;
   --color-cream: #141416;
@@ -205,7 +205,7 @@
     text-wrap: balance;
   }
 
-  /* pill buttons — white-filled primary (Dovetail CTA), blue accent, ghost */
+  /* pill buttons — white-filled primary, blue accent, ghost */
   .lc-btn,
   .lc-btn-ink,
   .lc-btn-lime,
@@ -258,8 +258,7 @@
     @apply inline-flex items-center gap-1.5 rounded-full border border-refuse/25 bg-refuse-soft px-2.5 py-1 font-mono text-[10.5px] font-medium uppercase tracking-[0.1em] text-refuse;
   }
 
-  /* light product window — frames imagery/app-UI on the dark canvas
-     (Dovetail pattern: light product screenshots floating on dark) */
+  /* light product window — frames imagery/app-UI on the dark canvas */
   .lc-window {
     background: #F5F2EA;
     border: 1px solid #2A2A2D;

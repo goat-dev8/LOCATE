@@ -21,6 +21,18 @@ create table if not exists locate.theses (
 );
 
 alter table locate.theses enable row level security;
-revoke all on all tables in schema locate from anon, authenticated, public;
+do $$
+declare
+  role_name text;
+begin
+  foreach role_name in array array['anon', 'authenticated']
+  loop
+    if exists (select 1 from pg_roles where rolname = role_name) then
+      execute format('revoke all on all tables in schema locate from %I', role_name);
+    end if;
+  end loop;
+end $$;
+
+revoke all on all tables in schema locate from public;
 
 insert into locate.schema_migrations(version) values ('002') on conflict do nothing;

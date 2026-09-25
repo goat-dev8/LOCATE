@@ -62,7 +62,20 @@ alter table locate.receipts enable row level security;
 alter table locate.ingest_cursor enable row level security;
 alter table locate.schema_migrations enable row level security;
 
-revoke all on schema locate from anon, authenticated;
-revoke all on all tables in schema locate from anon, authenticated, public;
+do $$
+declare
+  role_name text;
+begin
+  foreach role_name in array array['anon', 'authenticated']
+  loop
+    if exists (select 1 from pg_roles where rolname = role_name) then
+      execute format('revoke all on schema locate from %I', role_name);
+      execute format('revoke all on all tables in schema locate from %I', role_name);
+    end if;
+  end loop;
+end $$;
+
+revoke all on schema locate from public;
+revoke all on all tables in schema locate from public;
 
 insert into locate.schema_migrations(version) values ('001') on conflict do nothing;

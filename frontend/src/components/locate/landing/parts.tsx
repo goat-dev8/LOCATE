@@ -2,8 +2,7 @@
 
 /**
  * LOCATE landing — shared editorial primitives.
- * Dovetail-style: mono eyebrows, display sans + serif-italic accents,
- * hairline structure, generous rhythm.
+ * Mono eyebrows, display sans + italic accents, hairline structure.
  */
 
 import { motion, useReducedMotion } from "framer-motion";

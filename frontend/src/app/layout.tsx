@@ -23,9 +23,9 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "LOCATE — Lend out your PreStocks. Short the premium.",
+  title: "LOCATE — Lend the PreStock. Let someone short them.",
   description:
-    "LOCATE is the PreStocks token-lending & short-supply rail. Holders lend idle PreStocks for an upfront fee; traders borrow the token against USDC collateral, sell it short, and return it at maturity. Settled by time, delivery, and USDC — no oracles, no liquidation engines.",
+    "LOCATE turns idle PreStocks into borrowable short supply, secured by USDC collateral and settled by delivery.",
   icons: {
     icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230A0A0A' stroke='%23232326' stroke-width='1'/%3E%3Ccircle cx='16' cy='16' r='8' fill='none' stroke='%230044FF' stroke-width='2'/%3E%3Cpath d='M16 3v5M16 24v5M3 16h5M24 16h5' stroke='%230044FF' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='2.4' fill='%234D7CFF'/%3E%3C/svg%3E",
   },

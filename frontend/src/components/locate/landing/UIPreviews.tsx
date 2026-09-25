@@ -2,7 +2,7 @@
 
 /**
  * LOCATE — 06 · the workspace: dark app-UI previews on 3D tilt cards.
- * (Dovetail pattern: real product surfaces floating on the dark canvas.)
+ * Real product surfaces floating on the dark canvas.
  * The lender card shows the live OpenAI price. The borrower card shows a
  * funded Devnet offer, or 0 borrowable when the book is empty.
  */
