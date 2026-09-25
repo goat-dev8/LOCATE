@@ -122,7 +122,11 @@ function TakeOfferInner({
             TAKE OFFER
           </SheetTitle>
           <SheetDescription className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-ink-3">
-            {offer.id} · {asset.symbol} · {row?.premiumPct == null ? "PREMIUM UNAVAILABLE" : `${row.premiumPct >= 0 ? "+" : ""}${row.premiumPct.toFixed(1)}% PREMIUM`}
+            <span className="normal-case">{offer.id}</span>
+            {" · "}
+            {asset.symbol}
+            {" · "}
+            {row?.premiumPct == null ? "PREMIUM UNAVAILABLE" : `${row.premiumPct >= 0 ? "+" : ""}${row.premiumPct.toFixed(1)}% PREMIUM`}
           </SheetDescription>
         </SheetHeader>
 

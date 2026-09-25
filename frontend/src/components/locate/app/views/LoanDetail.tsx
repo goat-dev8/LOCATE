@@ -120,7 +120,7 @@ export function LoanDetailView() {
       </button>
 
       <ViewHead
-        label={`${loan.id} · ${asset.symbol}`}
+        label={<><span className="normal-case">{loan.id}</span>{` · ${asset.symbol}`}</>}
         title={loan.direction === "BORROWED" ? "You borrowed." : "You lent."}
         serif="The clock decides."
         actions={

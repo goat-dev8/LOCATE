@@ -101,7 +101,7 @@ export function ViewHead({
   serif,
   actions,
 }: {
-  label: string;
+  label: React.ReactNode;
   title: string;
   serif?: string;
   actions?: React.ReactNode;

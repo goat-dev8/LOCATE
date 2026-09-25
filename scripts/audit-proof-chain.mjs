@@ -93,12 +93,19 @@ rows.push(
   { cluster: "devnet", signature: "5PHRuUXGaj5bKWybJYt9EwUxBbmBa1GjYviM1MWDTnW39kQfegS9ZtvpPivDtYeMyCCLs2szHpKfRadjDgzFKHHP", slot: 503827662, locate: true },
   { cluster: "devnet", signature: "x5xL7wjduwWhZtkbe9uvV1j1kBf1kzW5Z13o1w4yxvDonWW5aiYC9gz5z1MvvBkJzzp9qWNTwuMyDt8r8rRV8QU", slot: 503831696, locate: true, wallet: WALLET },
   { cluster: "devnet", signature: "5tCumUozhPqcZonmzqZoW78QHmT3h3KM8uTiYyo7Ruf7rDcAUeU7WGRCZpcpUFv3A3WtfBXP3EPNtXhWhq74ebVn", slot: 503832748, locate: true, wallet: "CpTxsgPjvaaPSaBKkijvB1h3hzgJmPiTsWNhuS7tRkgX" },
+  { cluster: "devnet", signature: "4TbTczrhivm4Gq9eFA9i8s9B1E4o4Yqr4cnyzgp2HEK5zqF4iUtXszEsRhvYxxmTWBvCxqMKQFaC5hABoobFhA9G", slot: 503834342, locate: true, wallet: WALLET },
+  { cluster: "devnet", signature: "65P8SnZezfKhuP5fhJb5zpAckHmye9tHorCdBbJxRcZ36TJVfNFzLPwxakBshDeJmLLKmvX6AkWttfCLbXTgE5Z7", slot: 503858589, locate: true, wallet: WALLET },
+  { cluster: "devnet", signature: "3NxZ3QXQk1gbCiRppmW66S94pASM9MTyKJZvTYq2gTLPaiNdcFJGNnkor4jVBPsJf67Y7JrXnRveL5nAeEpG5Q1M", slot: 503859363, locate: true },
+  { cluster: "devnet", signature: "4WXs3ooiToSrL5KFGJ58413ga2WhzVjaMoUM5wpmnqY1AHMwe361FZkPhfauHgqsqn6mZqGBskZ4MmqHritaS3cw", slot: 503860398, locate: true, wallet: WALLET },
+  { cluster: "devnet", signature: "2PgsmjwxPmVTAPktsNhFp13xZr2kdFPDdDFzVs7WGahU6KwejfkGftCuqeKxN6J5BXBrgG7Xz2UPyknNKjRp7eGB", slot: 503863268, locate: true, wallet: WALLET },
+  { cluster: "devnet", signature: "4vtXFRpvbLBeneBSHf5LzsKP9FvGim2DkGfkaZHLPAPDJ7RUnNRuq4c9Q8ub6vM6AUtRLt86FzZHsnzb1re6iV5W", slot: 503863794, locate: true, wallet: "CpTxsgPjvaaPSaBKkijvB1h3hzgJmPiTsWNhuS7tRkgX" },
 );
 
 const results = [];
 for (const row of rows) {
   const connection = row.cluster === "mainnet" ? mainnet : devnet;
   results.push(await check(connection, row));
+  await new Promise((resolve) => setTimeout(resolve, 1200));
 }
 const failed = results.filter((row) => row.problems.length > 0);
 const report = {

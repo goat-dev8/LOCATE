@@ -1689,3 +1689,11 @@ PHASE EXECUTION
 Lender Hbkpp56cwNUgXbzFGhYoNbz3Vs3nMqVihW1HroK8TvaC listed 0.001 chain units, collateral 1.00, fee 0.10, term 7 days, grace 2 days. Signature 2PgsmjwxPmVTAPktsNhFp13xZr2kdFPDdDFzVs7WGahU6KwejfkGftCuqeKxN6J5BXBrgG7Xz2UPyknNKjRp7eGB, slot 503863268, finalized, err null. CreateOffer. Lender dOPENAI stayed 996899494.
 
 Borrower CpTxsgPjvaaPSaBKkijvB1h3hzgJmPiTsWNhuS7tRkgX took it. Signature 4vtXFRpvbLBeneBSHf5LzsKP9FvGim2DkGfkaZHLPAPDJ7RUnNRuq4c9Q8ub6vM6AUtRLt86FzZHsnzb1re6iV5W, slot 503863794, finalized, err null. TakeOffer. Loan 4U3UUMfK9QdJt2tm2S2NtTvFrBxX15L9JVvVgb2JDqnF. Lender dOPENAI 996899494 to 995899494. Borrower dOPENAI 2849392 to 3839392, net 990000. Borrower USDC 16300000 to 15200000. Lender USDC 13650000 to 13750000. Vault USDC 1000000. The position shows 6d 23h remaining. The borrower stayed connected, so early claim was not sent. The lender can still attempt it before maturity. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
+
+## 2026-09-25T06:55:00Z — Twenty signatures match the chain
+
+PHASE PROOF
+
+The chain audit checked 20 signatures, including the seven-day list and take. failed 0. Each one was finalized with err null, and the recorded slot matched. Cloned-state execution has no cluster signature, so proofCenterIntegrity stays false. The take drawer and the loan title no longer force the account id through uppercase text. Frontend tsc passed. No new signature. Early claim was not sent. Devnet DEX remains FAIL. Mainnet LOCATE deployment remains false.
+
+Files: scripts/audit-proof-chain.mjs, proof/verification/chain-audit.json, frontend/src/components/locate/app/drawers/TakeOfferDrawer.tsx, frontend/src/components/locate/app/views/LoanDetail.tsx, frontend/src/components/locate/app/parts.tsx.
