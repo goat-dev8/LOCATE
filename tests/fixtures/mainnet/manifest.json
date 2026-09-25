@@ -35,6 +35,16 @@
       "slot": 450212574,
       "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
     },
+    "openai_usdc_bin_array.json": {
+      "pubkey": "By1xEHvXdYq2obytSAd3HXeXyrnoopWqdijggUYHCeN5",
+      "sha256": "5cd2e4eb6fbea5fa1091a6ce048070f5e8ab7e7fd64071fdd013facbed5a1d60",
+      "bytes": 10136,
+      "slot": 450213158,
+      "owner": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+      "activeId": 145,
+      "binStep": 50,
+      "index": 2
+    },
     "openai_usdc_pool.json": {
       "pubkey": "4HTy7aTjPm5PTSEws2yWRDPX6gjWM6sC2dV5mv9u8JsH",
       "sha256": "34b099babce812026d0cae72f11150a074e9034854d11e2fab8b1bf8bb2b553b",

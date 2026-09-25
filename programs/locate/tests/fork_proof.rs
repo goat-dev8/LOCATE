@@ -577,7 +577,7 @@ fn write_proof(rows: &[Row], lifecycle: &Value, claim: &Value, neural: &Value) {
         "neuralink": neural,
         "dexSellExecution": false,
         "dexBuybackExecution": false,
-        "dexNote": "The OpenAI USDC pool and both reserve accounts are cloned under tests/fixtures/mainnet. The swap program is about 2.2 MB and the bin arrays are not cloned, so no DEX CPI was executed. External Mainnet DEX remains a separate layer.",
+        "dexNote": "The OpenAI USDC pool, both reserves, and the active bin array (index 2, active id 145) are cloned under tests/fixtures/mainnet. The swap program is about 2.2 MB and is not stored, so no DEX CPI was executed. External Mainnet DEX remains a separate layer.",
     });
     fs::write(dir.join("lifecycle.json"), serde_json::to_string_pretty(&life).unwrap()).unwrap();
     let manifest = json!({

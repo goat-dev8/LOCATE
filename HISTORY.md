@@ -1401,6 +1401,16 @@ The pool account names its two reserves. Both were read at slot 450212574. OpenA
 
 Devnet DEX remains FAIL. Mainnet deployment remains false.
 
+Pushed as ef6a328.
+
+## 2026-09-25T06:25:00Z — Active bin array cloned
+
+PHASE FORK
+
+The pool header has active id 145 and bin step 50. That maps to bin array index 2, account `By1xEHvXdYq2obytSAd3HXeXyrnoopWqdijggUYHCeN5`, read at slot 450213158. The account is 10,136 bytes and the saved sha256 matches. The swap program remains about 2.2 MB and is not stored. No swap was executed.
+
+Devnet DEX remains FAIL. Mainnet deployment remains false.
+
 Not pushed in this step.
 
 
