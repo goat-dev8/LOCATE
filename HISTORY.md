@@ -1265,5 +1265,19 @@ Pushed main e33133b..d350504. The commit includes the four-section proof page, r
 
 Git SHA: d350504
 
+## 2026-09-25T01:35:00Z — SDK replay and backend tests re-run
+
+PHASE REGRESSION
+
+`npm test` in sdk: 3 files, 31 tests passed in 3.28s. The cross-runtime replay test still requires 10,000 epoch-fee, 10,000 gross-for-net, 10,000 schedule, 10,000 collateral, and 5,000 PDA vectors.
+
+`npm test` in backend: 5 files, 21 tests passed in 3.61s.
+
+The fork matrix, local-validator suite, functional, security, and mutation program suites were not re-executed. The five LOCATE instructions were not changed. Devnet DEX remains FAIL. No new chain transaction.
+
+Not pushed in this step.
+
+Git SHA: 7a0b8ba
+
 
 
