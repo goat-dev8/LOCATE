@@ -1411,6 +1411,16 @@ The pool header has active id 145 and bin step 50. That maps to bin array index 
 
 Devnet DEX remains FAIL. Mainnet deployment remains false.
 
+Pushed as ca846d4.
+
+## 2026-09-25T06:35:00Z — Swap program ELF cloned
+
+PHASE FORK
+
+The DLMM program data account `HZcJwcJ2njPDxZtpPoKnF8v2w9QAx2rS7TdJPSRkbEhu` was read at slot 450213515. The ELF starts at byte 45 and is 2,229,776 bytes. It is saved as `tests/fixtures/mainnet/dlmm.so` with sha256 `d296c6771cec945601027613ca637c1be6721044c5859009d41c453477844c1f`. No swap instruction was built or executed.
+
+Devnet DEX remains FAIL. Mainnet deployment remains false.
+
 Not pushed in this step.
 
 

@@ -8,6 +8,15 @@
     "bytes": 1382016,
     "sha256": "0999dbf708971e723b08d1caafc988826a59c6001ed6dc02260da07defbe1469"
   },
+  "dlmmProgram": {
+    "program": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+    "programData": "HZcJwcJ2njPDxZtpPoKnF8v2w9QAx2rS7TdJPSRkbEhu",
+    "file": "dlmm.so",
+    "bytes": 2229776,
+    "sha256": "d296c6771cec945601027613ca637c1be6721044c5859009d41c453477844c1f",
+    "slot": 450213515,
+    "disclosure": "ELF only. No swap instruction was executed."
+  },
   "accounts": {
     "openai_mint.json": {
       "pubkey": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",

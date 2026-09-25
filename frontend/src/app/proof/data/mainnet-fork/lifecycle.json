@@ -16,7 +16,7 @@
     "secondClaimRefused": true
   },
   "dexBuybackExecution": false,
-  "dexNote": "The OpenAI USDC pool, both reserves, and the active bin array (index 2, active id 145) are cloned under tests/fixtures/mainnet. The swap program is about 2.2 MB and is not stored, so no DEX CPI was executed. External Mainnet DEX remains a separate layer.",
+  "dexNote": "The OpenAI USDC pool, both reserves, the active bin array, and the swap program ELF are cloned under tests/fixtures/mainnet. No swap instruction was built or executed. External Mainnet DEX remains a separate layer.",
   "dexSellExecution": false,
   "label": "Cloned Mainnet State — Local Execution",
   "network": "mainnet-fork",
